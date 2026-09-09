@@ -1,0 +1,16 @@
+domain,asysd_rule_missed,missed_in_manual_queue,recoverable_share,manual_queue_pairs
+biology,26,26,1.0,348
+business informatics,33,28,0.8485,159
+chemistry,27,27,1.0,110
+computer science,10,9,0.9,119
+economics,38,29,0.7632,316
+geography,12,12,1.0,105
+history,33,28,0.8485,105
+logistics,20,18,0.9,195
+management,30,21,0.7,247
+marketing,23,21,0.913,179
+physics,126,126,1.0,404
+political science,17,14,0.8235,119
+sociology,19,18,0.9474,151
+software engineering,43,32,0.7442,220
+transport,16,15,0.9375,197

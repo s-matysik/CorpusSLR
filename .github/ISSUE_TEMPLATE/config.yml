@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Methodological question about PRISMA or PRISMA-S reporting
+    url: https://github.com/s-matysik/CorpusSLR/discussions
+    about: >-
+      Questions about how to document a search, which sources count as
+      principal, or how to report the flow diagram are best discussed rather
+      than tracked as defects.
+  - name: How to cite CorpusSLR
+    url: https://github.com/s-matysik/CorpusSLR/blob/main/CITATION.cff
+    about: Citation metadata, also available from the "Cite this repository" button.

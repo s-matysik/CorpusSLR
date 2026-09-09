@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use CorpusSLR, please cite it."
+title: "CorpusSLR: from one structured query to a PRISMA-documented corpus"
+authors:
+  - family-names: "Matysik"
+    given-names: "Sebastian"
+    affiliation: "University of Szczecin, Institute of Management, Doctoral School, Szczecin, Poland"
+    email: "sebastian.matysik@usz.edu.pl"
+version: 1.0.0
+license: MIT
+repository-code: "https://github.com/s-matysik/CorpusSLR"
+abstract: >-
+  CorpusSLR automates the identification phase of systematic literature reviews.
+  One structured query is compiled to the native syntax of multiple
+  bibliographic databases, records from APIs and file exports are harmonized and
+  enriched, duplicates are removed by a cascading auditable procedure, and the
+  PRISMA 2020 flow diagram together with the PRISMA-S search-reporting appendix
+  is generated from the recorded audit trail.
+keywords: [systematic literature review, PRISMA, PRISMA-S, deduplication, Scopus,
+           OpenAlex, PubMed, Crossref, Semantic Scholar, arXiv, Embase, EBSCOhost,
+           ProQuest, RIS, BibTeX, EndNote, evidence synthesis, meta-research]

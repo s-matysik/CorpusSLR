@@ -1,0 +1,176 @@
+{
+ "base_seconds": 0.79,
+ "by_method": {
+  "doi": 830,
+  "fuzzy": 430
+ },
+ "n_clusters": 585,
+ "metrics": {
+  "cluster": {
+   "TP": 1260,
+   "TN": 584,
+   "FN": 1,
+   "FP": 0,
+   "sensitivity": 0.9992069785884219,
+   "specificity": 1.0,
+   "precision": 1.0,
+   "f1": 0.9996033320111067
+  },
+  "first_id": {
+   "TP": 1242,
+   "TN": 566,
+   "FN": 19,
+   "FP": 18,
+   "sensitivity": 0.9849325931800159,
+   "specificity": 0.9691780821917808,
+   "precision": 0.9857142857142858,
+   "f1": 0.9853232844109481
+  },
+  "richest": {
+   "TP": 1059,
+   "TN": 383,
+   "FN": 202,
+   "FP": 201,
+   "sensitivity": 0.8398096748612213,
+   "specificity": 0.6558219178082192,
+   "precision": 0.8404761904761905,
+   "f1": 0.8401428004760016
+  },
+  "id_only": {
+   "TP": 1260,
+   "TN": 584,
+   "FN": 1,
+   "FP": 0,
+   "sensitivity": 0.9992069785884219,
+   "specificity": 1.0,
+   "precision": 1.0,
+   "f1": 0.9996033320111067
+  },
+  "human_recomputed": {
+   "TP": 891,
+   "TN": 579,
+   "FN": 370,
+   "FP": 5,
+   "sensitivity": 0.7065820777160984,
+   "specificity": 0.9914383561643836,
+   "precision": 0.9944196428571429,
+   "f1": 0.8261474269819193
+  }
+ },
+ "survivor_agreement": {
+  "agree": 383,
+  "of": 584
+ },
+ "fp_from_id_stage": 0,
+ "fp_total": 0,
+ "fn_id_only": 1,
+ "fn_total": 1,
+ "shared_doi_groups": 21,
+ "shared_doi_records": 140,
+ "shared_doi_top": [
+  {
+   "doi": "10.1007/s00125-015-3687-4",
+   "n_records": 12,
+   "n_distinct_titles": 6,
+   "max_title_similarity": 0.481
+  },
+  {
+   "doi": "10.1007/s00125-017-4350-z",
+   "n_records": 11,
+   "n_distinct_titles": 6,
+   "max_title_similarity": 0.47
+  },
+  {
+   "doi": "10.1007/s00125-013-3012-z",
+   "n_records": 10,
+   "n_distinct_titles": 5,
+   "max_title_similarity": 0.422
+  },
+  {
+   "doi": "10.1007/s00125-016-4046-9",
+   "n_records": 10,
+   "n_distinct_titles": 5,
+   "max_title_similarity": 0.419
+  },
+  {
+   "doi": "10.1007/s00125-012-2688-9",
+   "n_records": 10,
+   "n_distinct_titles": 5,
+   "max_title_similarity": 0.448
+  },
+  {
+   "doi": "10.1007/s00125-014-3355-0",
+   "n_records": 10,
+   "n_distinct_titles": 5,
+   "max_title_similarity": 0.541
+  },
+  {
+   "doi": "10.1007/s00125-018-4693-0",
+   "n_records": 9,
+   "n_distinct_titles": 5,
+   "max_title_similarity": 0.532
+  },
+  {
+   "doi": "10.2337/db15386741",
+   "n_records": 8,
+   "n_distinct_titles": 4,
+   "max_title_similarity": 0.509
+  },
+  {
+   "doi": "10.2337/db14-1-388",
+   "n_records": 8,
+   "n_distinct_titles": 4,
+   "max_title_similarity": 0.389
+  },
+  {
+   "doi": "10.1007/s00125-010-1872-z",
+   "n_records": 6,
+   "n_distinct_titles": 3,
+   "max_title_similarity": 0.403
+  }
+ ],
+ "best_grid": {
+  "fuzzy_threshold": 0.8,
+  "year_tolerance": 0,
+  "f1": 0.9996033320111067,
+  "FP": 0,
+  "FN": 1
+ },
+ "at_default": {
+  "f1": 0.9996033320111067,
+  "FP": 0,
+  "FN": 1
+ },
+ "best_guard": {
+  "doi_title_min": 0.5,
+  "fuzzy_threshold": 0.9,
+  "f1": 0.996438464582509,
+  "TP": 1259,
+  "FP": 7,
+  "FN": 2,
+  "precision": 0.9944707740916272,
+  "sensitivity": 0.9984139571768438
+ },
+ "subtitle_pairs": 8,
+ "subtitle_below_093": [
+  {
+   "short": "protective effects of incretin on atherosclerosis",
+   "added": "japanese",
+   "ratio": 0.916,
+   "n_short": 3,
+   "n_long": 1
+  },
+  {
+   "short": "cardiovascular effects of dpp 4 inhibitors",
+   "added": "french",
+   "ratio": 0.923,
+   "n_short": 1,
+   "n_long": 3
+  }
+ ],
+ "fp_examples": [],
+ "fn_examples": [
+  "A DPP-4 inhibitor suppresses atherosclerotic lesions in the aorta and coronary arteries with decrease of macrophage infi (2014)"
+ ],
+ "performance": []
+}

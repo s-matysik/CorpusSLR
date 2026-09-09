@@ -1,0 +1,18 @@
+{
+ "1": "Database name - name each database, stating the platform for each",
+ "2": "Multi-database searching - platform name when databases searched simultaneously",
+ "3": "Study registries - list any study registries searched",
+ "4": "Online resources and browsing",
+ "5": "Citation searching",
+ "6": "Contacts",
+ "7": "Other methods",
+ "8": "Full search strategies - copied and pasted exactly as run",
+ "9": "Limits and restrictions",
+ "10": "Search filters - whether published search filters were used",
+ "11": "Prior work",
+ "12": "Updates",
+ "13": "Dates of searches - date when the last search occurred",
+ "14": "Peer review",
+ "15": "Total records - number of records identified from each database",
+ "16": "Deduplication - processes and software used to deduplicate"
+}

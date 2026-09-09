@@ -1,0 +1,128 @@
+{
+  "@context": "https://w3id.org/codemeta/3.0",
+  "@type": "SoftwareSourceCode",
+  "identifier": "corpusslr",
+  "name": "CorpusSLR",
+  "version": "1.0.0",
+  "description": "CorpusSLR automates the identification phase of systematic literature reviews. One structured query is compiled to the native syntax of multiple bibliographic databases, records from APIs and file exports are harmonized and enriched, duplicates are removed by a cascading auditable procedure, and the PRISMA 2020 flow diagram together with the PRISMA-S search-reporting appendix is generated from the recorded audit trail.",
+  "applicationCategory": "Information Science",
+  "programmingLanguage": [
+    {
+      "@type": "ComputerLanguage",
+      "name": "Python",
+      "version": ">=3.9"
+    }
+  ],
+  "runtimePlatform": [
+    "Python 3.9",
+    "Python 3.10",
+    "Python 3.11",
+    "Python 3.12",
+    "Python 3.13"
+  ],
+  "operatingSystem": "OS Independent",
+  "license": "https://spdx.org/licenses/MIT",
+  "codeRepository": "https://github.com/s-matysik/CorpusSLR",
+  "issueTracker": "https://github.com/s-matysik/CorpusSLR/issues",
+  "readme": "https://github.com/s-matysik/CorpusSLR/blob/main/README.md",
+  "developmentStatus": "active",
+  "author": [
+    {
+      "@type": "Person",
+      "givenName": "Sebastian",
+      "familyName": "Matysik",
+      "affiliation": {
+        "@type": "Organization",
+        "name": "University of Szczecin, Institute of Management, Doctoral School, Szczecin, Poland"
+      },
+      "email": "sebastian.matysik@usz.edu.pl"
+    }
+  ],
+  "maintainer": [
+    {
+      "@type": "Person",
+      "givenName": "Sebastian",
+      "familyName": "Matysik"
+    }
+  ],
+  "copyrightHolder": [
+    {
+      "@type": "Person",
+      "givenName": "Sebastian",
+      "familyName": "Matysik"
+    }
+  ],
+  "keywords": [
+    "systematic literature review",
+    "PRISMA",
+    "PRISMA-S",
+    "deduplication",
+    "record linkage",
+    "bibliographic databases",
+    "Scopus",
+    "Web of Science",
+    "OpenAlex",
+    "PubMed",
+    "Crossref",
+    "Embase",
+    "Semantic Scholar",
+    "arXiv",
+    "RIS",
+    "BibTeX",
+    "EndNote",
+    "evidence synthesis",
+    "meta-research",
+    "reproducible research"
+  ],
+  "softwareRequirements": [
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "requests",
+      "name": "requests",
+      "version": ">=2.28",
+      "provider": {
+        "@id": "https://pypi.org",
+        "@type": "Organization",
+        "name": "The Python Package Index",
+        "url": "https://pypi.org"
+      }
+    }
+  ],
+  "softwareSuggestions": [
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "python-docx",
+      "name": "python-docx",
+      "version": ">=1.1",
+      "description": "Optional: writes the PRISMA-S search-reporting appendix as a .docx file for journal submission.",
+      "provider": {
+        "@id": "https://pypi.org",
+        "@type": "Organization",
+        "name": "The Python Package Index",
+        "url": "https://pypi.org"
+      }
+    }
+  ],
+  "referencePublication": [
+    {
+      "@type": "ScholarlyArticle",
+      "name": "PRISMA 2020 statement: an updated guideline for reporting systematic reviews",
+      "identifier": "https://doi.org/10.1136/bmj.n71"
+    },
+    {
+      "@type": "ScholarlyArticle",
+      "name": "PRISMA-S: an extension to the PRISMA statement for reporting literature searches in systematic reviews",
+      "identifier": "https://doi.org/10.1186/s13643-020-01542-z"
+    },
+    {
+      "@type": "ScholarlyArticle",
+      "name": "A systematic review of the use of bibliographic databases: which academic search systems are suitable for systematic reviews or meta-analyses?",
+      "identifier": "https://doi.org/10.1002/jrsm.1378"
+    },
+    {
+      "@type": "ScholarlyArticle",
+      "name": "A randomised controlled trial of an automated deduplication tool (ASySD) for systematic reviews",
+      "identifier": "https://doi.org/10.1186/s13643-023-02356-5"
+    }
+  ]
+}

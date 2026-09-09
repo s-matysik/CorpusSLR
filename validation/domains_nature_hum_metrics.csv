@@ -1,0 +1,16 @@
+track,domain,qid,level,n_records,databases,doi_coverage,truth_pairs,pair_tp,pair_fp,pair_fn,precision,recall,f1,fp_preprint_vs_published,fp_two_preprint_servers,fp_book_edition,fp_working_paper_vs_published,fp_two_working_paper_series,fp_correction_vs_original,fp_over_merge,precision_excl_versions,f1_excl_versions,sample_sufficient,note
+nature_hum,biology,bio1,query,594,4,98.82,231,227,3,4,0.987,0.9827,0.9848,3,0,0,0,0,0,0,1.0,0.9913,True,
+nature_hum,biology,bio2,query,598,4,99.5,113,112,0,1,1.0,0.9912,0.9956,0,0,0,0,0,0,0,1.0,0.9956,True,
+nature_hum,biology,,domain,1192,4,99.16,344,339,3,5,0.9912,0.9855,0.9883,3,0,0,0,0,0,0,1.0,0.9927,True,records without DOI 10 of 1192 (0.84%); merged pairs unjudgeable because one member has no DOI: 3 of 345 (0.9%)
+nature_hum,geography,geo1,query,445,3,97.08,46,43,1,3,0.9773,0.9348,0.9556,0,0,0,0,0,0,1,0.9773,0.9556,True,
+nature_hum,geography,geo2,query,444,3,99.55,38,36,4,2,0.9,0.9474,0.9231,0,0,0,0,0,0,4,0.9,0.9231,True,
+nature_hum,geography,,domain,889,3,98.31,105,99,5,6,0.9519,0.9429,0.9474,0,0,0,0,0,0,5,0.9519,0.9474,True,records without DOI 15 of 889 (1.69%); merged pairs unjudgeable because one member has no DOI: 0 of 104 (0.0%)
+nature_hum,history,his1,query,432,3,92.36,53,47,2,6,0.9592,0.8868,0.9216,0,0,0,0,0,0,2,0.9592,0.9216,True,
+nature_hum,history,his2,query,387,3,94.06,26,25,1,1,0.9615,0.9615,0.9615,0,0,1,0,0,0,0,1.0,0.9804,False,"truth_pairs<30: sample too small for quantitative inference; reported for transparency only, not comparable with large-sample domains"
+nature_hum,history,,domain,819,3,93.16,102,95,3,7,0.9694,0.9314,0.95,0,0,1,0,0,0,2,0.9794,0.9548,True,records without DOI 56 of 819 (6.84%); merged pairs unjudgeable because one member has no DOI: 5 of 103 (4.9%)
+nature_hum,political science,pol1,query,392,3,95.66,38,36,1,2,0.973,0.9474,0.96,0,0,1,0,0,0,0,1.0,0.973,True,
+nature_hum,political science,pol2,query,449,3,98.22,81,79,0,2,1.0,0.9753,0.9875,0,0,0,0,0,0,0,1.0,0.9875,True,
+nature_hum,political science,,domain,841,3,97.03,119,115,1,4,0.9914,0.9664,0.9787,0,0,1,0,0,0,0,1.0,0.9829,True,records without DOI 25 of 841 (2.97%); merged pairs unjudgeable because one member has no DOI: 1 of 117 (0.9%)
+nature_hum,sociology,soc1,query,433,3,98.38,98,95,6,3,0.9406,0.9694,0.9548,0,0,0,0,0,0,6,0.9406,0.9548,True,
+nature_hum,sociology,soc2,query,447,3,97.76,55,52,0,3,1.0,0.9455,0.972,0,0,0,0,0,0,0,1.0,0.972,True,
+nature_hum,sociology,,domain,880,3,98.07,153,147,6,6,0.9608,0.9608,0.9608,0,0,0,0,0,0,6,0.9608,0.9608,True,records without DOI 17 of 880 (1.93%); merged pairs unjudgeable because one member has no DOI: 2 of 155 (1.3%)

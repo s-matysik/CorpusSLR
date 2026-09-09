@@ -1,0 +1,31 @@
+{
+ "query": "(TITLE-ABS-KEY(\"deep learning\" OR \"convolutional neural network\")) AND TITLE-ABS-KEY(\"diabetic retinopathy\") AND (PUBYEAR > 2017 AND PUBYEAR < 2025) AND (DOCTYPE(ar)) AND LANGUAGE(english)",
+ "databases_searched": [
+  "Scopus",
+  "PubMed",
+  "Crossref",
+  "arXiv"
+ ],
+ "databases_unavailable": {
+  "OpenAlex": "API key required by platform policy; the user declined, and keyless calls are unsupported",
+  "Semantic Scholar": "HTTP 429 (rate limited) throughout the session",
+  "bioRxiv/medRxiv": "reachable, but the API offers date-window listing only: an exhaustive 2018-2024 search costs 11,196 requests (~5 h), measured live",
+  "Web of Science": "no Clarivate key available"
+ },
+ "identified": 323,
+ "after_dedup": 297,
+ "duplicates_removed": 26,
+ "dedup_by_method": {
+  "doi": 24,
+  "fuzzy": 2
+ },
+ "overlap": {
+  "PubMed x Scopus": 22,
+  "Crossref x Scopus": 2,
+  "Crossref x arXiv": 1
+ },
+ "retractions_flagged": {
+  "retraction_notice": 1,
+  "retracted": 3
+ }
+}
