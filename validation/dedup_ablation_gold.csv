@@ -1,0 +1,7 @@
+configuration,TP,FP,FN,precision,recall,f1,delta_f1
+shipped defaults,1252,1,9,0.9992,0.9929,0.996,0.0
+no conflicting-identifier override (allow_copublication=False),1163,0,98,1.0,0.9223,0.9596,-0.0364
+identifier match unguarded by title (id_title_min=0.0),1251,16,10,0.9874,0.9921,0.9897,-0.0063
+no shared-locus guard (separate_by_locus=False),1252,3,9,0.9976,0.9929,0.9952,-0.0008
+single blocking pass (blocking_rounds=False),1250,1,11,0.9992,0.9913,0.9952,-0.0008
+no conference/article separation (separate_conference=False),1252,1,9,0.9992,0.9929,0.996,0.0

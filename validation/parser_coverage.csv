@@ -1,0 +1,33 @@
+level,requirement,format,implementation,status,detected,records,balanced,identifiers,verified_how
+1 - API,Scopus,REST API,ScopusSource,covered,n/a,1,n/a,doi+scopus_id+source_id,"tests/test_scopus.py, tests/test_scopus_live_shapes.py"
+1 - API,OpenAlex,REST API,OpenAlexSource,covered,n/a,1,n/a,doi+openalex_id+pmid+source_id,tests/test_sources_offline.py
+1 - API,PubMed/MEDLINE (E-utilities),REST API,PubMedSource,covered,n/a,1,n/a,doi+pmid+source_id,tests/test_sources_offline.py
+1 - API,Crossref,REST API,CrossrefSource,covered,n/a,1,n/a,doi+source_id,tests/test_sources_offline.py
+1 - API,Semantic Scholar,REST API,SemanticScholarSource,covered,n/a,1,n/a,doi+pmid+source_id,tests/test_semanticscholar.py
+1 - API,arXiv,REST API,ArxivSource,covered,n/a,1,n/a,doi+source_id,tests/test_arxiv.py
+1 - API,medRxiv,REST API,MedrxivSource,covered,n/a,1,n/a,doi+source_id,tests/test_preprints.py
+1 - API,bioRxiv,REST API,BiorxivSource,covered,n/a,1,n/a,doi+source_id,tests/test_preprints.py
+2 - file export,Web of Science,tagged .txt/.ciw (FN/PT/AU/TI/SO/DI),parse_wos,covered,n/a,2,yes,doi+pmid+source_id,tests/test_parsers_robustness.py::test_wellformed_sample_parses_and_balances[wos]
+2 - file export,Web of Science,RIS,parse_ris,covered,wos,1,yes,doi+source_id,tests/test_parsers_vendor_coverage.py::test_ris_dialect_autodetected
+2 - file export,Web of Science,BibTeX,parse_bibtex,covered,wos,1,yes,doi+source_id,tests/test_parsers_vendor_coverage.py::test_wos_bibtex_double_braces_are_stripped
+2 - file export,Web of Science,CSV,parse_csv_export,covered,wos,1,yes,doi+pmid+source_id,tests/test_parsers_vendor_coverage.py::test_wos_csv_keeps_wos_id_and_pmid
+2 - file export,Embase,RIS,parse_ris,covered,embase,1,yes,doi+pmid+source_id,tests/test_parsers_vendor_coverage.py::test_embase_ris_pmid_and_subtype
+2 - file export,Embase,CSV,parse_csv_export,covered,embase,1,yes,doi+pmid+source_id,tests/test_parsers_vendor_coverage.py::test_embase_csv_keeps_both_identifiers
+2 - file export,Cochrane CENTRAL,RIS,parse_ris,covered,central,1,yes,doi+source_id,tests/test_parsers_vendor_coverage.py::test_central_ris_preserves_the_central_number_and_trial_id
+2 - file export,EBSCOhost - Business Source,RIS,parse_ris,covered,ebsco,1,yes,source_id,tests/test_parsers_vendor_coverage.py::test_ebsco_per_record_database_is_resolved
+2 - file export,EBSCOhost - PsycINFO,RIS,parse_ris,covered,ebsco,1,yes,pmid+source_id,tests/test_parsers_vendor_coverage.py::test_ebsco_psycinfo_pmid_comes_from_c2
+2 - file export,EBSCOhost - CINAHL,RIS,parse_ris,covered,ebsco,1,yes,source_id,tests/test_parsers_vendor_coverage.py::test_ebsco_per_record_database_is_resolved
+2 - file export,EBSCOhost - ERIC,RIS,parse_ris,covered,ebsco,1,yes,source_id,tests/test_parsers_vendor_coverage.py::test_ebsco_per_record_database_is_resolved
+2 - file export,ProQuest (ABI/INFORM),RIS,parse_ris,covered,proquest,1,yes,doi+source_id,tests/test_parsers_vendor_coverage.py::test_proquest_ris_keeps_the_longer_title_and_the_document_id
+2 - file export,ProQuest (ABI/INFORM),.xls that is TSV,parse_csv_export,covered,proquest,1,yes,doi+source_id,tests/test_parsers_vendor_coverage.py::test_proquest_tsv_export_is_read_as_tab_separated
+2 - file export,ProQuest (ABI/INFORM),.xls that is HTML,parse_html_table,covered,proquest,2,yes,doi+source_id,tests/test_parsers_enw_html.py::test_proquest_html_export_field_mapping
+2 - file export,IEEE Xplore,CSV,parse_csv_export,covered,ieee,1,yes,doi+source_id+issn,tests/test_parsers_vendor_coverage.py::test_ieee_csv_arnumber_recovered_from_pdf_link
+2 - file export,IEEE Xplore,BibTeX,parse_bibtex,covered,ieee,1,yes,doi+source_id+issn,tests/test_parsers_vendor_coverage.py::test_bibtex_dialect_autodetected[ieee]
+2 - file export,ACM Digital Library,BibTeX,parse_bibtex,covered,acm,1,yes,doi+source_id,tests/test_parsers_vendor_coverage.py::test_acm_bibtex_conference_venue_and_page_range
+2 - file export,ACM Digital Library,EndNote tagged (.enw),parse_enw,covered,endnote-tagged,2,yes,doi+pmid+source_id+issn,tests/test_parsers_enw_html.py::test_enw_acm_conference_paper_field_mapping
+2 - file export,Scopus,RIS,parse_ris,covered,scopus,1,yes,doi,tests/test_parsers_vendor_coverage.py::test_ris_dialect_autodetected
+2 - file export,Scopus,CSV,parse_csv_export,covered,scopus,1,yes,doi+source_id+scopus_id,tests/test_parsers_vendor_coverage.py::test_scopus_csv_identifiers_and_open_access
+2 - file export,Scopus,BibTeX,parse_bibtex,covered,scopus,1,yes,doi+source_id,tests/test_parsers_vendor_coverage.py::test_scopus_bibtex_cited_by_from_note
+2 - file export,Dimensions,CSV,parse_csv_export,covered,dimensions,1,yes,doi+pmid+source_id,tests/test_parsers_vendor_coverage.py::test_dimensions_csv_publication_id_and_pmid
+2 - file export,PubMed,MEDLINE / .nbib,parse_nbib,covered,medline,2,yes,doi+pmid+source_id+issn,tests/test_parsers_robustness.py::test_wellformed_sample_parses_and_balances[nbib]
+2 - file export,EndNote / WoS desktop,EndNote XML,parse_endnote_xml,covered,n/a,2,yes,doi+source_id,tests/test_parsers_robustness.py::test_wellformed_sample_parses_and_balances[endnote_xml]

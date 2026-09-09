@@ -1,0 +1,5 @@
+domain,TP,FP_as_measured,version_variants,book_editions,corrections,true_overmerges,FP_excl_versions,precision_as_measured,precision_excl_versions,f1_excl_versions
+biomedicine,653,52,42,10,0,0,10,0.9262,0.9849,0.9857
+computer science,509,62,60,0,2,0,2,0.8914,0.9961,0.9951
+economics,62,94,78,16,0,0,16,0.3974,0.7949,0.8552
+management,107,18,11,4,2,1,7,0.856,0.9386,0.9304

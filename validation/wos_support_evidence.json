@@ -1,0 +1,26 @@
+[
+ {
+  "api": "Expanded",
+  "endpoint": "/api/wos",
+  "utc": "2026-08-25T00:35:27Z",
+  "status": 401,
+  "request_id": "fb8b36f4-f25d-431d-b877-8bab5d426a54",
+  "message": "Server.authorization, Not authorized for product: WWS"
+ },
+ {
+  "api": "Lite",
+  "endpoint": "/api/woslite",
+  "utc": "2026-08-25T00:35:27Z",
+  "status": 403,
+  "request_id": "e053f523c089eb58a98e75481cc45f75",
+  "message": "You cannot consume this service"
+ },
+ {
+  "api": "Starter",
+  "endpoint": "/apis/wos-starter/v1/documents",
+  "utc": "2026-08-25T00:35:28Z",
+  "status": 403,
+  "request_id": "60004520c296826ba5d406752766a702",
+  "message": "You cannot consume this service"
+ }
+]

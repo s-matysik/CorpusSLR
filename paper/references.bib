@@ -1,0 +1,311 @@
+% Bibliography for the CorpusSLR SoftwareX submission.
+%
+% Every entry below is one of the records in
+% validation/references_verified.json, whose metadata was confirmed against
+% Crossref or the publisher record. No entry is added that is not in that
+% file, so that nothing in the reference list rests on recollection.
+%
+% Two of the DOIs added in 1.0.0 had to be corrected against Crossref's
+% title search: the identifier recalled for Rathbone et al. (2015) resolved
+% to an erratum for a different paper, and the one recalled for Ouzzani et
+% al. (2016) returned HTTP 404. Both are recorded here as resolved, which is
+% the reason this file exists.
+%
+% Page ranges are written as 181\pageto 217 rather than 181-217 on purpose.
+% BibTeX's n.dashify function in elsarticle-num.bst rewrites ANY literal hyphen
+% in the pages field into an en dash "--" in the generated .bbl, and brace or
+% \mbox protection does not stop it (all four variants were tested). Since the
+% project forbids en dashes in the typeset output, the hyphen is emitted by the
+% \pageto macro defined in the .tex preamble: the .bib then contains no hyphen
+% for n.dashify to find, and the PDF shows 181-217.
+%
+% Note on Singh et al. (2021): only the containment direction reported in
+% their abstract is cited in the article (99.11% of WoS journals are also in
+% Scopus). The reverse percentage that appeared in an early project
+% specification is not in the paper and is not cited; see the
+% "rejected_claims" field of the verification file.
+
+@article{bramer2017,
+  author  = {Bramer, Wichor M. and Rethlefsen, Melissa L. and
+             Kleijnen, Jos and Franco, Oscar H.},
+  title   = {Optimal database combinations for literature searches in
+             systematic reviews: a prospective exploratory study},
+  journal = {Systematic Reviews},
+  volume  = {6},
+  number  = {1},
+  pages   = {245},
+  year    = {2017},
+  doi     = {10.1186/s13643-017-0644-y},
+}
+
+@article{gusenbauer2020,
+  author  = {Gusenbauer, Michael and Haddaway, Neal R.},
+  title   = {Which academic search systems are suitable for systematic
+             reviews or meta-analyses? Evaluating retrieval qualities of
+             Google Scholar, PubMed, and 26 other resources},
+  journal = {Research Synthesis Methods},
+  volume  = {11},
+  number  = {2},
+  pages   = {181\pageto 217},
+  year    = {2020},
+  doi     = {10.1002/jrsm.1378},
+}
+
+@article{singh2021,
+  author  = {Singh, Vivek Kumar and Singh, Prashasti and
+             Karmakar, Mousumi and Leta, Jacqueline and Mayr, Philipp},
+  title   = {The journal coverage of Web of Science, Scopus and Dimensions:
+             a comparative analysis},
+  journal = {Scientometrics},
+  volume  = {126},
+  number  = {6},
+  pages   = {5113\pageto 5142},
+  year    = {2021},
+  doi     = {10.1007/s11192-021-03948-5},
+}
+
+@article{prisma2020,
+  author  = {Page, Matthew J. and McKenzie, Joanne E. and
+             Bossuyt, Patrick M. and Boutron, Isabelle and
+             Hoffmann, Tammy C. and Mulrow, Cynthia D. and others},
+  title   = {The {PRISMA} 2020 statement: an updated guideline for reporting
+             systematic reviews},
+  journal = {BMJ},
+  volume  = {372},
+  pages   = {n71},
+  year    = {2021},
+  doi     = {10.1136/bmj.n71},
+}
+
+@article{prisma_s2021,
+  author  = {Rethlefsen, Melissa L. and Kirtley, Shona and
+             Waffenschmidt, Siw and Ayala, Ana Patricia and
+             Moher, David and Page, Matthew J. and Koffel, Jonathan B.},
+  title   = {{PRISMA-S}: an extension to the {PRISMA} statement for
+             reporting literature searches in systematic reviews},
+  journal = {Systematic Reviews},
+  volume  = {10},
+  number  = {1},
+  pages   = {39},
+  year    = {2021},
+  doi     = {10.1186/s13643-020-01542-z},
+}
+
+@article{hair2023,
+  author  = {Hair, Kaitlyn and Bahor, Zsanett and Macleod, Malcolm and
+             Liao, Jing and Sena, Emily S.},
+  title   = {The Automated Systematic Search Deduplicator ({ASySD}): a rapid,
+             open-source, interoperable tool to remove duplicate citations in
+             biomedical systematic reviews},
+  journal = {BMC Biology},
+  volume  = {21},
+  number  = {1},
+  pages   = {189},
+  year    = {2023},
+  doi     = {10.1186/s12915-023-01686-z},
+}
+
+@article{rathbone2015,
+  author  = {Rathbone, John and
+             Carter, Matt and
+             Hoffmann, Tammy and
+             Glasziou, Paul},
+  title   = {Better duplicate detection for systematic reviewers: evaluation of Systematic Review Assistant-Deduplication Module},
+  journal = {Systematic Reviews},
+  volume  = {4},
+  number  = {1},
+  pages   = {6},
+  year    = {2015},
+  doi     = {10.1186/2046-4053-4-6},
+}
+
+@article{bramer2016,
+  author  = {Bramer, Wichor M. and
+             Giustini, Dean and
+             de Jonge, Gerdien B. and
+             Holland, Leslie and
+             Bekhuis, Tanja},
+  title   = {De-duplication of database search results for systematic reviews in {EndNote}},
+  journal = {Journal of the Medical Library Association : JMLA},
+  volume  = {104},
+  number  = {3},
+  pages   = {240\pageto 243},
+  year    = {2016},
+  doi     = {10.3163/1536-5050.104.3.014},
+}
+
+@article{forbes2024,
+  author  = {Forbes, Connor and
+             Greenwood, Hannah and
+             Carter, Matt and
+             Clark, Justin},
+  title   = {Automation of duplicate record detection for systematic reviews: {Deduplicator}},
+  journal = {Systematic Reviews},
+  volume  = {13},
+  number  = {1},
+  pages   = {206},
+  year    = {2024},
+  doi     = {10.1186/s13643-024-02619-9},
+}
+
+@article{ouzzani2016,
+  author  = {Ouzzani, Mourad and
+             Hammady, Hossam and
+             Fedorowicz, Zbys and
+             Elmagarmid, Ahmed},
+  title   = {{Rayyan} - a web and mobile app for systematic reviews},
+  journal = {Systematic Reviews},
+  volume  = {5},
+  number  = {1},
+  pages   = {210},
+  year    = {2016},
+  doi     = {10.1186/s13643-016-0384-4},
+}
+
+@article{westgate2019,
+  author  = {Westgate, Martin J.},
+  title   = {{revtools}: An {R} package to support article screening for evidence synthesis},
+  journal = {Research Synthesis Methods},
+  volume  = {10},
+  number  = {4},
+  pages   = {606\pageto 614},
+  year    = {2019},
+  doi     = {10.1002/jrsm.1374},
+}
+
+@article{vanaltena2019,
+  author  = {van Altena, A.J. and
+             Spijker, R. and
+             Olabarriaga, S.D.},
+  title   = {Usage of automation tools in systematic reviews},
+  journal = {Research Synthesis Methods},
+  volume  = {10},
+  number  = {1},
+  pages   = {72\pageto 82},
+  year    = {2019},
+  doi     = {10.1002/jrsm.1335},
+}
+
+@article{kitchenham2009,
+  author  = {Kitchenham, Barbara and
+             Pearl Brereton, O. and
+             Budgen, David and
+             Turner, Mark and
+             Bailey, John and
+             Linkman, Stephen},
+  title   = {Systematic literature reviews in software engineering - A systematic literature review},
+  journal = {Information and Software Technology},
+  volume  = {51},
+  number  = {1},
+  pages   = {7\pageto 15},
+  year    = {2009},
+  doi     = {10.1016/j.infsof.2008.09.009},
+}
+
+@inproceedings{wohlin2014,
+  author    = {Wohlin, Claes},
+  title     = {Guidelines for snowballing in systematic literature studies and a replication in software engineering},
+  booktitle = {Proceedings of the 18th International Conference on Evaluation and Assessment in Software Engineering},
+  pages     = {1\pageto 10},
+  year      = {2014},
+  doi       = {10.1145/2601248.2601268},
+}
+
+@article{visser2021,
+  author  = {Visser, Martijn and
+             van Eck, Nees Jan and
+             Waltman, Ludo},
+  title   = {Large-scale comparison of bibliographic data sources: {Scopus}, Web of
+                    Science, {Dimensions}, {Crossref}, and {Microsoft Academic}},
+  journal = {Quantitative Science Studies},
+  volume  = {2},
+  number  = {1},
+  pages   = {20\pageto 41},
+  year    = {2021},
+  doi     = {10.1162/qss_a_00112},
+}
+
+@article{wilkinson2016,
+  author  = {Wilkinson, Mark D. and
+             Dumontier, Michel and
+             Aalbersberg, IJsbrand Jan and
+             Appleton, Gabrielle and
+             Axton, Myles and
+             Baak, Arie and
+             others},
+  title   = {The {FAIR} Guiding Principles for scientific data management and stewardship},
+  journal = {Scientific Data},
+  volume  = {3},
+  number  = {1},
+  pages   = {160018},
+  year    = {2016},
+  doi     = {10.1038/sdata.2016.18},
+}
+
+@article{embedslr2025,
+  author  = {Matysik, Sebastian and
+             Wiśniewska, Joanna and
+             Frankowski, Paweł Karol},
+  title   = {{EmbedSLR}: an open-source python framework for efficient embedding-based screening and bibliometric validation in systematic literature review},
+  journal = {SoftwareX},
+  volume  = {32},
+  pages   = {102416},
+  year    = {2025},
+  doi     = {10.1016/j.softx.2025.102416},
+}
+
+@article{embedslr2026,
+  author  = {Matysik, Sebastian and
+             Wiśniewska, Joanna and
+             Frankowski, Paweł Karol},
+  title   = {{Version} 2.0 - {EmbedSLR}: An open-source python framework for efficient embedding-based screening and bibliometric validation in systematic literature review},
+  journal = {SoftwareX},
+  volume  = {34},
+  pages   = {102563},
+  year    = {2026},
+  doi     = {10.1016/j.softx.2026.102563},
+}
+
+@article{reviq2026,
+  author  = {Haindl, Philipp},
+  title   = {{ReviQ}: A systematic literature review workbench},
+  journal = {SoftwareX},
+  volume  = {35},
+  pages   = {102814},
+  year    = {2026},
+  doi     = {10.1016/j.softx.2026.102814},
+}
+
+@article{buhos2018,
+  author  = {Bustos Navarrete, Claudio and
+             Morales Malverde, María Gabriela and
+             Salcedo Lagos, Pedro and
+             Díaz Mujica, Alejandro},
+  title   = {{Buhos}: A web-based systematic literature review management software},
+  journal = {SoftwareX},
+  volume  = {7},
+  pages   = {360\pageto 372},
+  year    = {2018},
+  doi     = {10.1016/j.softx.2018.10.004},
+}
+
+@article{techminer2023,
+  author  = {Velasquez, Juan D.},
+  title   = {{TechMiner}: Analysis of bibliographic datasets using {Python}},
+  journal = {SoftwareX},
+  volume  = {23},
+  pages   = {101457},
+  year    = {2023},
+  doi     = {10.1016/j.softx.2023.101457},
+}
+
+@article{blockingpy2026,
+  author  = {Strojny, Tymoteusz and
+             Beręsewicz, Maciej},
+  title   = {{BlockingPy}: approximate nearest neighbours for blocking of records for entity resolution},
+  journal = {SoftwareX},
+  volume  = {34},
+  pages   = {102583},
+  year    = {2026},
+  doi     = {10.1016/j.softx.2026.102583},
+}

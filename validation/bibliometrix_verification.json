@@ -1,0 +1,43 @@
+{
+ "verified_on": "2026-09-08",
+ "method": "executed, not asserted: a real 597-record Scopus export (46 columns, from the EmbedSLR example corpus) was parsed by parse_csv_export, written back by to_scopus_csv, re-parsed, and the written file imported by bibliometrix::convert2df",
+ "source_export": {
+  "records": 597,
+  "columns": 46,
+  "dialect_detected": "scopus"
+ },
+ "round_trip": {
+  "parsed": 597,
+  "re_parsed": 597,
+  "field_comparisons": 7761,
+  "mismatches": 0,
+  "fields_compared": [
+   "title",
+   "doi",
+   "year",
+   "journal",
+   "volume",
+   "issue",
+   "pages",
+   "abstract",
+   "authors",
+   "keywords",
+   "affiliations",
+   "doc_type",
+   "issn"
+  ]
+ },
+ "bibliometrix": {
+  "r_version": "R 4.5.3",
+  "rows_imported": 597,
+  "rows_dropped": 0,
+  "fields_generated": 57,
+  "documents": 597,
+  "authors": 1592,
+  "sources": 280,
+  "au_un_non_empty": "592/597",
+  "institutional_network": "986 x 986 institutions"
+ },
+ "defect_found_and_fixed": "parse_csv_export mapped no affiliation column in any dialect, so 595 of 597 records lost their addresses on import from file. bibliometrix derives C1 -> AU_UN from that column, so the institutional collaboration network returned 'Matrix is empty!!' (0 x 0). The Record.affiliations field existed but only the API clients populated it. After adding the column to all six dialect maps and splitting on '; ': 592/597 carry affiliations and the network resolves to 986 institutions.",
+ "supersedes": "an earlier note claimed a 14,302-record run with 31,984 authors; no such export or metrics file exists on this machine and the figure was withdrawn as unsupported"
+}

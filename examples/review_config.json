@@ -1,0 +1,77 @@
+{
+  "review": {
+    "title": "Artificial intelligence adoption in small and medium-sized enterprises",
+    "protocol": "https://doi.org/10.17605/OSF.IO/EXAMPLE",
+    "registration": "PROSPERO CRD42026000000",
+    "notes": "Run with: corpusslr run -c review_config.json"
+  },
+
+  "query": {
+    "blocks": [
+      ["artificial intelligence", "machine learning", "deep learning"],
+      ["adoption", "acceptance", "implementation", "diffusion"],
+      ["SME", "small and medium-sized enterprise", "small business", "small firm"]
+    ],
+    "years": [2015, 2026],
+    "doc_types": ["article", "review"],
+    "languages": ["en"],
+    "title_only": false
+  },
+
+  "databases": [
+    {"name": "scopus", "max_results": 2000, "view": "STANDARD"},
+    {"name": "openalex", "max_results": 2000},
+    {"name": "pubmed", "max_results": 1000},
+    {"name": "crossref", "max_results": 500}
+  ],
+
+  "files": [
+    {
+      "path": "exports/wos_export.txt",
+      "database": "Web of Science Core Collection",
+      "platform": "Clarivate",
+      "interface": "web interface export",
+      "query": "TS=((\"artificial intelligence\" OR \"machine learning\") AND (adoption OR acceptance) AND (SME OR \"small business\"))",
+      "filters": "PY=2015-2026; DT=Article OR Review; LA=English",
+      "date_run": "2026-08-10"
+    },
+    {
+      "path": "exports/embase.ris",
+      "database": "Embase",
+      "platform": "Elsevier",
+      "interface": "web interface export",
+      "date_run": "2026-08-10"
+    }
+  ],
+
+  "enrich": {"recover_abstracts": true, "min_len": 250},
+
+  "dedup": {
+    "fuzzy_threshold": 0.93,
+    "year_tolerance": 1,
+    "max_block": 400,
+    "separate_conference": true,
+    "allow_copublication": true
+  },
+
+  "screening": {
+    "records_excluded": 812,
+    "reports_not_retrieved": 6,
+    "fulltext_exclusions": {"wrong population": 41, "not empirical": 17},
+    "studies_included": 64
+  },
+
+  "harvest": {
+    "archive": "evidence/archive",
+    "notes": "Raw API responses deposited as the evidence base of the review."
+  },
+
+  "output": {
+    "dir": "review_output",
+    "prefix": "",
+    "exports": ["csv", "screening", "ris"],
+    "appendix": "md",
+    "svg": true,
+    "quality_csv": true
+  }
+}

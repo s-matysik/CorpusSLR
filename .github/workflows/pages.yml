@@ -1,0 +1,144 @@
+name: pages
+
+# Publishes the documentation site to GitHub Pages.
+#
+# The site is generated from the repository markdown by tools/build_site.py
+# using the standard library only, so this job installs nothing to build it.
+# The test suite that guards the generator is run first: tests/test_site.py
+# checks that every internal link resolves, that no page references an
+# external domain and that no long dash survives into the output. Publishing
+# a site that fails those checks would defeat the point of having them.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Least privilege: read the checkout, write the Pages artifact, and mint the
+# OIDC token the deployment step exchanges. Nothing here needs a secret.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deployment at a time, and a queued run is not cancelled: cancelling a
+# deployment mid-flight can leave the published site in a half-updated state.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: build the documentation site
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install pytest only
+        # The generator needs nothing beyond the standard library. pytest is
+        # installed to run the guard suite, and the package is installed
+        # because tests/test_site.py reads corpusslr.__version__ to check that
+        # the version shown on every page is the packaged one.
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+
+      - name: Run the site guard suite with network access blocked
+        # -p tools.no_network replaces the standard-library connect primitives
+        # with raising stubs. The generator must not reach the network, and
+        # this is the executable form of that claim.
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+        run: >-
+          python -m pytest tests/test_site.py
+          -p no:cacheprovider
+          -p tools.no_network
+          -v
+
+      - name: Build the site
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+        run: python tools/build_site.py --clean --out site
+
+      - name: Report what was built
+        # A short inventory in the log, so a failed deployment can be told
+        # apart from a build that produced nothing.
+        run: |
+          ls -la site
+          echo "pages: $(ls site/*.html | wc -l)"
+          test -f site/.nojekyll || (echo "missing .nojekyll" && exit 1)
+          test -f site/index.html || (echo "missing index.html" && exit 1)
+
+      - name: Verify the built site references no external domain
+        # Second, independent check on the artifact itself rather than on the
+        # generator. grep exits 0 when it finds a match, so a match here is
+        # the failure: the site has to render with no network at all.
+        run: |
+          if grep -R -n -E '(src|href)="(https?:)?//' site --include='*.html'; then
+            echo "the built site references an external domain"
+            exit 1
+          fi
+          if grep -R -n -i '<script' site --include='*.html'; then
+            echo "the built site contains a script element"
+            exit 1
+          fi
+          echo "no external references, no scripts"
+
+      - name: Verify no long dash survived into the built site
+        # The typography requirement, checked on the published bytes rather
+        # than on the generator that produced them.
+        #
+        # Written in Python rather than as `grep -P`, deliberately. A PCRE
+        # grep is a GNU extension: on a runner whose grep lacks it, the
+        # command exits 2, the shell `if` reads that as "no match" and the
+        # gate passes without having checked anything. A check that fails open
+        # is worse than no check, because it reports success. The interpreter
+        # is already installed and behaves the same everywhere.
+        run: |
+          python - <<'PY'
+          import pathlib
+          import sys
+
+          FORMS = [("em dash", "\u2014"), ("en dash", "\u2013"),
+                   ("spaced triple hyphen", " " + "-" * 3 + " "),
+                   ("spaced double hyphen", " " + "-" * 2 + " ")]
+          hits = []
+          for path in sorted(pathlib.Path("site").rglob("*.html")):
+              for number, line in enumerate(
+                      path.read_text(encoding="utf-8").split("\n"), start=1):
+                  for name, needle in FORMS:
+                      if needle in line:
+                          hits.append("%s:%d: %s in %r"
+                                      % (path, number, name, line.strip()[:120]))
+          if hits:
+              print("a long dash reached the built site:")
+              for hit in hits[:20]:
+                  print("  " + hit)
+              sys.exit(1)
+          print("no long dashes in the built site")
+          PY
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload the site as a Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    name: deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

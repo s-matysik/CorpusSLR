@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="910" height="370" font-family="Helvetica, Arial, sans-serif" font-size="12">
+<defs><marker id="arr" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 z" fill="#333"/></marker></defs>
+<rect x="0" y="0" width="910" height="370" fill="white"/>
+<text x="90" y="30" font-size="15" font-weight="bold">Identification of studies via databases and registers (PRISMA 2020)</text>
+<rect x="20" y="60" width="34" height="46" fill="#e8edf5" stroke="#94a3b8"/>
+<text x="37" y="83.0" text-anchor="middle" transform="rotate(-90 37 83.0)" font-weight="bold">Identification</text>
+<rect x="20" y="132" width="34" height="142" fill="#e8edf5" stroke="#94a3b8"/>
+<text x="37" y="203.0" text-anchor="middle" transform="rotate(-90 37 203.0)" font-weight="bold">Screening</text>
+<rect x="20" y="300" width="34" height="30" fill="#e8edf5" stroke="#94a3b8"/>
+<text x="37" y="315.0" text-anchor="middle" transform="rotate(-90 37 315.0)" font-weight="bold">Included</text>
+<rect x="90" y="60" width="330" height="46" fill="#ffffff" stroke="#333" rx="3"/>
+<text x="100" y="78">Records identified from databases (n = 2):</text>
+<text x="100" y="94">Embase (n = 1); IEEE Xplore (n = 1)</text>
+<rect x="520" y="60" width="360" height="78" fill="#ffffff" stroke="#333" rx="3"/>
+<text x="530" y="78">Records removed before screening:</text>
+<text x="530" y="94">Duplicate records removed (n = 0)</text>
+<text x="530" y="110">Records marked ineligible by automation tools (n = 0)</text>
+<text x="530" y="126">Records removed for other reasons (n = 0)</text>
+<rect x="90" y="132" width="330" height="30" fill="#ffffff" stroke="#333" rx="3"/>
+<text x="100" y="150">Records screened (n = 2)</text>
+<rect x="520" y="132" width="360" height="30" fill="#ffffff" stroke="#333" rx="3"/>
+<text x="530" y="150">Records excluded (n = 0)</text>
+<rect x="90" y="188" width="330" height="30" fill="#ffffff" stroke="#333" rx="3"/>
+<text x="100" y="206">Reports sought for retrieval (n = 2)</text>
+<rect x="520" y="188" width="360" height="30" fill="#ffffff" stroke="#333" rx="3"/>
+<text x="530" y="206">Reports not retrieved (n = 0)</text>
+<rect x="90" y="244" width="330" height="30" fill="#ffffff" stroke="#333" rx="3"/>
+<text x="100" y="262">Reports assessed for eligibility (n = 2)</text>
+<rect x="520" y="244" width="360" height="30" fill="#ffffff" stroke="#333" rx="3"/>
+<text x="530" y="262">Reports excluded (n = 0)</text>
+<rect x="90" y="300" width="330" height="30" fill="#ffffff" stroke="#333" rx="3"/>
+<text x="100" y="318">Studies included in review (n = 0)</text>
+<line x1="255.0" y1="106" x2="255.0" y2="132" stroke="#333" marker-end="url(#arr)"/>
+<line x1="255.0" y1="162" x2="255.0" y2="188" stroke="#333" marker-end="url(#arr)"/>
+<line x1="255.0" y1="218" x2="255.0" y2="244" stroke="#333" marker-end="url(#arr)"/>
+<line x1="255.0" y1="274" x2="255.0" y2="300" stroke="#333" marker-end="url(#arr)"/>
+<line x1="420" y1="84.0" x2="520" y2="84.0" stroke="#333" marker-end="url(#arr)"/>
+<line x1="420" y1="151.0" x2="520" y2="151.0" stroke="#333" marker-end="url(#arr)"/>
+<line x1="420" y1="207.0" x2="520" y2="207.0" stroke="#333" marker-end="url(#arr)"/>
+<line x1="420" y1="263.0" x2="520" y2="263.0" stroke="#333" marker-end="url(#arr)"/>
+</svg>
