@@ -1,0 +1,20 @@
+{
+  "verified_live": "2026-08-16, Scopus Search API with institutional token",
+  "scopus": {
+    "COMPLETE view": "17 authors parsed on a sample record (previously 1), 4 author keywords, 1694-char abstract",
+    "STANDARD view": "page_size=200 (was hard-coded 25); event notes warn that the author list is incomplete",
+    "cursor paging": "450 records over 5 pages, all unique ids",
+    "offset paging": "300 records, all unique; start+count<=5000 respected (measured: 4800+200 OK, 4900+200 -> HTTP 400)",
+    "page-size limits": "STANDARD 200 OK / 201 -> HTTP 400; COMPLETE 25 OK / 26 -> HTTP 400",
+    "401 handling": "message names both causes (bad key vs key outside the institution IP range) and points at insttoken"
+  },
+  "wos": "WosStarterSource written against the documented Starter API and tested offline only - no Clarivate key available",
+  "dedup_gold": {
+    "TP": 1254,
+    "FP": 2,
+    "FN": 7,
+    "precision": 0.9984,
+    "recall": 0.9944,
+    "f1": 0.9964
+  }
+}

@@ -5,8 +5,8 @@ without network access. Every CSV named here is included with this submission.
 
 ## S1. Test suite
 
-1354 test functions across 42 files; pytest collects **2114**
-cases on Python 3.13 including parametrised variants, and **2095 + 4 skipped**
+1357 test functions across 42 files; pytest collects **2117**
+cases on Python 3.13 including parametrised variants, and **2097 + 4 skipped**
 on Python 3.9 (the skips are optional libraries absent from that environment,
 not a behaviour difference). Statement coverage 98 %. The suite runs with the
 socket layer stubbed out (`pytest -p tools.no_network`), so no test can reach

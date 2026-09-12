@@ -1,0 +1,74 @@
+name: quality
+
+# Static analysis is kept in a separate workflow from the test matrix so that a
+# lint regression is legible at a glance and never masks, or is masked by, a
+# behavioural failure. Both tools are configured in pyproject.toml, so a
+# contributor's local run and this job apply the same rules.
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: quality-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ruff:
+    name: ruff (lint)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install ruff
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install "ruff>=0.6"
+
+      - name: Lint package, tests, examples and tooling
+        # Enforcing (not advisory): the selected rule set was brought to zero
+        # findings before this workflow was added, so any hit is a regression
+        # introduced by the commit under test.
+        run: python -m ruff check --no-cache .
+
+      - name: Report formatting drift without failing
+        # Formatting is not enforced. The package predates ruff-format and
+        # reflowing 8 700 lines would bury behavioural changes in review noise.
+        # The diff is reported so the decision stays visible.
+        continue-on-error: true
+        run: python -m ruff format --check --diff .
+
+  mypy:
+    name: mypy (type check)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install mypy and typed dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install "mypy>=1.11" types-requests
+          python -m pip install -e "."
+
+      - name: Type-check the package
+        # Rigour level: mypy's default rules plus check-untyped-defs, with
+        # missing third-party stubs ignored. Chosen because it was reachable at
+        # zero errors without adding annotations to function signatures, so the
+        # gate rejects genuine type contradictions rather than absent
+        # annotations. See CONTRIBUTING.md for the rationale.
+        run: python -m mypy corpusslr

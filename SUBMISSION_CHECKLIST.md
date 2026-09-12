@@ -1,13 +1,13 @@
 # SoftwareX submission checklist -- CorpusSLR 1.0.0
 
-**19 of 21 items verified mechanically; 2 open and stated as such.** Every "done" carries the command output that establishes it.
+**20 of 21 items verified mechanically; 1 open and stated as such.** Every "done" carries the command output that establishes it.
 
 Regenerate with `python validation/submission_checklist.py`.
 
 ## Verified
 
 - [x] **Test suite passes**
-      2114 passed in 15.51s
+      2117 passed in 19.08s
 - [x] **Coverage measured and above the CI floor**
       TOTAL                                   7006    159    98%
 - [x] **Offline execution enforced, not asserted**
@@ -15,7 +15,7 @@ Regenerate with `python validation/submission_checklist.py`.
 - [x] **Static analysis clean**
       ruff: All checks passed! | mypy: Success: no issues found in 40 source files
 - [x] **Metadata agree across all five files**
-      15 passed in 0.15s
+      15 passed in 0.17s
 - [x] **Every figure in the documentation follows from a measurement**
       all stated figures agree with their measurements
 - [x] **Coverage against the project specification measured**
@@ -42,13 +42,13 @@ Regenerate with `python validation/submission_checklist.py`.
       LICENSE
 - [x] **Continuous integration configured on a Python matrix**
       tests.yml (matrix + build + sdist run + metadata) and quality.yml
+- [x] **CI executed on GitHub**
+      all workflows green on s-matysik/CorpusSLR: pages success, pages build and deployment success, quality success, tests success
 - [x] **Web of Science client exercised against the live API**
       WosExpandedSource run against https://api.clarivate.com/api/wos with an entitled institutional key: 1431 hits for the test query, 100/100 records carrying an abstract, 26 DOI overlaps with PubMed. See validation/wos_live_verification.json and validation/live_wos_prisma_s.md.
 
 ## Open -- required before or at submission
 
-- [ ] **CI executed on GitHub**
-      cannot be run from a sandbox; one push confirms runner behaviour, action resolution and matrix expansion
 - [ ] **Zenodo DOI minted**
       .zenodo.json prepares the deposit; the version DOI exists only after archiving, and CITATION.cff gains its doi: field then
 

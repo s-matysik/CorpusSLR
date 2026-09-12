@@ -1,0 +1,218 @@
+{
+ "bramer2017": {
+  "doi": "10.1186/s13643-017-0644-y",
+  "citation": "Bramer WM, Rethlefsen ML, Kleijnen J, Franco OH. Systematic Reviews 6:245 (2017)",
+  "claims": [
+   "the combination Embase + MEDLINE + Web of Science Core Collection + Google Scholar achieved an overall recall of 98.3% and 100% recall in 72% of the reviews",
+   "16% of included references (291 of 1746) were found in a single database only; Embase produced the most unique references (n=132)",
+   "an estimated 60% of published systematic reviews do not retrieve 95% of available relevant references",
+   "58 published systematic reviews analysed, 1746 relevant references from database searches"
+  ],
+  "source_of_verification": "publisher abstract retrieved 2026-08-16"
+ },
+ "gusenbauer2020": {
+  "doi": "10.1002/jrsm.1378",
+  "citation": "Gusenbauer M, Haddaway NR. Research Synthesis Methods 11(2):181-217 (2020)",
+  "claims": [
+   "28 widely used academic search systems were investigated and compared for systematic search qualities"
+  ],
+  "note": "the 14-principal-systems split must be quoted from the paper body, not the abstract; cite only the 28-system figure unless the body is read",
+  "source_of_verification": "Crossref abstract retrieved 2026-08-16"
+ },
+ "singh2021": {
+  "doi": "10.1007/s11192-021-03948-5",
+  "citation": "Singh VK, Singh P, Karmakar M, Leta J, Mayr P. Scientometrics 126:5113-5142 (2021)",
+  "claims": [
+   "99.11% of journals indexed in Web of Science are also indexed in Scopus",
+   "96.61% of WoS journals are also in Dimensions; 96.42% of Scopus journals are in Dimensions",
+   "Dimensions indexes 82.22% more journals than WoS and 48.17% more than Scopus",
+   "Web of Science is the most selective and Dimensions the most exhaustive of the three"
+  ],
+  "note": "99.11% verified 2026-09-08 from the article's own abstract: 'About 99.11% and 96.61% of the journals indexed in Web of Science are also indexed in Scopus and Dimensions, respectively.' The 34% figure remains unverified and is cited nowhere.",
+  "source_of_verification": "publisher abstract via Semantic Scholar 2026-08-16; reverse direction derived arithmetically from the abstract's stated size ratios",
+  "rejected_claims": [
+   "'only ~34% of Scopus journals are indexed in WoS' - this appears in the project specification but is NOT in Singh et al. Deriving it from their own published ratios gives ~81% (Scopus is ~1.23x the size of WoS and contains 99.11% of it), so the figure is wrong by a wide margin and must not be cited. The asymmetry is real but far smaller than the specification assumed; cite the direction (WoS is nearly a subset of Scopus, not vice versa) rather than a reverse percentage."
+  ],
+  "verified_from": "article abstract, doi:10.1007/s11192-021-03948-5"
+ },
+ "prisma_s2021": {
+  "doi": "10.1186/s13643-020-01542-z",
+  "citation": "Rethlefsen ML, Kirtley S, Waffenschmidt S, et al. Systematic Reviews 10:39 (2021)",
+  "claims": [
+   "PRISMA-S is a 16-item checklist extension for reporting literature searches"
+  ],
+  "note": "verify the item count against the checklist before citing it",
+  "source_of_verification": "Crossref metadata retrieved 2026-08-16"
+ },
+ "hair2023": {
+  "doi": "10.1186/s12915-023-01686-z",
+  "citation": "Hair K, Bahor Z, Macleod M, Liao J, Sena ES. BMC Biology 21:189 (2023)",
+  "claims": [
+   "ASySD on the Diabetes gold standard: TP 1259, FP 0, FN 2, precision 1.000, F1 0.999",
+   "EndNote on the same set: TP 1218, FP 0, FN 43, F1 0.983",
+   "SRA-DM: TP 1147, FP 70, FN 114, F1 0.926",
+   "human reviewers: TP 893, FP 3, FN 368, F1 0.828"
+  ],
+  "source_of_verification": "paper tables extracted from Europe PMC full text; our own recomputation of the human row (F1 0.826 vs 0.828) confirms the metric implementation"
+ },
+ "prisma2020": {
+  "doi": "10.1136/bmj.n71",
+  "citation": "Page MJ, McKenzie JE, Bossuyt PM, et al. BMJ 372:n71 (2021)",
+  "claims": [
+   "PRISMA 2020 statement: updated reporting guideline for systematic reviews"
+  ],
+  "source_of_verification": "Crossref metadata retrieved 2026-08-16"
+ },
+ "rathbone2015": {
+  "doi": "10.1186/2046-4053-4-6",
+  "citation": "Rathbone J, Carter M, Hoffmann T, Glasziou P. Systematic Reviews 4:6 (2015)",
+  "claims": [
+   "the Systematic Review Assistant-Deduplication Module (SRA-DM) is the tool whose published confusion matrix appears in the comparison table; only its identity and provenance are cited here, the performance figures come from Hair et al. (2023)"
+  ],
+  "verified_on": "2026-09-09",
+  "verified_from": "Crossref work record, api.crossref.org/works/10.1186/2046-4053-4-6",
+  "note": "the DOI first recalled for this entry was wrong (it resolved to an erratum for a different paper); the correct one was found through Crossref's bibliographic title search and is recorded above"
+ },
+ "bramer2016": {
+  "doi": "10.3163/1536-5050.104.3.014",
+  "citation": "Bramer WM, Giustini D, de Jonge GB, Holland L, Bekhuis T. Journal of the Medical Library Association : JMLA 104:240-243 (2016)",
+  "claims": [
+   "EndNote can be driven to deduplicate database search results by a documented multi-pass procedure; cited for the identity of the EndNote row in the comparison table"
+  ],
+  "verified_on": "2026-09-09",
+  "verified_from": "Crossref work record, api.crossref.org/works/10.3163/1536-5050.104.3.014"
+ },
+ "forbes2024": {
+  "doi": "10.1186/s13643-024-02619-9",
+  "citation": "Forbes C, Greenwood H, Carter M, Clark J. Systematic Reviews 13:206 (2024)",
+  "claims": [
+   "a 2024 deduplication tool for systematic reviews (Deduplicator); cited as concurrent work, no figures taken from it"
+  ],
+  "verified_on": "2026-09-09",
+  "verified_from": "Crossref work record, api.crossref.org/works/10.1186/s13643-024-02619-9"
+ },
+ "ouzzani2016": {
+  "doi": "10.1186/s13643-016-0384-4",
+  "citation": "Ouzzani M, Hammady H, Fedorowicz Z, Elmagarmid A. Systematic Reviews 5:210 (2016)",
+  "claims": [
+   "Rayyan is a screening application; cited to mark where the screening stage begins, not for any measurement"
+  ],
+  "verified_on": "2026-09-09",
+  "verified_from": "Crossref work record, api.crossref.org/works/10.1186/s13643-016-0384-4",
+  "note": "the DOI first recalled for this entry was wrong (HTTP 404); the correct one was found through Crossref's bibliographic title search and is recorded above"
+ },
+ "westgate2019": {
+  "doi": "10.1002/jrsm.1374",
+  "citation": "Westgate MJ. Research Synthesis Methods 10:606-614 (2019)",
+  "claims": [
+   "revtools is an R package for article screening in evidence synthesis; cited as prior tooling, no figures taken from it"
+  ],
+  "verified_on": "2026-09-09",
+  "verified_from": "Crossref work record, api.crossref.org/works/10.1002/jrsm.1374"
+ },
+ "vanaltena2019": {
+  "doi": "10.1002/jrsm.1335",
+  "citation": "van Altena A, Spijker R, Olabarriaga S. Research Synthesis Methods 10:72-82 (2019)",
+  "claims": [
+   "surveys the usage of automation tools by review teams; cited for the existence and uptake of such tools, no figures quoted"
+  ],
+  "verified_on": "2026-09-09",
+  "verified_from": "Crossref work record, api.crossref.org/works/10.1002/jrsm.1335"
+ },
+ "kitchenham2009": {
+  "doi": "10.1016/j.infsof.2008.09.009",
+  "citation": "Kitchenham B, Pearl Brereton O, Budgen D, Turner M, Bailey J, Linkman S. Information and Software Technology 51:7-15 (2009)",
+  "claims": [
+   "systematic literature reviews are established methodology outside medicine, in software engineering; cited to support the cross-disciplinary framing, no figures quoted"
+  ],
+  "verified_on": "2026-09-09",
+  "verified_from": "Crossref work record, api.crossref.org/works/10.1016/j.infsof.2008.09.009"
+ },
+ "wohlin2014": {
+  "doi": "10.1145/2601248.2601268",
+  "citation": "Wohlin C. Proceedings of the 18th International Conference on Evaluation and Assessment in Software Engineering :1-10 (2014)",
+  "claims": [
+   "snowballing is a recognised complement to database searching; cited in the limitations, no figures quoted"
+  ],
+  "verified_on": "2026-09-09",
+  "verified_from": "Crossref work record, api.crossref.org/works/10.1145/2601248.2601268"
+ },
+ "visser2021": {
+  "doi": "10.1162/qss_a_00112",
+  "citation": "Visser M, van Eck NJ, Waltman L. Quantitative Science Studies 2:20-41 (2021)",
+  "claims": [
+   "compares Scopus, Web of Science, Dimensions, Crossref and Microsoft Academic at scale; cited alongside Singh et al. for the fact that coverage differs between systems, no figures quoted"
+  ],
+  "verified_on": "2026-09-09",
+  "verified_from": "Crossref work record, api.crossref.org/works/10.1162/qss_a_00112"
+ },
+ "wilkinson2016": {
+  "doi": "10.1038/sdata.2016.18",
+  "citation": "Wilkinson MD, Dumontier M, Aalbersberg IJ, Appleton G, Axton M, Baak A, Blomberg N, Boiten J, da Silva Santos LB, Bourne PE, Bouwman J, Brookes AJ, Clark T, Crosas M, Dillo I, Dumon O, Edmunds S, Evelo CT, Finkers R, Gonzalez-Beltran A, Gray AJ, Groth P, Goble C, Grethe JS, Heringa J, ’t Hoen PA, Hooft R, Kuhn T, Kok R, Kok J, Lusher SJ, Martone ME, Mons A, Packer AL, Persson B, Rocca-Serra P, Roos M, van Schaik R, Sansone S, Schultes E, Sengstag T, Slater T, Strawn G, Swertz MA, Thompson M, van der Lei J, van Mulligen E, Velterop J, Waagmeester A, Wittenburg P, Wolstencroft K, Zhao J, Mons B. Scientific Data 3:160018 (2016)",
+  "claims": [
+   "the FAIR guiding principles; cited for the reporting and reproducibility argument, no figures quoted"
+  ],
+  "verified_on": "2026-09-09",
+  "verified_from": "Crossref work record, api.crossref.org/works/10.1038/sdata.2016.18"
+ },
+ "embedslr2025": {
+  "doi": "10.1016/j.softx.2025.102416",
+  "citation": "Matysik S, Wiśniewska J, Frankowski PK. SoftwareX 32:102416 (2025)",
+  "claims": [
+   "the original EmbedSLR release; cited together with the 2.0 update where the downstream screening path is named"
+  ],
+  "verified_on": "2026-09-09",
+  "verified_from": "Crossref work record, api.crossref.org/works/10.1016/j.softx.2025.102416",
+  "journal_check": "ISSN 2352-7110 present on the Crossref record"
+ },
+ "embedslr2026": {
+  "doi": "10.1016/j.softx.2026.102563",
+  "citation": "Matysik S, Wiśniewska J, Frankowski PK. SoftwareX 34:102563 (2026)",
+  "claims": [
+   "EmbedSLR 2.0 reads a Scopus-layout corpus and screens it by sentence embeddings, which is why the Scopus export is this library's canonical output; cited as the reuse path, no figures taken from it. Self-citation: the first author is shared"
+  ],
+  "verified_on": "2026-09-09",
+  "verified_from": "Crossref work record, api.crossref.org/works/10.1016/j.softx.2026.102563",
+  "journal_check": "ISSN 2352-7110 present on the Crossref record"
+ },
+ "reviq2026": {
+  "doi": "10.1016/j.softx.2026.102814",
+  "citation": "Haindl P. SoftwareX 35:102814 (2026)",
+  "claims": [
+   "a systematic-review workbench; cited for the existence of tools that administer protocol and screening around an assembled corpus, no figures quoted"
+  ],
+  "verified_on": "2026-09-09",
+  "verified_from": "Crossref work record, api.crossref.org/works/10.1016/j.softx.2026.102814",
+  "journal_check": "ISSN 2352-7110 present on the Crossref record"
+ },
+ "buhos2018": {
+  "doi": "10.1016/j.softx.2018.10.004",
+  "citation": "Bustos Navarrete C, Morales Malverde MG, Salcedo Lagos P, Díaz Mujica A. SoftwareX 7:360-372 (2018)",
+  "claims": [
+   "web-based systematic-review management software; cited in the same place as ReviQ, no figures quoted"
+  ],
+  "verified_on": "2026-09-09",
+  "verified_from": "Crossref work record, api.crossref.org/works/10.1016/j.softx.2018.10.004",
+  "journal_check": "ISSN 2352-7110 present on the Crossref record"
+ },
+ "techminer2023": {
+  "doi": "10.1016/j.softx.2023.101457",
+  "citation": "Velasquez JD. SoftwareX 23:101457 (2023)",
+  "claims": [
+   "analysis of bibliographic datasets in Python; cited as a consumer of the exported corpus, no figures quoted"
+  ],
+  "verified_on": "2026-09-09",
+  "verified_from": "Crossref work record, api.crossref.org/works/10.1016/j.softx.2023.101457",
+  "journal_check": "ISSN 2352-7110 present on the Crossref record"
+ },
+ "blockingpy2026": {
+  "doi": "10.1016/j.softx.2026.102583",
+  "citation": "Strojny T, Beręsewicz M. SoftwareX 34:102583 (2026)",
+  "claims": [
+   "approximate nearest neighbours for blocking in entity resolution; cited to place this library's blocking stage in the general entity-resolution literature, no figures quoted"
+  ],
+  "verified_on": "2026-09-09",
+  "verified_from": "Crossref work record, api.crossref.org/works/10.1016/j.softx.2026.102583",
+  "journal_check": "ISSN 2352-7110 present on the Crossref record"
+ }
+}

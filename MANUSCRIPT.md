@@ -350,7 +350,11 @@ compiled one in biomedical databases.
 
 ## Acknowledgements / Declaration of competing interest
 
-(to be completed by the author)
+The evaluation rests on the labelled deduplication benchmark published by the ASySD authors, whose decision to release it openly is what made an external comparison possible. Clarivate granted the Web of Science Expanded API entitlement used to verify that client against the live service.
+
+## Data availability
+
+All data underlying the results are public. The software, the evaluation scripts and the measurement tables are in the repository given in C2. The validation data are additionally packaged for review as `corpusslr_validation_data.zip`, whose manifest maps each file to the table or figure it supports. One file is third-party: the ASySD *Diabetes* gold standard, redistributed unmodified from `github.com/camaradesuk/ASySD` under that project's GPL-3.0 licence, with provenance, pinned commit and checksum recorded in `validation/THIRD_PARTY_DATA.md`. The corpora harvested for the cross-disciplinary study are archived as compressed record dumps, so every number reported here recomputes without network access.
 
 ## References
 

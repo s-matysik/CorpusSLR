@@ -277,3 +277,37 @@ def test_a_missing_figure_stops_the_build(tmp_path):
     doc = build_docx.new_document()
     with pytest.raises(SystemExit):
         build_docx.add_figure(doc, str(tmp_path / "absent.png"), "caption")
+
+
+# --------------------------------------------------------------------------
+# No placeholder may reach the editor.
+#
+# The Acknowledgements section shipped as "(To be completed by the author.)"
+# through several rebuilds. A placeholder in a submitted manuscript is worse
+# than an absent section, because it tells the editor the file was not read
+# before it was sent. This fails the build while any remain.
+# --------------------------------------------------------------------------
+
+PLACEHOLDER_MARKERS = ("To be completed", "TODO", "TBD", "FIXME",
+                       "XXX", "lorem ipsum", "PLACEHOLDER")
+
+
+def test_the_manuscript_carries_no_placeholder():
+    import pathlib
+    import re
+    root = pathlib.Path(__file__).resolve().parents[1]
+    found = []
+    for rel in ("paper/corpusslr_softwarex.tex", "MANUSCRIPT.md",
+                "SUPPLEMENTARY.md"):
+        path = root / rel
+        if not path.exists():
+            continue
+        text = path.read_text(encoding="utf-8")
+        for marker in PLACEHOLDER_MARKERS:
+            for m in re.finditer(re.escape(marker), text, re.I):
+                line_start = text.rfind("\n", 0, m.start()) + 1
+                line = text[line_start:text.find("\n", m.start())]
+                if line.lstrip().startswith("%"):      # a source comment is not shipped
+                    continue
+                found.append("%s: %s" % (rel, line.strip()[:70]))
+    assert not found, "placeholder text would be submitted: %s" % found

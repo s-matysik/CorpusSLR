@@ -1,8 +1,9 @@
-# SoftwareX manuscript
+# Building the article
 
-The CorpusSLR article in the template Elsevier requires for SoftwareX: the
-`elsarticle` document class, a Code metadata table with fields C1-C9, the
-prescribed section order, and a 3000-word limit on the main text.
+How to rebuild `corpusslr_softwarex.pdf` from source, and what is checked
+before it is considered rebuilt. This file is build documentation for the
+`paper/` directory. It is not part of the submission: the manuscript itself is
+`corpusslr_softwarex.tex`, and the Word versions are in `docx/`.
 
 Typographic rule applied to every file here: the only dash is the hyphen `-`.
 No en dashes, no em dashes, no LaTeX `--` or `---`. Check 7 and check 8 of
@@ -13,13 +14,13 @@ No en dashes, no em dashes, no LaTeX `--` or `---`. Check 7 and check 8 of
 | File | What it is |
 |---|---|
 | `corpusslr_softwarex.tex` | The article. `elsarticle`, `final,5p,times,twocolumn`. |
-| `references.bib` | Six references, each confirmed against Crossref or the publisher record in `validation/references_verified.json`. Nothing else is cited. |
-| `figures/fig_domains.png` | Figure 1, copied from `validation/fig_domains.png`. |
-| `figures/fig_ablation.png` | Figure 2, copied from `validation/fig_ablation.png`. |
+| `references.bib` | Twenty-two references, each confirmed against Crossref or the publisher record in `validation/references_verified.json`. Nothing else is cited. |
+| `figures/fig_ablation.png` | Figure 1, copied from `validation/fig_ablation.png`. |
+| `figures/fig_domains.png` | Figure 2, copied from `validation/fig_domains.png`. |
 | `listing_example.py` | Listing 1, kept runnable. Run it to confirm the code in the article works. |
 | `verify_tex.py` | Eight structural checks on the LaTeX source and the PDF, each provable by fault injection. |
 | `count_words.py` | Main-text word count against the 3000-word limit. |
-| `corpusslr_softwarex.pdf` | The compiled article, 6 pages. |
+| `corpusslr_softwarex.pdf` | The compiled article, 7 pages. |
 
 ## Build
 
@@ -87,9 +88,9 @@ Measured in this environment, from a clean state (no `.aux`, `.bbl`, `.pdf`):
 
 ```
 pdflatex: exit 0
-bibtex  : exit 0, no warnings, 6 entries written to the .bbl
+bibtex  : exit 0, no warnings, 22 entries written to the .bbl
 pdflatex: exit 0
-pdflatex: exit 0, 6 pages, no errors, no LaTeX warnings,
+pdflatex: exit 0, 7 pages, no errors, no LaTeX warnings,
           no undefined references, 0 overfull boxes
 ```
 
@@ -132,10 +133,10 @@ and asserts that the right check reports it:
 python verify_tex.py corpusslr_softwarex.tex --self-test
 ```
 
-Twelve faults are injected into the source (a deleted `\end`, two crossed
+Eleven faults are injected into the source (a deleted `\end`, two crossed
 environments, a misspelled `\cite` key, a figure pointing at a missing file, a
 `\ref` to a non-existent label, a removed `\caption`, an undefined command,
-and five dash variants including one inside a listing), and a thirteenth
+and five dash variants including one inside a listing), and a twelfth
 recompiles the document with an em dash in body text to prove check 8 against
 a real PDF. All are caught, each by its own check. If `pdflatex` is absent the
 PDF fault is reported as SKIPPED rather than passed, because a check that
@@ -147,8 +148,9 @@ cannot run has not passed.
 python count_words.py corpusslr_softwarex.tex
 ```
 
-Measured: **2656 words** of main text against the 3000-word limit, a margin of
-344 words. Excluded and reported separately: the frontmatter, all table bodies
+Measured: **3000 words** of main text against the 3000-word limit, a margin of
+0 words. The article now sits exactly on the limit, so any addition needs a cut
+somewhere else. Excluded and reported separately: the frontmatter, all table bodies
 (404 words), listings (103 words), captions, the bibliography and the back
 matter. The counter was itself fault-tested: adding 100 known words moves the
 total by exactly +100, unwrapping a listing raises it, and deleting a sentence

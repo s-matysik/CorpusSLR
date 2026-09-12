@@ -1,0 +1,16 @@
+domain,asysd_rule_fp,asysd_rule_tp,fp_prevented_by_strict_missing,tp_lost_by_strict_missing,fp_with_both_pages_present_and_different
+biology,0,318,0,43,0
+business informatics,5,91,4,32,3
+chemistry,5,78,4,5,2
+computer science,3,62,3,39,0
+economics,24,192,24,55,15
+geography,1,93,0,19,0
+history,3,69,1,11,1
+logistics,4,175,3,67,1
+management,4,212,4,33,4
+marketing,4,148,0,20,0
+physics,5,210,5,37,1
+political science,0,102,0,7,0
+sociology,0,134,0,39,0
+software engineering,12,132,12,93,1
+transport,8,166,8,75,0

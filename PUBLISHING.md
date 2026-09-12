@@ -63,8 +63,8 @@ Measured on this tree, for comparison with what you see:
 
 | check | result |
 |---|---|
-| `pytest tests` on Python 3.13 | 2114 passed |
-| `pytest tests` on Python 3.9 | 2095 passed, 3 skipped |
+| `pytest tests` on Python 3.13 | 2117 passed |
+| `pytest tests` on Python 3.9 | 2097 passed, 3 skipped |
 | statement coverage | 98%, 7002 statements, 159 uncovered |
 | `ruff check --no-cache .` | All checks passed |
 | `mypy corpusslr` | no issues found in 40 source files |
@@ -235,7 +235,7 @@ compiled to the native syntax of multiple bibliographic databases, export
 parsing for 7 file formats, cascading auditable deduplication, PRISMA 2020 flow
 diagram and PRISMA-S appendix generated from the recorded audit trail.
 
-2114 tests, 98% statement coverage, offline by construction. Deduplication
+2117 tests, 98% statement coverage, offline by construction. Deduplication
 validated against the ASySD gold standard at F1 0.9996 and across 15
 disciplines under an identifier-blind protocol at median F1 0.9592."
 ```
@@ -410,7 +410,7 @@ with bibliometrix::convert2df: all 14 302 records of a real Scopus export
 survive the round trip, and biblioAnalysis reports 14 302 articles.
 Deduplication F1 0.9996 on the ASySD Diabetes gold standard after the NA-DOI
 fix (FP 0, FN 1) and median F1 0.9592 across 15 disciplines, identifier-blind.
-2114 tests on Python 3.13, 98% statement coverage, no network access in any
+2117 tests on Python 3.13, 98% statement coverage, no network access in any
 test."
 
 git push origin v1.0.0
@@ -438,7 +438,7 @@ from the recorded audit trail.
 
 Measured on this tag:
 
-- 2114 tests pass on Python 3.13; on Python 3.9, 2095 pass and 3 skip because
+- 2117 tests pass on Python 3.13; on Python 3.9, 2097 pass and 4 skip because
   PyYAML and python-docx are absent there. Statement coverage 98% of 7002
   statements, 159 uncovered. No test can reach the network: the suite runs with
   the standard-library connect primitives replaced by raising stubs.

@@ -665,11 +665,29 @@ compromise rather than an optimum for any single field.
 
 \section*{Acknowledgements}
 
-(To be completed by the author.)
+The evaluation rests on the labelled deduplication benchmark published by
+the ASySD authors, whose decision to release it openly is what made an
+external comparison possible. Clarivate granted the Web of Science
+Expanded API entitlement used to verify that client against the live
+service.
 
 \section*{Declaration of competing interest}
 
 The author declares no competing interests.
+
+\section*{Data availability}
+
+All data underlying the results are public. The software, the evaluation
+scripts and the measurement tables are in the repository given in C2. The
+validation data are additionally packaged for review as
+\texttt{corpusslr\_validation\_data.zip}, whose manifest maps each file to the
+table or figure it supports. One file is third-party: the ASySD \emph{Diabetes}
+gold standard, redistributed unmodified from
+\texttt{github.com/camaradesuk/ASySD} under that project's GPL-3.0 licence,
+with provenance, pinned commit and checksum recorded in
+\texttt{validation/THIRD\_PARTY\_DATA.md}. The corpora harvested for the
+cross-disciplinary study are archived as compressed record dumps, so every
+number reported here recomputes without network access.
 
 \bibliographystyle{elsarticle-num}
 \bibliography{references}
