@@ -1,0 +1,5 @@
+database,retrieved,seconds,with_doi,with_abstract,multi_author,with_pages,abstract_pct,multiauthor_pct
+Scopus,100,5.0,97,99,100,98,99.0,100.0
+PubMed,100,1.7,100,100,99,89,100.0,99.0
+Crossref,100,1.0,100,50,78,72,50.0,78.0
+arXiv,23,0.2,4,23,22,0,100.0,95.7

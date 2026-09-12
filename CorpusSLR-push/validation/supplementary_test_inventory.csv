@@ -1,0 +1,43 @@
+file,area,tests
+tests/test_arxiv.py,arXiv client,21
+tests/test_cli.py,Command-line interface,164
+tests/test_data_package.py,Submission documents,11
+tests/test_dedup_prisma_ext.py,Deduplication,71
+tests/test_docs_examples.py,Documentation consistency,18
+tests/test_docx.py,Submission documents,16
+tests/test_enrich_quality_export.py,Export formats,20
+tests/test_export_scopus.py,Scopus client and export,49
+tests/test_file_export_integration.py,Export formats,6
+tests/test_harvest.py,Reproducible harvesting,79
+tests/test_integration_e2e.py,End-to-end pipeline,2
+tests/test_integrity.py,Publication integrity,13
+tests/test_metadata_consistency.py,Release metadata,15
+tests/test_notebook.py,Colab notebook,24
+tests/test_parser_utils.py,File-format parsers,16
+tests/test_parsers.py,File-format parsers,6
+tests/test_parsers_bibtex.py,File-format parsers,40
+tests/test_parsers_csv.py,File-format parsers,38
+tests/test_parsers_endnote.py,File-format parsers,25
+tests/test_parsers_enw_html.py,File-format parsers,19
+tests/test_parsers_query_ext.py,File-format parsers,34
+tests/test_parsers_ris_dialects.py,File-format parsers,29
+tests/test_parsers_robustness.py,File-format parsers,32
+tests/test_parsers_vendor_coverage.py,File-format parsers,24
+tests/test_pipeline.py,End-to-end pipeline,5
+tests/test_preprints.py,Preprint servers,33
+tests/test_prisma_s_items.py,PRISMA reporting,7
+tests/test_publishing.py,Release metadata,23
+tests/test_push_tree.py,Submission documents,11
+tests/test_record_query.py,Record model,6
+tests/test_registry.py,Source registry,31
+tests/test_reviewer_package.py,Reviewer package,39
+tests/test_scopus.py,Scopus client and export,56
+tests/test_scopus_live_shapes.py,Scopus client and export,37
+tests/test_scopus_query_compliance.py,Scopus client and export,20
+tests/test_semanticscholar.py,Semantic Scholar client,21
+tests/test_site.py,Documentation site,60
+tests/test_sources_offline.py,API clients,22
+tests/test_tui.py,Terminal interface,98
+tests/test_validate.py,Validation protocol,39
+tests/test_wos_expanded.py,Web of Science clients,16
+tests/test_wos_starter.py,Web of Science clients,60

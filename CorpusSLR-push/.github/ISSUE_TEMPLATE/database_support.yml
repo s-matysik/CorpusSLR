@@ -1,0 +1,64 @@
+name: Database or export format support
+description: Request support for a bibliographic database, platform or export dialect
+labels: ["enhancement", "sources"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Support for a new database is mostly a question of evidence: what its
+        export actually looks like, and whether its search syntax can be
+        reproduced. A sample export is far more useful than a link to the
+        vendor's documentation, which is frequently wrong about its own format.
+
+  - type: input
+    id: database
+    attributes:
+      label: Database or platform
+      placeholder: "e.g. Scopus, LILACS, CAB Abstracts, ProQuest Dissertations"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: access
+    attributes:
+      label: How would records be retrieved
+      options:
+        - Public API
+        - API requiring an institutional key
+        - File export only (no API)
+        - Not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: sample
+    attributes:
+      label: Sample export or API response
+      description: |
+        A few records is enough. Please redact abstracts if your licence
+        restricts redistribution — the field structure is what matters, not the
+        text. This becomes the offline test double, so an accurate sample
+        directly determines whether the parser is correct.
+      render: text
+
+  - type: textarea
+    id: syntax
+    attributes:
+      label: Search syntax, if the database has an API
+      description: |
+        How are boolean operators, field prefixes, date limits and document-type
+        filters written? If the platform cannot express a reproducible boolean
+        search, say so — that determines whether it is classified as principal
+        or supplementary under Gusenbauer & Haddaway (2020), which in turn
+        affects what the PRISMA-S appendix reports.
+      render: text
+
+  - type: textarea
+    id: why
+    attributes:
+      label: Why this database matters for evidence synthesis
+      description: |
+        Which fields or review types depend on it, and what is currently missed
+        without it.
+    validations:
+      required: true

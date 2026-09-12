@@ -1,0 +1,45 @@
+{
+ "verified_on": "2026-09-07T20:36:00Z",
+ "outcome": "Web of Science Expanded API verified live - the entitlement Clarivate provisioned works and the package now has a client for it",
+ "endpoint": "https://api.clarivate.com/api/wos",
+ "auth": "X-ApiKey header (Authorization: Bearer and ?apikey= are rejected by the gateway)",
+ "live_query": "TS=(\"deep learning\" OR \"convolutional neural network\") AND TS=(\"diabetic retinopathy\") AND PY=2020-2024 AND DT=(Article)",
+ "records_found_by_wos": 1431,
+ "per_database": {
+  "Web of Science": {
+   "records": 100,
+   "with_abstract": 100,
+   "multi_author": 99
+  },
+  "PubMed": {
+   "records": 100,
+   "with_abstract": 100,
+   "multi_author": 99
+  },
+  "Crossref": {
+   "records": 100,
+   "with_abstract": 52,
+   "multi_author": 79
+  }
+ },
+ "deduplication": {
+  "identified": 300,
+  "unique": 274,
+  "merged": 26,
+  "by_method": {
+   "doi": 26
+  },
+  "overlap_pubmed_wos": 26
+ },
+ "quota_observed": {
+  "requests_per_day_remaining": 29992,
+  "records_per_month_remaining": 999798,
+  "requests_per_second_remaining": 2
+ },
+ "still_unentitled": {
+  "lite /api/woslite": 403,
+  "starter /apis/wos-starter/v1": 403
+ },
+ "client_added": "corpusslr.sources.wos_expanded.WosExpandedSource - 20 offline tests, fixtures captured from live responses including a genuine single-author record whose names.name node is a dict, not a list",
+ "why_it_matters": "the Starter API returns no abstracts at all, which makes title/abstract screening impossible; Expanded returned an abstract on 100/100 records"
+}

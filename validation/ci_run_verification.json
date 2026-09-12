@@ -1,0 +1,33 @@
+{
+ "verified_on": "2026-09-10T07:32:54Z",
+ "repository": "s-matysik/CorpusSLR",
+ "method": "read from the GitHub Actions REST API, not asserted: the conclusion of the most recent run of each workflow, with the commit each ran against",
+ "total_runs": 7,
+ "workflows": {
+  "pages": {
+   "conclusion": "success",
+   "run_id": 34413544958,
+   "head_sha": "34e7a63681b0",
+   "created_at": "2026-09-09T22:42:36Z"
+  },
+  "pages build and deployment": {
+   "conclusion": "success",
+   "run_id": 34413544803,
+   "head_sha": "34e7a63681b0",
+   "created_at": "2026-09-09T22:42:36Z"
+  },
+  "quality": {
+   "conclusion": "success",
+   "run_id": 34413545057,
+   "head_sha": "34e7a63681b0",
+   "created_at": "2026-09-09T22:42:36Z"
+  },
+  "tests": {
+   "conclusion": "success",
+   "run_id": 34413544973,
+   "head_sha": "34e7a63681b0",
+   "created_at": "2026-09-09T22:42:36Z"
+  }
+ },
+ "all_succeeded": true
+}

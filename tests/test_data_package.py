@@ -113,3 +113,43 @@ def test_the_zip_members_are_all_under_one_top_level_directory(built):
     with zipfile.ZipFile(built["zip"]) as zf:
         tops = {n.split("/")[0] for n in zf.namelist()}
     assert tops == {bdp.PKG_DIRNAME}, tops
+
+
+# --------------------------------------------------------------------------
+# Third-party data must travel with its provenance.
+#
+# validation/labelled_test_set.csv is the one file in this repository that was
+# not produced here: it comes from the ASySD project, whose repository is
+# GPL-3.0, while this package is MIT. An earlier packaging note asserted CC BY
+# 4.0 on the strength of the article's licence, which does not cover the
+# dataset; the OSF project the article names declares no licence at all. A
+# wrong licence claim shipped to a journal is worse than none, so the notice is
+# pinned by a test rather than left to survive on its own.
+# --------------------------------------------------------------------------
+
+def test_third_party_notice_states_the_real_licence():
+    import pathlib
+    notice = pathlib.Path(__file__).resolve().parents[1] / "validation" / \
+        "THIRD_PARTY_DATA.md"
+    assert notice.exists(), "the third-party data notice is missing"
+    text = notice.read_text(encoding="utf-8")
+    for token in ("labelled_test_set.csv", "GPL-3.0", "camaradesuk/ASySD",
+                  "cc84d80163de15a412e6a2a1cff75f8c3369c85834476eeab0d6c2b49b52e45e",
+                  "10.1186/s12915-023-01686-z"):
+        assert token in text, "the notice does not state %s" % token
+
+
+def test_no_packaging_note_claims_cc_by_for_the_dataset():
+    """The dataset is not CC BY, and no build product may say that it is."""
+    import pathlib
+    import re
+    root = pathlib.Path(__file__).resolve().parents[1]
+    for rel in ("tools/build_data_package.py", "tools/build_reviewer_package.py"):
+        text = (root / rel).read_text(encoding="utf-8")
+        for m in re.finditer(r"[^\n]{0,90}CC BY[^\n]{0,60}", text):
+            line = m.group(0)
+            # The corrected note explains the earlier mistake, so it names the
+            # licence in order to reject it. Only an assertion is a defect.
+            if re.search(r"said CC BY|not covered by it|article is CC BY", line):
+                continue
+            raise AssertionError("%s still claims CC BY: %s" % (rel, line.strip()))

@@ -1,10 +1,10 @@
 file,area,tests
 tests/test_arxiv.py,arXiv client,21
 tests/test_cli.py,Command-line interface,164
-tests/test_data_package.py,Submission documents,9
+tests/test_data_package.py,Submission documents,11
 tests/test_dedup_prisma_ext.py,Deduplication,71
 tests/test_docs_examples.py,Documentation consistency,18
-tests/test_docx.py,Submission documents,16
+tests/test_docx.py,Submission documents,17
 tests/test_enrich_quality_export.py,Export formats,20
 tests/test_export_scopus.py,Scopus client and export,49
 tests/test_file_export_integration.py,Export formats,6

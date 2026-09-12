@@ -509,7 +509,7 @@ reproduction script and the calibration and performance data are in
 [`validation/`](validation/).
 
 ```bash
-python -m pytest tests -q                 # 2111 offline tests, 98% coverage
+python -m pytest tests -q                 # 2117 offline tests, 98% coverage
 python validation/eval_asysd.py --gold validation/labelled_test_set.csv
 ```
 

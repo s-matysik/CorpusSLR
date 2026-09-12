@@ -1,0 +1,147 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "corpusslr"
+version = "1.0.0"
+description = "From one structured query to a PRISMA-documented corpus: multi-database retrieval, export parsing, auditable deduplication, PRISMA 2020 flow diagram and PRISMA-S appendix for systematic literature reviews."
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [{name = "Sebastian Matysik"}]
+keywords = ["systematic literature review", "PRISMA", "PRISMA-S", "deduplication",
+            "Scopus", "OpenAlex", "PubMed", "Crossref", "Web of Science",
+            "Embase", "EBSCOhost", "ProQuest", "IEEE Xplore", "Semantic Scholar",
+            "arXiv", "medRxiv", "bioRxiv", "RIS", "BibTeX", "EndNote",
+            "bibliometrics", "evidence synthesis", "meta-research"]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Scientific/Engineering :: Information Analysis",
+  "Topic :: Text Processing :: Markup :: XML",
+  "Typing :: Typed",
+]
+dependencies = ["requests>=2.28"]
+
+[project.scripts]
+corpusslr = "corpusslr.cli:main"
+
+[project.optional-dependencies]
+docx = ["python-docx>=1.1"]
+dev = ["pytest>=7", "pytest-cov>=4"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[project.urls]
+Repository = "https://github.com/s-matysik/CorpusSLR"
+
+[tool.setuptools.packages.find]
+include = ["corpusslr*"]
+
+# --------------------------------------------------------------------------
+# Static analysis
+#
+# Both tools are configured here rather than in the CI workflow so that a
+# contributor's local run and the continuous-integration job apply exactly the
+# same rules. The selected levels were each brought to zero findings before the
+# quality workflow was made blocking; every deliberate exclusion below names
+# the reason, so a reviewer can see what is being checked and what is not.
+# --------------------------------------------------------------------------
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+# reviewer_package/ is a build product: it holds copies of files that are
+# already linted at their source path, and linting the copies would report
+# every finding twice while making the gate depend on whether a package
+# happens to be built.
+# site/ is the same case: tools/build_site.py copies the notebook and other
+# documents there for download, so the copies would be linted a second time
+# and the gate would depend on whether the site happens to be built.
+extend-exclude = ["build_check", "validation", "docs/_build", "reviewer_package",
+                  "site", "paper",
+                  # tools/build_data_package.py copies scripts here; they are
+                  # already linted at their source path.
+                  "corpusslr_validation_data", "CorpusSLR-push"]
+
+[tool.ruff.lint]
+# Correctness and clarity rules only. Rules that would reflow existing code
+# (formatting, import order, annotation modernisation) are excluded on purpose:
+# CorpusSLR is a released instrument whose accuracy figures are tied to
+# specific revisions, and a mass reflow would bury behavioural changes in
+# review noise. UP (pyupgrade) in particular cannot be applied while
+# requires-python is >=3.9, since it rewrites annotations to 3.10+ syntax.
+select = ["E", "W", "F", "B", "C4", "SIM", "RET", "PIE", "RSE", "ISC"]
+ignore = [
+  # B904 (raise ... from err): 28 sites, all in the HTTP source clients, where
+  # the wrapped requests exception is deliberately not chained -- SourceError
+  # carries the diagnostic message the user needs, and the underlying urllib3
+  # traceback is noise for a review-methods audience. Revisiting this is
+  # tracked as a maintenance item, not a correctness defect.
+  "B904",
+  # B023 (closure over loop variable): 8 sites in the export parsers, all the
+  # same reviewed pattern -- a `first(*tags)` helper defined inside the
+  # per-record loop and called only within the iteration that defines it.
+  # Late binding therefore cannot manifest; the rule has no flow analysis to
+  # see that. Verified by inspection at each site.
+  "B023",
+  # ISC001 conflicts with ruff format's own string handling.
+  "ISC001",
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Test modules hold byte-exact fixture payloads copied from real database
+# exports (RIS records, EndNote XML, vendor CSV). Rewrapping them would change
+# the bytes under test, so the line-length and string-concatenation rules do
+# not apply there. SIM115 is excluded because several tests open a file to
+# assert on the handle itself, which a context manager would close first.
+"tests/*" = ["E501", "ISC002", "ISC004", "SIM115", "E402"]
+# Examples are written to be read top to bottom by a methods audience.
+"examples/*" = ["E501"]
+# The Colab notebook installs the package in its first cell and imports it
+# immediately afterwards, so E402 ("import not at top of cell") reports the
+# one ordering the notebook cannot avoid: the import is only valid after the
+# install has run. Nothing else is excluded -- the notebook's cells are
+# otherwise linted like any other source, and a separate test compiles each
+# one and rejects any stored output or hardcoded credential.
+"notebooks/*" = ["E402"]
+# tools/build_reviewer_package.py holds the reviewer README as a template
+# string, and a markdown table row cannot be wrapped: a newline inside a row
+# ends the row. The long lines are therefore data, not code, and E501 is
+# excluded for that file alone. Nothing else is excluded there.
+"tools/build_reviewer_package.py" = ["E501"]
+
+[tool.mypy]
+# Rigour level: mypy's defaults plus check_untyped_defs, with missing
+# third-party stubs ignored.
+#
+# Chosen deliberately over --strict. The package is annotated at its public
+# surface but many internal helpers are not, and --disallow-untyped-defs
+# reports 70 findings that are all "this function lacks annotations" rather
+# than "these types contradict each other". Enabling check_untyped_defs
+# instead makes mypy analyse the bodies of unannotated functions too, so the
+# gate catches genuine type contradictions -- an int assigned to a str field,
+# a None-able Match used without a guard -- across the whole package rather
+# than only its typed parts. That level went from 28 errors to 0.
+python_version = "3.10"
+files = ["corpusslr"]
+ignore_missing_imports = true
+check_untyped_defs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+no_implicit_optional = true
+# python_version is 3.10 rather than 3.9 because mypy 2.x refuses to target
+# 3.9. The package still supports 3.9: that guarantee is enforced by the test
+# matrix, which runs the full suite on the 3.9 interpreter itself.
+

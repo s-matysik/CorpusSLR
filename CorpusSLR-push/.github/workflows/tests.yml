@@ -1,0 +1,152 @@
+name: tests
+
+# CorpusSLR is a research instrument, so a reviewer must be able to see that
+# the published accuracy figures come from a suite that runs unattended, on
+# every supported interpreter, without network access and without credentials.
+# Every job below is self-contained: no secrets, no service containers, no
+# fixtures fetched at run time.
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: pytest (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install package with optional extras
+        # The .docx appendix test is skipped when python-docx is absent, which
+        # would silently shrink the matrix's coverage of prisma_s.py. The docx
+        # extra is installed so that test runs on every version.
+        #
+        # Two CLI tests covering the optional YAML config format still skip
+        # here: PyYAML is deliberately not a dependency (the CLI reads JSON from
+        # the standard library and reports a clear error for .yaml input without
+        # PyYAML), so those skips are expected rather than a gap to close.
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[docx,dev]"
+
+      - name: Report resolved environment
+        run: |
+          python -c "import sys; print(sys.version)"
+          python -c "import corpusslr; print('corpusslr', corpusslr.__version__)"
+          python -c "import docx; print('python-docx available')"
+
+      - name: Run test suite with coverage, network access blocked
+        # -p tools.no_network replaces the standard-library connect primitives
+        # with raising stubs, so a test that reaches a bibliographic API fails
+        # instead of passing on a machine that happens to be online. This is
+        # the executable form of the offline claim made in the manuscript.
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+        run: >-
+          python -m pytest tests
+          -p no:cacheprovider
+          -p tools.no_network
+          --cov=corpusslr
+          --cov-report=term-missing:skip-covered
+          --cov-report=xml
+          --cov-fail-under=95
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-py${{ matrix.python-version }}
+          path: coverage.xml
+          if-no-files-found: warn
+
+  build:
+    name: build and check distributions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install build tooling
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install build twine
+
+      - name: Build wheel and sdist
+        run: python -m build
+
+      - name: Check distribution metadata
+        run: python -m twine check --strict dist/*
+
+      - name: Verify the wheel imports in a clean interpreter
+        # Guards against a packaging regression a source-tree test run cannot
+        # see: a module present on disk but missing from the built wheel.
+        run: |
+          python -m venv /tmp/wheelcheck
+          /tmp/wheelcheck/bin/python -m pip install --upgrade pip
+          /tmp/wheelcheck/bin/python -m pip install dist/*.whl
+          /tmp/wheelcheck/bin/python -c "import corpusslr; print(corpusslr.__version__); print(len([n for n in dir(corpusslr) if not n.startswith('_')]), 'public symbols')"
+
+      - name: Verify the test suite runs from the unpacked sdist
+        # A reviewer or packager checks a release by downloading the sdist and
+        # running its tests. That only works if everything the suite reads
+        # travels with the distribution -- the citation metadata read by
+        # tests/test_metadata_consistency.py and the offline-enforcement plugin
+        # in tools/. This step is what keeps MANIFEST.in honest.
+        run: |
+          mkdir -p /tmp/sdistcheck
+          tar -xzf dist/*.tar.gz -C /tmp/sdistcheck --strip-components=1
+          cd /tmp/sdistcheck
+          python -m pip install ".[docx,dev]"
+          PYTHONPATH=. python -m pytest tests -p no:cacheprovider -p tools.no_network
+
+      - name: Upload distributions
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/*
+
+  metadata:
+    name: citation metadata consistency
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install package
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+
+      - name: Check version, licence and author agree across metadata files
+        # pyproject.toml, corpusslr/__init__.py, CITATION.cff, codemeta.json
+        # and .zenodo.json each carry the version, licence and author. A release
+        # in which they disagree yields a Zenodo record citing the wrong
+        # version, so this is a test rather than a release-checklist item.
+        run: python -m pytest tests/test_metadata_consistency.py -v -p no:cacheprovider

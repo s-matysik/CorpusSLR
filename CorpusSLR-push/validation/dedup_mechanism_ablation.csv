@@ -1,0 +1,6 @@
+mechanism,origin,FP,FN,f1_without,delta_f1
+identifier guarded by title,this work,4,7,0.9956,0.0028
+shared-locus guard,this work,3,4,0.9972,0.0012
+multi-round blocking,ASySD (Hair et al. 2023),0,6,0.9976,0.0008
+conflicting-identifier override,this work,0,5,0.998,0.0004
+conference/article separation,this work,1,4,0.998,0.0004

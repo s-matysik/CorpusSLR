@@ -1,0 +1,69 @@
+{
+  "title": "CorpusSLR: from one structured query to a PRISMA-documented corpus",
+  "version": "1.0.0",
+  "description": "<p>CorpusSLR automates the identification phase of systematic literature reviews. One structured query is compiled to the native syntax of multiple bibliographic databases, records retrieved from APIs and from file exports are harmonized and enriched, duplicates are removed by a cascading auditable procedure, and the PRISMA 2020 flow diagram together with the PRISMA-S search-reporting appendix is generated from the recorded audit trail.</p><p>Deduplication is validated against the ASySD gold standard (Hair et al., 2023) at F1 0.9996 on the Diabetes set, and independently across four research domains under an identifier-blind protocol. Reproducible harvesting archives raw API responses with checksums, so an analysis can be replayed without network access.</p><p>The package depends only on the Python standard library and <code>requests</code>; <code>python-docx</code> is optional and used only to write the PRISMA-S appendix as a .docx file.</p>. The confusion matrices behind that figure ship with the release in validation/asysd_metrics.csv and are regenerable with validation/eval_asysd.py.",
+  "upload_type": "software",
+  "license": "mit",
+  "access_right": "open",
+  "creators": [
+    {
+      "name": "Matysik, Sebastian",
+      "affiliation": "University of Szczecin, Institute of Management, Doctoral School, Szczecin, Poland"
+    }
+  ],
+  "keywords": [
+    "systematic literature review",
+    "PRISMA",
+    "PRISMA-S",
+    "deduplication",
+    "record linkage",
+    "bibliographic databases",
+    "Scopus",
+    "Web of Science",
+    "OpenAlex",
+    "PubMed",
+    "Crossref",
+    "Embase",
+    "Semantic Scholar",
+    "arXiv",
+    "RIS",
+    "BibTeX",
+    "EndNote",
+    "evidence synthesis",
+    "meta-research",
+    "reproducible research",
+    "Python"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/s-matysik/CorpusSLR",
+      "relation": "isSupplementTo",
+      "resource_type": "software",
+      "scheme": "url"
+    },
+    {
+      "identifier": "10.1136/bmj.n71",
+      "relation": "cites",
+      "resource_type": "publication-article",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.1186/s13643-020-01542-z",
+      "relation": "cites",
+      "resource_type": "publication-article",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.1002/jrsm.1378",
+      "relation": "cites",
+      "resource_type": "publication-article",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.1186/s13643-023-02356-5",
+      "relation": "cites",
+      "resource_type": "publication-article",
+      "scheme": "doi"
+    }
+  ]
+}

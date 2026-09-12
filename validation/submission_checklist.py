@@ -98,9 +98,23 @@ def collect():
           os.path.exists(os.path.join(HERE, ".github", "workflows", "tests.yml")),
           "tests.yml (matrix + build + sdist run + metadata) and quality.yml")
 
-    check("CI executed on GitHub", False,
-          "cannot be run from a sandbox; one push confirms runner behaviour, "
-          "action resolution and matrix expansion")
+    # This was a hardcoded False, so it could never close however many times CI
+    # ran. It now reads the recorded outcome of the real runs, the same way the
+    # Web of Science item below reads its own verification file, so the tick
+    # stands on evidence and a red run reopens it.
+    ci = os.path.join(HERE, "validation", "ci_run_verification.json")
+    ci_ok, ci_note = False, ("no recorded run; push and record the outcome with "
+                             "validation/record_ci_runs.py")
+    if os.path.exists(ci):
+        with open(ci, encoding="utf-8") as fh:
+            rec = json.load(fh)
+        ci_ok = bool(rec.get("all_succeeded"))
+        ci_note = "{} on {}: {}".format(
+            "all workflows green" if ci_ok else "a workflow is not green",
+            rec.get("repository", "?"),
+            ", ".join("{} {}".format(n, w.get("conclusion"))
+                      for n, w in sorted(rec.get("workflows", {}).items())))
+    check("CI executed on GitHub", ci_ok, ci_note)
     wos = os.path.join(HERE, "validation", "wos_live_verification.json")
     wos_ok = False
     if os.path.exists(wos):

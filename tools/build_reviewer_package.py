@@ -324,7 +324,12 @@ INVENTORY = [
 BULK = [
     ("validation/labelled_test_set.csv", "data",
      ("The ASySD Diabetes gold standard as scored, 1845 records with the "
-      "duplicate labels; the input to the F1 0.9984 result.")),
+      "duplicate labels; the input to the F1 0.9984 result. Third-party "
+      "data under the upstream project's GPL-3.0, see "
+      "data/THIRD_PARTY_DATA.md.")),
+    ("validation/THIRD_PARTY_DATA.md", "data",
+     ("Provenance, pinned upstream commit, checksum and licence of the "
+      "one file here that was not produced by this project.")),
     ("validation/domains_social_raw.jsonl.gz", "data",
      ("Raw harvested records for the social-science track, so the evaluation "
       "reruns offline.")),

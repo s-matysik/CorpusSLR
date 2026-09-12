@@ -1,0 +1,7 @@
+mechanism,origin,precision,recall,f1,delta_f1
+shipped defaults,-,0.9189,0.9635,0.9407,0.0
+conflicting-identifier override,this work,0.9189,0.9635,0.9407,0.0
+identifier guarded by title,this work,0.9189,0.9635,0.9407,0.0
+shared-locus guard,this work,0.8702,0.9678,0.9164,0.0242
+multi-round blocking,ASySD (Hair et al. 2023),0.9203,0.9562,0.9379,0.0028
+conference/article separation,this work,0.9189,0.9635,0.9407,0.0

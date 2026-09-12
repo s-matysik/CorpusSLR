@@ -60,6 +60,75 @@ never distributed.
   section named EmbedSLR without citing it, the same omission the EndNote and
   SRA-DM rows had. The reference list now has twenty-two entries.
 
+### Fixed
+
+- The validation data package told the journal that
+  `labelled_test_set.csv` is redistributed "under CC BY 4.0". That was an
+  unverified claim and it is wrong. The article is CC BY 4.0, but the article's
+  licence does not cover the dataset; the Open Science Framework project the
+  article names as the home of the data (`osf.io/c9evs`) was queried through
+  the OSF API and neither it nor either of its two components declares a
+  licence; and the copy actually used here was downloaded from
+  `github.com/camaradesuk/ASySD`, whose repository is GPL-3.0. GPL-3.0 is
+  therefore the only licence explicitly attached to a copy anyone here
+  obtained, and both packaging notes now say so. `validation/THIRD_PARTY_DATA.md`
+  records the provenance, the pinned upstream commit `49544ce33171`, the
+  SHA-256 of the copy shipped, the citation, and a fetch command for anyone who
+  would rather not receive the file at all. Two tests pin it: one requires the
+  notice to state the licence, the checksum and the source, the other fails the
+  build if any packaging note claims CC BY for the dataset again.
+
+### Fixed
+
+- The submission checklist's "CI executed on GitHub" item was a hardcoded
+  `False` with a note explaining that a sandbox cannot run it. That made it
+  unclosable: continuous integration has now run green on GitHub several times
+  and the item still reported open, which is the same defect class as the two
+  hardcoded verification entries found earlier. It now reads
+  `validation/ci_run_verification.json`, written by the new
+  `validation/record_ci_runs.py` from the GitHub Actions REST API, recording
+  each workflow's latest conclusion with its run id and commit. Verified both
+  ways: with all four workflows green the item closes (20 verified, 1 open),
+  and flipping one recorded conclusion to `failure` reopens it. The recorder
+  exits non-zero and writes nothing when the API is unreachable, so an absent
+  network leaves the item open rather than ticking it on a guess.
+
+### Fixed
+
+- `paper/README.md` had drifted from the article it documents. Each figure it
+  carried is below with what the artefact actually contains:
+
+  - previously stated: six references; measured: 22.
+  - previously stated: a six-page PDF; measured: 7 pages.
+  - previously stated: six entries in the `.bbl`; measured: 22.
+  - previously stated: 2656 words of main text; measured: 3000.
+  - previously stated: a 344-word margin; measured: 0.
+  - previously stated: thirteen injected faults; measured: 11 into the source
+    plus one that recompiles the document.
+  - the figure order predated the renumbering: Figure 1 is the ablation.
+
+  Measured now, the bibliography has 22 entries, the
+  article is 7 pages, the main text is exactly 3000 words with zero margin, the
+  self-test injects 11 faults into the source plus one that recompiles the
+  document, and Figure 1 is the ablation. The file also opened under the
+  heading "SoftwareX manuscript" with a sentence fragment about the template,
+  which made build documentation look like the submitted article; it now says
+  what it is.
+
+- The reason those drifted is that `paper/README.md` was not in the audited
+  document list, so `validation/audit_document_numbers.py` never read it. It is
+  now, together with four new rules that measure what it claims against the
+  artefacts themselves: bibliography entries from `references.bib`, page count
+  from the committed PDF (inflating the object streams with `zlib`, since
+  pdflatex writes the page tree compressed and a regex over the raw bytes finds
+  nothing), word count and margin from `count_words.py`, and the fault counts
+  from the `FAULTS` table in `verify_tex.py`. All four were proved by
+  injection. Two defects in the rules themselves were found and fixed while
+  proving them: markdown emphasis between a number and its noun
+  ("**N words** of main text") defeated the first pattern, and an unscoped
+  "N pages" rule reported the documentation site's correct page count as a
+  stale PDF claim, so the page rule now requires article context.
+
 ### Changed
 
 - The deduplication section claimed that "every deduplicator treats a shared

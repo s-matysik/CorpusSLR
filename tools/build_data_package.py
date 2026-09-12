@@ -44,8 +44,12 @@ INVENTORY = (
       "ASySD Diabetes set, with the published values and the derived ones "
       "marked separately.")),
     ("validation/labelled_test_set.csv", "gold_standard",
-     ("The ASySD Diabetes gold standard itself (Hair et al. 2023, CC BY 4.0), "
-      "so S2 can be recomputed without downloading anything.")),
+     ("The ASySD Diabetes gold standard itself (Hair et al. 2023), so S2 can "
+      "be recomputed without downloading anything. Third-party data under "
+      "the upstream project's GPL-3.0; see THIRD_PARTY_DATA.md.")),
+    ("validation/THIRD_PARTY_DATA.md", "gold_standard",
+     ("Provenance, pinned upstream commit, checksum and licence of the one "
+      "file in this package that was not produced here.")),
     ("validation/eval_asysd.py", "gold_standard",
      ("Regenerates every S2 number, the threshold sweep and the error "
       "analysis.")),
@@ -281,9 +285,16 @@ VERIFIED = (
 
 LICENCE = (
     ("The software and these measurements are MIT-licensed."
-     " gold_standard/labelled_test_set.csv is redistributed from the ASySD"
-     " project (Hair K, Bahor Z, Macleod M, Liao J, Sena E. BMC Biology"
-     " 21:189, 2023) under CC BY 4.0."),
+     " gold_standard/labelled_test_set.csv is third-party data, not ours:"
+     " it is redistributed unmodified from the ASySD project"
+     " (Hair K, Bahor Z, Macleod M, Liao J, Sena E. BMC Biology 21:189,"
+     " 2023), obtained from https://github.com/camaradesuk/ASySD, whose"
+     " repository is licensed GPL-3.0. An earlier version of this note"
+     " said CC BY 4.0 on the strength of the article's licence; the"
+     " article is CC BY but the dataset is not covered by it, and the OSF"
+     " project the article names declares no licence on any of its three"
+     " nodes. Provenance, checksum and pinned commit:"
+     " validation/THIRD_PARTY_DATA.md."),
 )
 
 UNRESOLVED_NOTE = (
