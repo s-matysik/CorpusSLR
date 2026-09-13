@@ -60,6 +60,60 @@ never distributed.
   section named EmbedSLR without citing it, the same omission the EndNote and
   SRA-DM rows had. The reference list now has twenty-two entries.
 
+### Added
+
+- `COVER_LETTER.md`, the submission letter. Every figure in it is read from a
+  saved measurement file, and the file is now in the audited document list, so
+  a figure in the letter cannot drift from the manuscript it accompanies.
+  Verified by injecting a wrong test count: caught.
+- `[project.urls]` gained Homepage, Documentation, Issues and Changelog. It
+  carried only Repository, so the package index would have shown no link to the
+  documentation site even though that site is live.
+
+### Changed
+
+- The distribution was examined before a first upload to the package index, and
+  the source archive is not publishable as built: at 9.6 MB it is dominated by
+  the evaluation corpora, and 4 MB of that is the ASySD gold standard, which is
+  third-party data under that project's GPL-3.0 licence. Shipping it inside a
+  package named and licensed MIT on a public index is a stronger act than
+  keeping it in the repository under an attribution notice. Trimming the archive
+  was measured rather than assumed: the same tree builds an archive of 2.3 MB,
+  but five tests then fail, all of them assembling the reviewer package, the
+  data package or the documentation site from inside the distribution, and the
+  untrimmed archive passes 1991 with none failing. The wheel needs no trimming
+  at all: it contains `corpusslr/` and the dist-info only, 233 KB, no validation
+  data and no third-party file. So the index release is the wheel, and the
+  source archive stays a repository artefact where
+  `validation/THIRD_PARTY_DATA.md` governs the terms.
+
+### Fixed
+
+- The sentence under the gold-standard table contradicted the abstract and the
+  table above it. Both said one missed duplicate and F1 0.9996; the sentence
+  said four, and attributed 0.9996 to development milestone 1.3. Measured on
+  the released code with `validation/eval_asysd.py`: TP 1260, FP 0, FN 1,
+  F1 0.9996, so the abstract and the table were right and only the sentence was
+  stale, left over from the state just after the `NA` identifier fix.
+  Previously stated: four missed duplicates.
+  The sentence now reports the measurement and
+  the fix's own effect from `na_doi_fix_impact.csv` (one false positive and nine
+  misses, to none and four). The same claim in different wording sat in
+  `MANUSCRIPT.md`, from which the submitted Word file is generated, and was
+  corrected there too.
+- `paper/corpusslr_softwarex.tex` was absent from the audited document list, so
+  no number in the submitted article had ever been checked against a
+  measurement; only its markdown mirror was. That is how the contradiction
+  survived. It is now audited, which surfaced no other disagreement, and a new
+  rule reads the gold-standard miss count from the row measured on the released
+  code and rejects any prose claiming a different one, in digits or in words,
+  scoped to gold-standard context so the cross-disciplinary miss counts are not
+  compared against it. Verified by reinjecting the exact defect: caught.
+- `paper/README.md` stated the main text at the limit with no room left. The
+  correction above shortened the article, so it is now 2981 words with 19 to
+  spare. Previously stated: 3000 words of main text.
+  Previously stated: a margin of 0 words.
+
 ### Fixed
 
 - The validation data package told the journal that

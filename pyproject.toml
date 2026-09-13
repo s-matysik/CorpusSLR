@@ -44,7 +44,11 @@ testpaths = ["tests"]
 addopts = "-q"
 
 [project.urls]
+Homepage = "https://s-matysik.github.io/CorpusSLR/"
+Documentation = "https://s-matysik.github.io/CorpusSLR/"
 Repository = "https://github.com/s-matysik/CorpusSLR"
+Issues = "https://github.com/s-matysik/CorpusSLR/issues"
+Changelog = "https://github.com/s-matysik/CorpusSLR/blob/main/CHANGELOG.md"
 
 [tool.setuptools.packages.find]
 include = ["corpusslr*"]
