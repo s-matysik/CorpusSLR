@@ -311,7 +311,7 @@ def test_the_supplement_title_states_the_current_version():
 @pytest.mark.skipif(not os.path.exists(_PAPER),
                     reason="paper/ is not present in this checkout")
 def test_the_markdown_metadata_table_agrees_with_the_article():
-    """The C1-C9 table exists in MANUSCRIPT.md and in the .tex.
+    """The C1-C8 table exists in MANUSCRIPT.md and in the .tex.
 
     Two copies is what let C1 fall a release behind: the .tex was bumped and
     the markdown was not, and the Word submission renders from the markdown.
@@ -320,7 +320,7 @@ def test_the_markdown_metadata_table_agrees_with_the_article():
     with open(os.path.join(ROOT, "MANUSCRIPT.md"), encoding="utf-8") as fh:
         md = fh.read()
     rows = re.findall(r"^\|\s*(C\d)\s*\|[^|]*\|\s*([^|]+?)\s*\|$", md, re.M)
-    assert len(rows) == 9, "the markdown metadata table has %d row(s)" % len(rows)
+    assert len(rows) == 8, "the markdown metadata table has %d row(s)" % len(rows)
     values = dict(rows)
     assert values["C1"] == corpusslr.__version__, (
         "the markdown C1 row says %s, the package is %s"

@@ -44,6 +44,27 @@ never distributed.
 
 ### Fixed
 
+- The code metadata table followed a superseded template. Read from the official
+  SoftwareX article template, version 6 of March 2026, the table carries eight
+  rows and no "Permanent link to Reproducible Capsule" row; an earlier version
+  had one as C3, which shifted every label below it by one. The submitted table
+  therefore labelled the licence as C4 where the template calls it C3, and so on
+  down the table, in a document whose own instructions say the template is
+  insisted upon. The table is now C1 to C8 with the template's labels verbatim,
+  and the browser-runnable notebook that row used to hold is named in the
+  illustrative example, which is where a runnable example belongs. Eight places
+  in the tests and the build tools asserted nine rows and were corrected with
+  it.
+- The abstract was 168 words where the template asks for about 100. It is now
+  119, keeping both validation figures and the downstream-format result.
+- Section 2 had no "Software functionalities" subsection. The template names it
+  alongside "Software architecture" as the two subsections of the software
+  description, so the functional groups are now introduced under that heading
+  before the detailed subsections, and "Architecture" is renamed to the
+  template's wording.
+
+### Fixed
+
 - The Word converter silently deleted content. A sentence wrapped as
   "... ours higher in 13 of / 15. Neither dominates ..." had its continuation
   read as item 15 of an ordered list; the marker was consumed and the submitted

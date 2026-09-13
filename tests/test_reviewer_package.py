@@ -565,7 +565,7 @@ def test_the_verifier_is_packaged_and_re_derives_every_claim(root):
         env=dict(os.environ, PYTHONPATH=REPO))
     assert proc.returncode == 0, proc.stdout[-3000:] + proc.stderr[-2000:]
     assert "AT LEAST ONE CLAIM" not in proc.stdout
-    for cid in ("C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9"):
+    for cid in ("C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8"):
         assert re.search(r"^%s\s" % cid, proc.stdout, re.M), \
             "%s produced no line" % cid
 

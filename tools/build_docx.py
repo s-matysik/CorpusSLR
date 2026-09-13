@@ -2,7 +2,7 @@
 
 Elsevier accepts Word for SoftwareX, and the journal's Word template is a
 single-column manuscript in Times New Roman 12 pt with the required section
-order and the C1-C9 "Code metadata" table before section 1. This script
+order and the C1-C8 "Code metadata" table before section 1. This script
 produces that layout from the same markdown the LaTeX version is built from,
 so the two cannot drift: both read MANUSCRIPT.md.
 
@@ -572,7 +572,7 @@ def _unlatex(s):
 
 
 def code_metadata_rows():
-    """The C1-C9 table, parsed from the article.
+    """The C1-C8 table, parsed from the article.
 
     The same table also sits in MANUSCRIPT.md, and keeping two copies is what
     let the C1 row fall a release behind: the .tex was bumped and the markdown
@@ -590,8 +590,8 @@ def code_metadata_rows():
     rows = []
     for m in re.finditer(r"(C\d)\s*&\s*(.+?)\s*&\s*(.+?)\s*\\\\", flat):
         rows.append((m.group(1), _unlatex(m.group(2)), _unlatex(m.group(3))))
-    if len(rows) != 9:
-        raise SystemExit("expected C1-C9, parsed %d row(s)" % len(rows))
+    if len(rows) != 8:
+        raise SystemExit("expected C1-C8, parsed %d row(s)" % len(rows))
     return rows
 
 
