@@ -148,11 +148,18 @@ cannot run has not passed.
 python count_words.py corpusslr_softwarex.tex
 ```
 
-Measured: **2981 words** of main text against the 3000-word limit, a margin of
-19 words. The article now sits exactly on the limit, so any addition needs a cut
-somewhere else. Excluded and reported separately: the frontmatter, all table bodies
-(404 words), listings (103 words), captions, the bibliography and the back
-matter. The counter was itself fault-tested: adding 100 known words moves the
+Measured under the journal's own rule, which counts the abstract, the running
+text, the captions and the footnotes and excludes the title, the authors, the
+affiliations, the references and the metadata tables: **3456 words** of main text
+against the 4000-word limit, a margin of
+544 words. Counting the listings as well gives 3643, still inside it. This file
+and the counter previously measured the running text alone against 3000, which
+is stricter than the journal on both the threshold and the components, and
+passages were trimmed to fit a limit that does not exist. The running text is
+2981 words and is still reported, as a body-length diagnostic rather than a
+constraint. Excluded from that diagnostic and reported separately: the
+frontmatter, all table bodies (407 words), listings (103 words), captions, the
+bibliography and the back matter. The counter was itself fault-tested: adding 100 known words moves the
 total by exactly +100, unwrapping a listing raises it, and deleting a sentence
 lowers it.
 

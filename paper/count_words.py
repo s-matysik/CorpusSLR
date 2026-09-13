@@ -1,8 +1,21 @@
-"""Count the words of the main text against the SoftwareX 3000-word limit.
+"""Count the article against the SoftwareX word limit.
 
-SoftwareX counts the body of the article. Excluded here, and each exclusion is
-reported separately so the reader can see what was left out rather than take
-the total on trust:
+Two numbers are reported, because the journal's rule and a conservative body
+count are not the same thing and confusing them once cost real content.
+
+The journal's published rule is 4000 words, "excluding: title, authors,
+affiliations, references, metadata tables and including: abstract, running
+text, captions, footnotes". That is the number to submit against, and it is
+printed first.
+
+This file originally counted only the running text against 3000, excluding the
+abstract and the captions. That was stricter than the journal on both the
+threshold and the components, and passages were trimmed to fit a limit that
+does not exist. The stricter figure is still printed, as a body-length
+diagnostic rather than a constraint.
+
+Excluded from the body figure, each reported separately so the reader can see
+what was left out rather than take the total on trust:
 
   - the frontmatter (title, authors, abstract, keywords)
   - the code metadata table and every other table body
@@ -95,25 +108,73 @@ def count(tex_path: str, verbose: bool = False) -> Tuple[int, Dict[str, int]]:
     return len(words), excluded
 
 
+def _strip_comments_text(text: str) -> str:
+    return "\n".join(re.sub(r"(?<!\\\\)%.*$", "", line) for line in text.split("\n"))
+
+
+def _plain_words(text: str) -> int:
+    text = re.sub(r"\\\\[a-zA-Z@]+\s*(\[[^\]]*\])?", " ", text)
+    text = re.sub(r"[{}$&~\\\\]", " ", text)
+    return len([w for w in text.split() if any(c.isalnum() for c in w)])
+
+
+def journal_components(path: str) -> Dict[str, int]:
+    """The pieces the journal's rule names, each measured separately.
+
+    The rule counts the abstract, the running text, the captions and the
+    footnotes, and excludes the title, the authors, the affiliations, the
+    references and the metadata tables. Listings are not named either way, so
+    they are reported separately and added only to the conservative bound.
+    """
+    with open(path, encoding="utf-8") as handle:
+        src = _strip_comments_text(handle.read())
+    abstract = re.search(r"\\begin\{abstract\}(.*?)\\end\{abstract\}", src, re.S)
+    return {
+        "abstract": _plain_words(abstract.group(1)) if abstract else 0,
+        "captions": sum(_plain_words(m.group(1))
+                        for m in re.finditer(r"\\caption\{(.*?)\}\s*\n", src, re.S)),
+        "footnotes": sum(_plain_words(m.group(1))
+                         for m in re.finditer(r"\\footnote\{(.*?)\}", src, re.S)),
+        "listings": sum(_plain_words(m.group(1))
+                        for m in re.finditer(
+                            r"\\begin\{lstlisting\}(.*?)\\end\{lstlisting\}", src, re.S)),
+    }
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("tex")
-    ap.add_argument("--limit", type=int, default=3000)
+    ap.add_argument("--limit", type=int, default=4000,
+                    help="the journal's published limit")
+    ap.add_argument("--body-limit", type=int, default=3000,
+                    help="diagnostic threshold for the running text alone")
     ap.add_argument("--verbose", action="store_true")
     args = ap.parse_args()
     n, excluded = count(args.tex, args.verbose)
+    parts = journal_components(args.tex)
+    journal = n + parts["abstract"] + parts["captions"] + parts["footnotes"]
+    upper = journal + parts["listings"]
     print(f"file: {os.path.relpath(args.tex)}")
     print()
-    print("excluded from the count (words each):")
+    print("excluded from the body figure (words each):")
     for env, c in sorted(excluded.items(), key=lambda kv: -kv[1]):
         print(f"  {env:16s} {c:5d}")
     print()
-    print(f"MAIN TEXT: {n} words")
-    print(f"LIMIT    : {args.limit} words")
-    margin = args.limit - n
+    print("the journal's rule: abstract + running text + captions + footnotes")
+    for k in ("abstract", "captions", "footnotes"):
+        print(f"  {k:16s} {parts[k]:5d}")
+    print(f"  {'running text':16s} {n:5d}")
+    print(f"JOURNAL COUNT: {journal} words")
+    print(f"LIMIT        : {args.limit} words")
+    margin = args.limit - journal
     verdict = "within limit" if margin >= 0 else "OVER LIMIT"
     print(f"{verdict}, margin {margin:+d} words "
-          f"({100.0 * n / args.limit:.1f}% of the limit)")
+          f"({100.0 * journal / args.limit:.1f}% of the limit)")
+    print(f"  including listings as well: {upper} words, "
+          f"margin {args.limit - upper:+d}")
+    print()
+    print(f"MAIN TEXT: {n} words   (running text only, diagnostic; "
+          f"not the journal's rule)")
     return 0 if margin >= 0 else 1
 
 

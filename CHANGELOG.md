@@ -35,6 +35,39 @@ never distributed.
 
 ### Added
 
+- `paper/highlights.md` and `SUGGESTED_REVIEWERS.md`, both asked for at
+  submission. The reviewer list is built from authors of work the manuscript
+  cites, with names and affiliations read from the record of the cited paper
+  rather than recalled, and all seven DOIs it cites verified to resolve and to
+  be present in the bibliography. The highlights are five bullets, each within
+  the 85-character limit, checked rather than eyeballed.
+
+### Fixed
+
+- The word counter measured the wrong rule against the wrong limit. The
+  journal's published rule is 4000 words, counting the abstract, the running
+  text, the captions and the footnotes and excluding the title, the authors,
+  the affiliations, the references and the metadata tables. This counter
+  measured the running text alone against 3000, excluding the abstract and the
+  captions, and passages were trimmed on several occasions to fit a threshold
+  that does not exist. Under the journal's rule the article is 3456 words with
+  544 to spare, or 3643 counting the listings as well. The counter now reports
+  the journal's figure first and keeps the running-text figure as a
+  body-length diagnostic; the number audit reads the journal count and its
+  margin as one pair, rather than pairing the body figure with the journal
+  margin.
+- C3 in the code metadata table gave a repository path where the row asks for a
+  permanent link to a reproducible capsule, and C8 pointed at two markdown files
+  in the repository although the rendered documentation site is live. C3 is now
+  the notebook's browser launch URL and C8 the site. The notebook was confirmed
+  present on the default branch and the site returns HTTP 200; the launch URL
+  itself could not be checked from this environment.
+- All 22 bibliography DOIs were verified to resolve against Crossref. Two
+  initially returned rate-limit responses and were retried rather than reported
+  as dead.
+
+### Added
+
 - Ten further references, each verified against its Crossref work record and
   recorded in `validation/references_verified.json`: the provenance of the
   EndNote and SRA-DM rows in the comparison table, which the article named
