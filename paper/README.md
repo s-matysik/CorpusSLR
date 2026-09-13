@@ -148,8 +148,8 @@ cannot run has not passed.
 python count_words.py corpusslr_softwarex.tex
 ```
 
-Measured: **3000 words** of main text against the 3000-word limit, a margin of
-0 words. The article now sits exactly on the limit, so any addition needs a cut
+Measured: **2981 words** of main text against the 3000-word limit, a margin of
+19 words. The article now sits exactly on the limit, so any addition needs a cut
 somewhere else. Excluded and reported separately: the frontmatter, all table bodies
 (404 words), listings (103 words), captions, the bibliography and the back
 matter. The counter was itself fault-tested: adding 100 known words moves the

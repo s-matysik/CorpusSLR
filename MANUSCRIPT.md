@@ -227,7 +227,7 @@ confusion matrices, since the paper reports precision and F1 only.
 | SRA-DM | 70 | 114 | 0.942 | 0.9096 | 0.926 |
 | Human reviewers | 3 | 368 | 0.997 | 0.7082 | 0.828 |
 
-The 1.7 row is below the 0.9996 reported for 1.3, and the difference is informative: rejecting the literal `NA` as an identifier removed 492 spurious links, and four true duplicates previously merged *through* them must now be found on title evidence alone. The earlier figure was partly an artefact.
+CorpusSLR matches the published precision of the best tool on this benchmark, with no false positives and one missed duplicate against ASySD's two. Reaching that was not threshold tuning. Rejecting the literal `NA` as an identifier removed 492 spurious links in this file alone, moving the measurement from one false positive and nine misses to none and four (`validation/na_doi_fix_impact.csv`); the separators described above account for the rest. Two of the five error classes fixed to reach this level were not threshold problems but normalisation defects that no amount of tuning would have removed: percent-encoded DOIs creating a second identity for the same work, and page fields carrying an article length rather than a location.
 
 Comparator rows are as published; precision and F1 are their reported values,
 recall is recomputed from their confusion matrices because the source does not

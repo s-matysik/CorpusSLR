@@ -38,7 +38,15 @@ DOCS = ["MANUSCRIPT.md", "SUPPLEMENTARY.md", "AUDIT_REPORT.md", "CHANGELOG.md",
         # Added after this file was found stating six references and a six-page
         # PDF against a twenty-two-entry bibliography and a seven-page article.
         # It documents the built paper, so its numbers age with every rebuild.
-        "paper/README.md"]
+        "paper/README.md",
+        # The submitted article itself, absent from this list until a sentence
+        # under Table 2 was found claiming four missed duplicates on the gold
+        # standard while the abstract and the table above it said one. Only the
+        # markdown mirror was audited, so nothing read the file that is sent.
+        "paper/corpusslr_softwarex.tex",
+        # The cover letter restates the headline figures for the editor, so
+        # it ages exactly like the manuscript and is checked with it.
+        "COVER_LETTER.md"]
 
 
 def measured_test_counts():
@@ -309,6 +317,26 @@ def _paper_facts():
             facts["source_faults"] = sum(
                 1 for e in entries
                 if not re.search(r"pdf|typeset|recompil", e, re.I))
+
+    # The headline accuracy figure. The prose under Table 2 claimed "four
+    # missed duplicates" and attributed 0.9996 to a development milestone, both
+    # left over from an intermediate state, while the abstract and the table
+    # said one miss. The abstract and the table were right, and nothing checked
+    # the sentence against them. The count is read from the row measured on the
+    # released code so a sentence cannot drift from it again.
+    metrics = os.path.join(HERE, "validation", "asysd_metrics.csv")
+    if os.path.exists(metrics):
+        with open(metrics, encoding="utf-8", newline="") as fh:
+            for row in csv.DictReader(fh):
+                method = (row.get("method") or "")
+                metric = (row.get("metric") or "")
+                if method.startswith("CorpusSLR") and "dev milestone" not in method \
+                        and "cluster level" in metric:
+                    try:
+                        facts["gold_fn"] = int(float(row["FN"]))
+                    except (KeyError, TypeError, ValueError):
+                        pass
+                    break
     return facts
 
 
@@ -350,6 +378,13 @@ def audit():
             # claim. The context decides, so the match is kept only when the
             # surrounding text is about the article and not about the site.
             (r"\b([\w-]+|\d+)\s+pages\b", "pdf_pages", "pages in the PDF"),
+            # Only counted where the surrounding text is about the biomedical
+            # gold standard: the cross-disciplinary sections state their own
+            # miss counts, which are different numbers about different data.
+            (r"\b([\w-]+|\d+)\s+missed\s+duplicates?\b", "gold_fn",
+             "misses on the gold standard"),
+            (r"\b([\w-]+|\d+)\s+false\s+negatives?\b", "gold_fn",
+             "false negatives on the gold standard"),
             # Markdown emphasis sits between the number and its noun
             # ("**2656 words** of main text"), which is how this claim survived
             # the first version of the rule.
@@ -371,6 +406,11 @@ def audit():
                     continue
                 if _historical(m.start()):
                     continue
+                if key == "gold_fn":
+                    window = txt[max(0, m.start() - 400):m.start() + 400]
+                    if not re.search(r"gold standard|ASySD|Diabetes|tab:gold",
+                                     window, re.I):
+                        continue
                 if key == "pdf_pages":
                     window = txt[max(0, m.start() - 120):m.end() + 120].lower()
                     about_site = re.search(r"build_site|site/|html|witryn", window)

@@ -496,18 +496,16 @@ Human reviewers & 3 & 368 & 0.997 & 0.7082 & 0.828 \\
 \end{tabular}
 \end{table}
 
-CorpusSLR matches the published precision of the best tool on this benchmark
-with no false positives and four missed duplicates against ASySD's two. The
-1.7 figure is below the 0.9996 measured for version 1.3, and the difference is
-informative rather than a regression: rejecting the literal \texttt{NA} as an
-identifier removed 492 spurious links, and four true duplicates that had
-previously been merged \emph{through} those links must now be found on title
-evidence alone. The earlier figure was partly an artefact of accepting a
-missing-value literal as an identifier. Two of the five error classes fixed to
-reach this level were not threshold problems but normalisation defects that no
-amount of tuning would have removed: percent-encoded DOIs creating a second
-identity for the same work, and page fields carrying an article length rather
-than a location.
+CorpusSLR matches the published precision of the best tool on this benchmark,
+with no false positives and one missed duplicate against ASySD's two. Reaching
+that was not threshold tuning. Rejecting the literal \texttt{NA} as an
+identifier removed 492 spurious links in this file alone, moving the
+measurement from one false positive and nine misses to none and four
+(\texttt{validation/na\_doi\_fix\_impact.csv}); the separators described above
+account for the rest. Two of the five error classes fixed to reach this level
+were not threshold problems but normalisation defects that no amount of tuning
+would have removed: percent-encoded DOIs creating a second identity for the
+same work, and page fields carrying an article length rather than a location.
 
 \subsection{Transfer across fifteen disciplines}
 
