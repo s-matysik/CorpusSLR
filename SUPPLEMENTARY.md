@@ -50,9 +50,19 @@ it reports any drift and exits non-zero. Data:
 N = 1,845 records, 1,261 labelled duplicates. Cluster-level metrics in the
 convention of Hair et al. (2023).
 
+All rows are cluster-level, the basis Hair et al. define and report: a cluster
+counts as a true positive when the records the gold standard groups together
+are grouped together here. The CorpusSLR row is measured on the released
+1.0.0 code by `validation/eval_asysd.py`. Earlier rows of
+`validation/asysd_metrics.csv` record development milestones and ablation
+steps, and one intermediate ablation step (TP 1257, FN 4) previously stood in
+this table by mistake. Comparator rows are as published, with recall
+recomputed from their confusion matrices because the source does not
+tabulate it.
+
 | tool | TP | FP | FN | precision | recall | F1 |
 |---|---:|---:|---:|---:|---:|---:|
-| **CorpusSLR 1.0** | **1257** | **0** | **4** | **1.0000** | **0.9968** | **0.9984** |
+| **CorpusSLR 1.0.0** | **1260** | **0** | **1** | **1.0000** | **0.9992** | **0.9996** |
 | ASySD (Hair et al. 2023) | 1259 | 0 | 2 | 1.000 | 0.9984 | 0.999 |
 | EndNote | 1218 | 0 | 43 | 1.000 | 0.9659 | 0.983 |
 | SRA-DM | 1147 | 70 | 114 | 0.942 | 0.9096 | 0.926 |
@@ -128,8 +138,9 @@ Data: `bibliometrix_verification.json`.
 1. The DOI arbiter defines a duplicate as one identifier, while Cochrane defines
    it as one study. Both precisions are reported; the choice is the review
    team's.
-2. Records without a DOI cannot enter the ground truth (1.7 %-6.8 % per
-   discipline), so a systematic failure confined to DOI-less records would be
+2. Records without a DOI cannot enter the reference standard (0.8 % of
+   records in biology to 25.6 % in computer science, the complement of the
+   `doi_coverage` column of `validation/domains_15_final.csv`), so a systematic failure confined to DOI-less records would be
    invisible to this protocol.
 3. Retrieval was capped at 150 records per database per query to share the Web
    of Science daily budget; real reviews retrieve more, where cluster sizes and

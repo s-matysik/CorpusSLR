@@ -342,6 +342,14 @@ def _paper_facts():
                         and "cluster level" in metric:
                     try:
                         facts["gold_fn"] = int(float(row["FN"]))
+                        # The whole confusion matrix, because the supplement carried an
+                        # intermediate ablation step (TP 1257, FN 4) under the released
+                        # version's name and the arithmetic scanner passed it: that row
+                        # was internally consistent, it just did not describe this
+                        # software.
+                        facts["gold_row"] = (int(float(row["TP"])),
+                                             int(float(row["FP"])),
+                                             int(float(row["FN"])))
                     except (KeyError, TypeError, ValueError):
                         pass
                     break
@@ -428,6 +436,38 @@ def audit():
                         continue
                 problems.append((rel, what, m.group(0).strip()[:52],
                                  "{} vs measured {}".format(stated, paper[key])))
+
+        # A table row naming this software on the gold standard must carry the
+        # confusion matrix measured on the released code. The arithmetic
+        # scanner cannot catch a wrong one, because a row lifted from an
+        # intermediate ablation step is internally consistent; only comparing
+        # it against the measurement finds it.
+        if paper.get("gold_row"):
+            tp_m, fp_m, fn_m = paper["gold_row"]
+            # Only rows naming the released version. Ablation and milestone
+            # rows carry other configurations' matrices by design, and an
+            # earlier version of this rule reported those as errors.
+            row_re = re.compile(
+                r"^\|\s*\**\s*(CorpusSLR[^|]*?)\s*\**\s*\|\s*\**\s*([\d,]+)\s*\**\s*"
+                r"\|\s*\**\s*([\d,]+)\s*\**\s*\|\s*\**\s*([\d,]+)\s*\**\s*\|",
+                re.M)
+            release = corpusslr.__version__
+            short = ".".join(release.split(".")[:2])
+            for m in row_re.finditer(txt):
+                label = m.group(1)
+                if not re.search(r"\b(%s|%s)\b" % (re.escape(release),
+                                                    re.escape(short)), label):
+                    continue
+                if re.search(r"ablac|ablation|milestone|etap|wariant", label, re.I):
+                    continue
+                if _historical(m.start()):
+                    continue
+                stated = tuple(int(g.replace(",", "")) for g in m.groups()[1:])
+                if stated != (tp_m, fp_m, fn_m):
+                    problems.append((rel, "gold-standard row",
+                                     m.group(0).strip()[:56],
+                                     "%s vs measured %s" % (stated,
+                                                            (tp_m, fp_m, fn_m))))
 
         # A count is a count whether or not the word "test" sits next to it.
         # The first version of this check required that word, so

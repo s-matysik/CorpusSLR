@@ -44,6 +44,33 @@ never distributed.
 
 ### Fixed
 
+- The supplement's gold-standard table contradicted the article. It reported
+  TP 1257, FP 0, FN 4, F1 0.9984 under the released version's name, which would
+  have put ASySD marginally ahead, while the abstract and the article's own
+  table said F1 0.9996 with one miss. Re-measured on the released 1.0.0 code by
+  `validation/eval_asysd.py`: cluster-level TP 1260, FP 0, FN 1, precision
+  1.0000, recall 0.9992, F1 0.9996. The article was right; the supplement had
+  lifted an intermediate ablation step from `validation/asysd_metrics.csv`,
+  where TP 1257 and FN 4 is the "+ blocking rounds" row of a development
+  milestone. The arithmetic scanner had passed it because the row was
+  internally consistent, so a rule now compares any table row naming the
+  released version against the measured confusion matrix, scoped to exclude
+  ablation and milestone rows, which carry other configurations by design.
+  Proven by reinjecting the exact row. The table also now names its metric:
+  every row is cluster-level, the basis Hair et al. define, so the comparison
+  is like for like.
+- The supplement said 1.7 % to 6.8 % of records per discipline lack a DOI. The
+  measured range is 0.8 % in biology to 25.6 % in computer science, and the old
+  figures came from the superseded four-discipline study. The article's own
+  coverage range, 74.3 % to 99.2 %, turned out to be correct but unbacked: the
+  reproduction script computed `doi_coverage` into its result row and the
+  committed CSV had been written before that column reached the file, so the
+  range rested on nothing a reader could check. Regenerating the table writes
+  it: computer science 74.39 %, biology 99.16 %, history 93.16 %, each matching
+  the article. `--check` reproduces the table.
+
+### Fixed
+
 - The code metadata table followed a superseded template. Read from the official
   SoftwareX article template, version 6 of March 2026, the table carries eight
   rows and no "Permanent link to Reproducible Capsule" row; an earlier version
