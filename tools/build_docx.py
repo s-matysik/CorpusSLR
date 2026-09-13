@@ -751,13 +751,32 @@ def build_supplementary(outdir):
     return path, counts
 
 
+def build_cover_letter(outdir):
+    """The cover letter, in the same layout as the manuscript.
+
+    Editors read it in Word alongside the article, so it is generated from the
+    same source and with the same styles rather than typed separately: a figure
+    quoted here has to be the figure the article states, and the number audit
+    covers this file for exactly that reason. No line numbering, which belongs
+    on a manuscript under review and not on a letter.
+    """
+    with open(os.path.join(HERE, "COVER_LETTER.md"), encoding="utf-8") as fh:
+        src = strip_provenance_comments(fh.read())
+    doc = new_document()
+    counts = render(doc, src, os.path.join(HERE, "paper", "figures"))
+    path = os.path.join(outdir, "CorpusSLR_SoftwareX_cover_letter.docx")
+    doc.save(path)
+    return path, counts
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--outdir", default=os.path.join(HERE, "paper", "docx"))
     args = ap.parse_args(argv)
     os.makedirs(args.outdir, exist_ok=True)
 
-    for build in (build_manuscript, build_supplementary):
+    for build in (build_manuscript, build_supplementary,
+                  build_cover_letter):
         path, counts = build(args.outdir)
         print("wrote %s (%s)"
               % (os.path.relpath(path, HERE),

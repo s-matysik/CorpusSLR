@@ -454,3 +454,40 @@ def test_the_markdown_and_the_article_agree_on_the_discipline_count():
         wrong = sorted(v for v in stated if v != measured)
         assert not wrong, ("%s states %s disciplines; the table has %d"
                            % (rel, wrong, measured))
+
+
+# --------------------------------------------------------------------------
+# The cover letter is generated too, so what reaches the editor is testable.
+# --------------------------------------------------------------------------
+
+def test_the_cover_letter_is_built_and_carries_the_headline_figures():
+    import csv
+    import pathlib
+    from docx import Document
+    from docx.oxml.ns import qn
+    root = pathlib.Path(__file__).resolve().parents[1]
+    path = root / "paper" / "docx" / "CorpusSLR_SoftwareX_cover_letter.docx"
+    if not path.exists():
+        import pytest
+        pytest.fail("the cover letter is not built; run tools/build_docx.py")
+    doc = Document(str(path))
+    body = _normalise("\n".join(p.text for p in doc.paragraphs))
+    # The letter restates the article's headline result, so it must agree with
+    # the row measured on the released code rather than with a recollection.
+    with open(root / "validation" / "asysd_metrics.csv", encoding="utf-8",
+              newline="") as handle:
+        gold = [r for r in csv.DictReader(handle)
+                if r["method"].startswith("CorpusSLR")
+                and "dev milestone" not in r["method"]
+                and "cluster level" in (r.get("metric") or "")][0]
+    assert "TP %d, FP %d, FN %d" % (int(float(gold["TP"])), int(float(gold["FP"])),
+                                    int(float(gold["FN"]))) in body, body[:300]
+    # Line numbering belongs on a manuscript under review, not on a letter.
+    assert doc.sections[0]._sectPr.find(qn("w:lnNumType")) is None
+    # Every prose paragraph of the source must survive the conversion whole.
+    src = (root / "COVER_LETTER.md").read_text(encoding="utf-8")
+    import re as _re
+    blocks = [b.strip() for b in _re.split(r"\n\s*\n", src)
+              if b.strip() and b.strip()[0] not in "#|!%-"]
+    missing = [_normalise(b)[:80] for b in blocks if _normalise(b) not in body]
+    assert not missing, "absent from the letter: %s" % missing[:2]

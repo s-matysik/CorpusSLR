@@ -35,6 +35,17 @@ never distributed.
 
 ### Added
 
+- The cover letter is generated as a Word document by `tools/build_docx.py`,
+  in the manuscript's layout and without line numbering, which belongs on a
+  manuscript under review rather than on a letter. It was also cut from 812
+  words to 426: the letter competes with the article for the editor's
+  attention, and everything it repeated from the abstract was spending that
+  attention twice. A test pins the generated file against the gold-standard row
+  measured on the released code and requires every prose paragraph of the
+  source to survive the conversion whole.
+
+### Added
+
 - `paper/highlights.md` and `SUGGESTED_REVIEWERS.md`, both asked for at
   submission. The reviewer list is built from authors of work the manuscript
   cites, with names and affiliations read from the record of the cited paper
