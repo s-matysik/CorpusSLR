@@ -235,11 +235,6 @@ tabulate it. CorpusSLR finds one more true duplicate than ASySD with no false
 positives. Its remaining error is a cluster the gold standard splits between a
 journal article and its conference abstract.
 
-Two of the five error classes fixed to reach this level were not threshold
-problems but normalisation defects that no amount of tuning would have removed:
-percent-encoded DOIs creating a second identity for the same work, and page
-fields carrying an article length rather than a location.
-
 ### 3.2 Transfer across fifteen disciplines
 
 Accuracy measured on one biomedical benchmark says nothing about a review in
@@ -340,11 +335,11 @@ The third is reproducibility, in the sense of the FAIR principles [21], at two l
 
 CorpusSLR covers the span from a structured query to a PRISMA-compliant,
 deduplicated, auditable corpus, with deduplication validated against a published
-gold standard and across four disciplines. Both Web of Science clients are exercised against the live service: the Expanded API returned an abstract on 100/100 records where Starter returns none.
+gold standard and across fifteen disciplines. Both Web of Science clients are exercised against the live service: the Expanded API returned an abstract on 100/100 records where Starter returns none.
 
 Its limitations are stated plainly:
- the social-science arms are small (67 and 116 evaluable
-pairs, no confidence intervals), citation-based strategies such as snowballing [22] are outside its scope, and thesaurus expansion (MeSH,
+ the smallest discipline arms carry few pairs (computer science 66,
+business informatics and history 102 each, no confidence intervals), citation-based strategies such as snowballing [22] are outside its scope, and thesaurus expansion (MeSH,
 Emtree) is not performed, so a librarian-designed strategy still outperforms a
 compiled one in biomedical databases.
 

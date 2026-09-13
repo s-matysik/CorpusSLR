@@ -311,3 +311,75 @@ def test_the_manuscript_carries_no_placeholder():
                     continue
                 found.append("%s: %s" % (rel, line.strip()[:70]))
     assert not found, "placeholder text would be submitted: %s" % found
+
+
+# --------------------------------------------------------------------------
+# Nothing may be lost between the markdown and the Word file.
+#
+# A sentence wrapped as "... ours higher in 13 of\n15. Neither dominates ..."
+# had its continuation read as item 15 of an ordered list, and the marker was
+# consumed: the submitted document read "higher in 13 of" and ran into the next
+# sentence. No check noticed, because the number audit compares figures against
+# measurements and this was a deletion, not a disagreement.
+# --------------------------------------------------------------------------
+
+def _normalise(text):
+    import re
+    text = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", text)   # links render as their label
+    text = re.sub(r"[`*_]", "", text)
+    return " ".join(text.split())
+
+
+def test_no_markdown_sentence_is_dropped_in_conversion():
+    import pathlib
+    import re
+    from docx import Document
+    root = pathlib.Path(__file__).resolve().parents[1]
+    doc = root / "paper" / "docx" / "CorpusSLR_SoftwareX_manuscript.docx"
+    if not doc.exists():                       # built by tools/build_docx.py
+        import pytest
+        pytest.fail("the Word manuscript is not built; run tools/build_docx.py")
+    body = _normalise("\n".join(p.text for p in Document(str(doc)).paragraphs)
+                      + "\n" + "\n".join(c.text for t in Document(str(doc)).tables
+                                         for r in t.rows for c in r.cells))
+    src = (root / "MANUSCRIPT.md").read_text(encoding="utf-8")
+    # Prose paragraphs only: tables, code fences, images and headings are
+    # transformed rather than copied, and the metadata block is regenerated.
+    blocks, skip = [], False
+    for block in re.split(r"\n\s*\n", src):
+        stripped = block.strip()
+        if stripped.startswith("```"):
+            skip = not skip
+            continue
+        if skip or not stripped or stripped[0] in "#|!%":
+            continue
+        if stripped.startswith(("- ", "* ")) or re.match(r"^\d+\.\s", stripped):
+            continue
+        blocks.append(stripped)
+    # Each paragraph must survive WHOLE and contiguous. Checking only its tail
+    # was not enough: the deletion that motivated this test happened in the
+    # middle of a paragraph, and a tail check passed over it.
+    missing = []
+    for block in blocks:
+        flat = _normalise(block)
+        if flat and flat not in body:
+            missing.append(flat[:90])
+    assert not missing, ("text present in the markdown but absent or broken in "
+                         "the Word file: %s" % missing[:3])
+
+
+def test_no_paragraph_is_written_twice():
+    """A paragraph appearing twice is an editing leftover, not emphasis."""
+    import pathlib
+    import re
+    from collections import Counter
+    root = pathlib.Path(__file__).resolve().parents[1]
+    for rel in ("MANUSCRIPT.md", "SUPPLEMENTARY.md", "paper/corpusslr_softwarex.tex"):
+        path = root / rel
+        if not path.exists():
+            continue
+        blocks = [_normalise(b) for b in
+                  re.split(r"\n\s*\n", path.read_text(encoding="utf-8"))]
+        counts = Counter(b for b in blocks if len(b.split()) >= 25)
+        repeated = [b[:70] for b, n in counts.items() if n > 1]
+        assert not repeated, "%s repeats a paragraph: %s" % (rel, repeated)

@@ -75,7 +75,7 @@ network access:
   institutional collaboration network;
 - a lossless round trip through the package's own parser on a real 597-record
   vendor export, 7,761 field comparisons, zero mismatches;
-- 2,117 offline tests, no network access anywhere in the suite, on Python 3.9
+- 2119 offline tests, no network access anywhere in the suite, on Python 3.9
   through 3.13.
 
 The validation data are packaged separately for review, with a manifest mapping

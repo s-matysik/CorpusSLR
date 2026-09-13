@@ -7,7 +7,7 @@ Regenerate with `python validation/submission_checklist.py`.
 ## Verified
 
 - [x] **Test suite passes**
-      2117 passed in 16.65s
+      2119 passed in 39.84s
 - [x] **Coverage measured and above the CI floor**
       TOTAL                                   7006    159    98%
 - [x] **Offline execution enforced, not asserted**
@@ -15,7 +15,7 @@ Regenerate with `python validation/submission_checklist.py`.
 - [x] **Static analysis clean**
       ruff: All checks passed! | mypy: Success: no issues found in 40 source files
 - [x] **Metadata agree across all five files**
-      15 passed in 0.35s
+      15 passed in 0.36s
 - [x] **Every figure in the documentation follows from a measurement**
       all stated figures agree with their measurements
 - [x] **Coverage against the project specification measured**

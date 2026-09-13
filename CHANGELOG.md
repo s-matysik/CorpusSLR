@@ -44,6 +44,36 @@ never distributed.
 
 ### Fixed
 
+- The Word converter silently deleted content. A sentence wrapped as
+  "... ours higher in 13 of / 15. Neither dominates ..." had its continuation
+  read as item 15 of an ordered list; the marker was consumed and the submitted
+  document read "higher in 13 of" running straight into the next sentence. Any
+  wrapped line beginning with a number and a period, a year or a count, was
+  exposed. A list may now only begin a block, which is where markdown allows
+  one. Two guards were added and each was proven by reinjecting the defect it
+  covers: every prose paragraph of the markdown must appear whole and
+  contiguous in the Word file, and no paragraph of 25 words or more may appear
+  twice in the manuscript, the supplement or the article source. The first
+  guard initially checked only a paragraph's tail and passed over the very
+  deletion that motivated it, because that deletion was mid-paragraph.
+- Three defects in `MANUSCRIPT.md`, the source the submitted Word file is
+  generated from, which the article source did not share: the conclusions said
+  the cross-disciplinary validation covered four disciplines rather than
+  fifteen; the limitations named the two smallest arms of the superseded
+  four-discipline study (previously stated: 67 and 116 evaluable pairs) rather
+  than the current smallest arms, computer science at 66 pairs and business
+  informatics and history at 102 each; and a paragraph on the two
+  normalisation defects appeared twice, once standing alone and once folded
+  into the paragraph above it. The markdown had been drifting from the article
+  source while only the article source was audited.
+- `README.md` still described the superseded four-discipline study. It now
+  states the fifteen-discipline result, with the earlier study kept for the
+  calibration finding it established. Linking the two new files revealed that
+  the site builder refuses unresolved internal links, which is correct: neither
+  is published by the site, so they are named rather than linked.
+
+### Fixed
+
 - The word counter measured the wrong rule against the wrong limit. The
   journal's published rule is 4000 words, counting the abstract, the running
   text, the captions and the footnotes and excluding the title, the authors,
@@ -114,7 +144,8 @@ never distributed.
   was measured rather than assumed: the same tree builds an archive of 2.3 MB,
   but five tests then fail, all of them assembling the reviewer package, the
   data package or the documentation site from inside the distribution, and the
-  untrimmed archive passes 1991 with none failing. The wheel needs no trimming
+  untrimmed archive had none failing; previously stated: 1991 passing in that
+  archive at that measurement. The wheel needs no trimming
   at all: it contains `corpusslr/` and the dist-info only, 233 KB, no validation
   data and no third-party file. So the index release is the wheel, and the
   source archive stays a repository artefact where
