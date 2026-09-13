@@ -290,9 +290,17 @@ def _paper_facts():
     if os.path.exists(counter) and os.path.exists(tex):
         out = subprocess.run([sys.executable, counter, tex], cwd=HERE,
                              capture_output=True, text=True).stdout
-        m = re.search(r"MAIN TEXT:\s*([\d,]+)\s*words", out)
+        # The journal's rule is the authoritative pair: its count and the margin
+        # against its 4000-word limit. The counter also prints the running text
+        # alone, which is a body-length diagnostic and a different number, so
+        # reading "MAIN TEXT" here while reading the journal margin below would
+        # pair figures that do not belong together.
+        m = re.search(r"JOURNAL COUNT:\s*([\d,]+)\s*words", out)
         if m:
             facts["main_words"] = int(m.group(1).replace(",", ""))
+        m = re.search(r"MAIN TEXT:\s*([\d,]+)\s*words", out)
+        if m:
+            facts["body_words"] = int(m.group(1).replace(",", ""))
         m = re.search(r"margin\s*([+-])\s*(\d+)\s*words", out)
         if m:
             facts["margin"] = int(m.group(2)) * (1 if m.group(1) == "+" else -1)
