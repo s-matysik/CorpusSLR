@@ -426,13 +426,16 @@ corpus.add_records(parse_ris_file("embase.ris"),        # dialect auto-detected
 ## Validation
 
 Deduplication is validated on two levels: a published biomedical gold standard
-(below) and an identifier-blind cross-disciplinary study covering biomedicine,
-computer science, management and economics (7,440 records harvested from 5
-databases, 7,187 evaluated after document-type curation - 
-see [`validation/multidomain_validation.md`](validation/multidomain_validation.md)).
-The cross-disciplinary study found that the 0.93 default needs no per-discipline
-tuning (argmax gain ≤0.006 in every field) and that the biomedical arm is not the
-strongest, so the defaults are not fitted to biomedical conventions.
+(below) and an identifier-blind cross-disciplinary study covering 15
+disciplines (13,809 live records, 2,584 judgeable pairs, median pairwise
+F1 0.9592; per-discipline figures in `validation/domains_15_final.csv`,
+reproduced by `validation/eval_domains_15.py`).
+An earlier four-discipline study is kept in
+[`validation/multidomain_validation.md`](validation/multidomain_validation.md)
+for the calibration result it established: the 0.93 default needs no
+per-discipline tuning, with an argmax gain of at most 0.006 in every field, and
+the biomedical arm is not the strongest, so the defaults are not fitted to
+biomedical conventions.
 
 Deduplication is validated against the ASySD gold-standard *Diabetes* dataset
 (N = 1845; 1261 true duplicates, 584 unique), the benchmark published with
@@ -509,7 +512,7 @@ reproduction script and the calibration and performance data are in
 [`validation/`](validation/).
 
 ```bash
-python -m pytest tests -q                 # 2117 offline tests, 98% coverage
+python -m pytest tests -q                 # 2119 offline tests, 98% coverage
 python validation/eval_asysd.py --gold validation/labelled_test_set.csv
 ```
 

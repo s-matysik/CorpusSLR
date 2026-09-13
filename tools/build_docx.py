@@ -505,6 +505,17 @@ def render(doc, markdown, figure_root, skip_headings=()):
 
         b = re.match(r"^[-*]\s+(.*)$", stripped)
         n = re.match(r"^\d+\.\s+(.*)$", stripped)
+        # A list starts a block. Matching one mid-paragraph silently deleted
+        # content from the submitted document: a sentence wrapped as
+        # "... ours higher in 13 of\n15. Neither dominates; ..." had its
+        # continuation read as item 15 of an ordered list, and the marker "15."
+        # was consumed, so the Word file read "higher in 13 of" and ran
+        # straight into the next sentence. Any wrapped line beginning with a
+        # number and a period, a year or a count, was exposed to this. The
+        # buffer being empty means the previous line was blank or a block
+        # boundary, which is where a list may legitimately begin.
+        if (b or n) and para:
+            b = n = None
         if b or n:
             flush()
             item = [(b or n).group(1)]
