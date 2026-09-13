@@ -150,9 +150,9 @@ python count_words.py corpusslr_softwarex.tex
 
 Measured under the journal's own rule, which counts the abstract, the running
 text, the captions and the footnotes and excludes the title, the authors, the
-affiliations, the references and the metadata tables: **3456 words** of main text
+affiliations, the references and the metadata tables: **3529 words** of main text
 against the 4000-word limit, a margin of
-544 words. Counting the listings as well gives 3643, still inside it. This file
+471 words. Counting the listings as well gives 3643, still inside it. This file
 and the counter previously measured the running text alone against 3000, which
 is stricter than the journal on both the threshold and the components, and
 passages were trimmed to fit a limit that does not exist. The running text is

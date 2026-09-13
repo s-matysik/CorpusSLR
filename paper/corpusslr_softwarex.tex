@@ -69,19 +69,14 @@ deduplicated corpus}
 A systematic literature review rests on a multi-database search, but the
 databases disagree about query syntax, field semantics, paging and export
 format, and every disagreement is paid for in manual work or in silently lost
-records. CorpusSLR is a Python library that compiles one structured query into
-the syntax of each supported database, retrieves through native APIs or parses
-the file exports of databases without an open API, deduplicates the result
-with a cascading and fully auditable procedure, and generates the PRISMA 2020
-flow diagram and the PRISMA-S search appendix from recorded provenance rather
-than reconstructing them afterwards. Deduplication reaches F1 0.9996
-(0 false positives, 1 false negative) on the published ASySD Diabetes gold
-standard, and a median pairwise F1 of 0.9592 across fifteen disciplines
-(13\,809 live records, 2584 judgeable pairs) under an identifier-blind
-protocol. The merged corpus is written in Scopus export layout, verified by
-executing \texttt{bibliometrix::convert2df()} on it. The package depends only
-on the standard library plus \texttt{requests} and runs on Python 3.9 and
-later.
+records. CorpusSLR compiles one structured query into the syntax of each
+supported database, retrieves through native APIs or parses file exports,
+deduplicates with an auditable cascade, and generates the PRISMA 2020 flow
+diagram and the PRISMA-S search appendix from recorded provenance rather than
+reconstructing them afterwards. Deduplication reaches F1 0.9996 on the
+published ASySD gold standard and a median pairwise F1 of 0.9592 across fifteen
+disciplines under an identifier-blind protocol. The corpus is written in Scopus
+export layout, verified by running \texttt{bibliometrix::convert2df()} on it.
 \end{abstract}
 
 \begin{keyword}
@@ -92,7 +87,11 @@ bibliographic databases \sep evidence synthesis
 \end{frontmatter}
 
 %% ------------------------------------------------------------------
-%% Code metadata table (SoftwareX requirement, fields C1-C9)
+%% Code metadata table (SoftwareX requirement, fields C1-C8).
+%% Template version 6 (March 2026) carries eight rows and no "Reproducible
+%% Capsule" row; an earlier version had one as C3, which shifted every label
+%% below it by one. The browser-runnable notebook that row used to hold is
+%% named in the illustrative example instead.
 %% ------------------------------------------------------------------
 \begin{table*}[t]
 \caption{Code metadata.}
@@ -105,23 +104,19 @@ bibliographic databases \sep evidence synthesis
 C1 & Current code version & 1.0.0 \\
 C2 & Permanent link to code/repository used for this code version &
 \url{https://github.com/s-matysik/CorpusSLR} \\
-C3 & Permanent link to Reproducible Capsule &
-\url{https://colab.research.google.com/github/s-matysik/CorpusSLR/blob/main/notebooks/corpusslr_colab.ipynb}
-(a 26-cell notebook running the whole workflow in the browser, with no local
-installation) \\
-C4 & Legal Code License & MIT License \\
-C5 & Code versioning system used & git \\
-C6 & Software code languages, tools, and services used &
+C3 & Legal code license & MIT License \\
+C4 & Code versioning system used & git \\
+C5 & Software code languages, tools and services used &
 Python (>= 3.9) \\
-C7 & Compilation requirements, operating environments and dependencies &
+C6 & Compilation requirements, operating environments and dependencies &
 Pure Python, no compilation. Runtime dependency: \texttt{requests} >= 2.28.
 Optional: \texttt{python-docx} >= 1.1 for the .docx appendix. Development:
 \texttt{pytest}, \texttt{pytest-cov}. OS independent \\
-C8 & If available, link to developer documentation/manual &
+C7 & If available, link to developer documentation/manual &
 \url{https://s-matysik.github.io/CorpusSLR/}, built from
 \texttt{docs/user\_guide.md} and the generated
 \texttt{docs/api\_reference.md} \\
-C9 & Support email for questions & Via the repository issue tracker \\
+C8 & Support email for questions & Via the repository issue tracker \\
 \bottomrule
 \end{tabular}
 \end{table*}
@@ -178,7 +173,7 @@ appendix are generated from recorded provenance.
 \section{Software description}
 \label{sec:description}
 
-\subsection{Architecture}
+\subsection{Software architecture}
 
 A \texttt{SearchQuery} holds blocks of synonyms, a year range, document types
 and languages, and compiles to Scopus, PubMed, OpenAlex, Crossref, Semantic
@@ -193,6 +188,18 @@ Records are normalised \texttt{Record} dataclasses. DOIs are lowercased,
 percent-decoded and stripped of resolver prefixes; titles are transliterated
 before Unicode decomposition, so that stroked and ligature letters survive
 normalisation instead of collapsing into gaps.
+
+\subsection{Software functionalities}
+
+The library exposes six groups of functionality, each detailed below: compiling
+one structured query into the syntax of every supported database; retrieving
+records through native APIs or parsing the file exports of databases without
+one; merging duplicates with an auditable cascade that logs the evidence for
+every decision; generating the PRISMA 2020 flow diagram and the PRISMA-S search
+appendix from recorded provenance; flagging retracted records and retraction
+notices separately; and writing the merged corpus in the export layout that
+downstream bibliometric tools already read. A command line and a terminal
+interface cover the same workflow for users who do not write Python.
 
 \subsection{Retrieval and parsing}
 
@@ -378,6 +385,9 @@ directly so that the example runs offline, without an API key; in a review
 they would come from a client such as
 \texttt{ScopusSource(api\_key=...).search(query)}. The example is kept
 runnable as \texttt{paper/listing\_example.py} in the repository.
+The same workflow runs in the browser with no local installation, as a
+notebook of 26 cells:
+\url{https://colab.research.google.com/github/s-matysik/CorpusSLR/blob/main/notebooks/corpusslr_colab.ipynb}.
 
 \begin{lstlisting}[language=Python,caption={A complete review in the library
 API. Runs offline; the file is executed as part of preparing this

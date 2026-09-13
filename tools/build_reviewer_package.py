@@ -78,7 +78,7 @@ INVENTORY = [
      ("The typeset article as a reviewer receives it: elsarticle, six pages, "
       "compiled from the .tex beside it with zero errors and zero warnings.")),
     ("paper/corpusslr_softwarex.tex", "manuscript",
-     ("The article source in the SoftwareX template, including the C1-C9 code "
+     ("The article source in the SoftwareX template, including the C1-C8 code "
       "metadata table, both figures and three code listings.")),
     ("paper/references.bib", "manuscript",
      ("The bibliography, restricted to records confirmed at Crossref; the "

@@ -11,14 +11,12 @@
 |---|---|---|
 | C1 | Current code version | 1.0.0 |
 | C2 | Permanent link to code/repository used for this code version | https://github.com/s-matysik/CorpusSLR |
-| C3 | Permanent link to Reproducible Capsule | notebooks/corpusslr_colab.ipynb in the repository, a 26-cell Google Colab notebook running the whole workflow |
-| C4 | Legal Code License | MIT License |
-| C5 | Code versioning system used | git |
-| C6 | Software code languages, tools, and services used | Python (>= 3.9) |
-| C7 | Compilation requirements, operating environments and dependencies | Pure Python, no compilation. Runtime dependency: requests >= 2.28. Optional: python-docx >= 1.1 for the .docx appendix. Development: pytest, pytest-cov. OS independent |
-| C8 | If available, link to developer documentation/manual | docs/user_guide.md and docs/api_reference.md in the repository |
-| C9 | Support email for questions | Via the repository issue tracker |
-
+| C3 | Legal code license | MIT License |
+| C4 | Code versioning system used | git |
+| C5 | Software code languages, tools and services used | Python (>= 3.9) |
+| C6 | Compilation requirements, operating environments and dependencies | Pure Python, no compilation. Runtime dependency: requests >= 2.28. Optional: python-docx >= 1.1 for the .docx appendix. Development: pytest, pytest-cov. OS independent |
+| C7 | If available, link to developer documentation/manual | https://s-matysik.github.io/CorpusSLR/, built from docs/user_guide.md and the generated docs/api_reference.md |
+| C8 | Support email for questions | Via the repository issue tracker |
 ## 1. Motivation and significance
 
 A systematic literature review stands or falls on its search, in medicine and equally in fields that adopted the method later, such as software engineering [1]. Two decades of
@@ -55,7 +53,7 @@ provenance rather than reconstructed afterwards.
 
 ## 2. Software description
 
-### 2.1 Architecture
+### 2.1 Software architecture
 
 A `SearchQuery` holds blocks of synonyms, a year range, document types and
 languages, and compiles to Scopus, PubMed, OpenAlex, Crossref, Semantic Scholar,
@@ -70,7 +68,19 @@ stripped of resolver prefixes; titles are transliterated before Unicode
 decomposition so that stroked and ligature letters (ł, ø, ß, đ) survive
 normalisation instead of collapsing into gaps.
 
-### 2.2 Retrieval and parsing
+### 2.2 Software functionalities
+
+The library exposes six groups of functionality, each detailed below: compiling
+one structured query into the syntax of every supported database; retrieving
+records through native APIs or parsing the file exports of databases without
+one; merging duplicates with an auditable cascade that logs the evidence for
+every decision; generating the PRISMA 2020 flow diagram and the PRISMA-S search
+appendix from recorded provenance; flagging retracted records and retraction
+notices separately; and writing the merged corpus in the export layout that
+downstream bibliometric tools already read. A command line and a terminal
+interface cover the same workflow for users who do not write Python.
+
+### 2.3 Retrieval and parsing
 
 Ten API client classes cover the systems reachable programmatically, nine of which are selectable as databases from the command line; databases without an open API are supported through their file exports, which is where most of the engineering effort sits - encodings, dialects and vendor quirks that quietly drop records.
 
@@ -85,7 +95,7 @@ audit warns when a corpus rests on no principal system, on exactly one, or is
 dominated by supplementary records, and emits reporting notes for tiers that
 need qualification in the methods section.
 
-### 2.3 Deduplication: what is standard and what is not
+### 2.4 Deduplication: what is standard and what is not
 
 The core is textbook and is not claimed as a contribution: DOI normalization,
 title-token blocking, Ratcliff-Obershelp similarity, union-find for transitive
@@ -159,7 +169,7 @@ switching it off and rescoring. Bars are F1 lost. Multi-round blocking (†) is
 borrowed from ASySD; the other four are contributed here. The ranking inverts
 between the two corpora, which is the argument for validating on more than one.
 
-### 2.4 Reporting and reproducibility
+### 2.5 Reporting and reproducibility
 
 Outputs are the PRISMA 2020 flow diagram (SVG), the PRISMA-S appendix (Markdown
 or .docx), a per-source metadata completeness report, an empirical cross-source
@@ -168,7 +178,7 @@ screening CSV, RIS and BibTeX. A harvest layer archives raw API responses with a
 manifest and an order-independent checksum, so that a reviewer can replay a
 search and verify that the corpus is the one the review describes.
 
-### 2.5 The canonical output: Scopus CSV
+### 2.6 The canonical output: Scopus CSV
 
 A review does not end at a deduplicated corpus; it continues into screening and
 bibliometric analysis, and those tools read one dialect. CorpusSLR therefore
@@ -196,7 +206,7 @@ references - are written empty rather than invented. An empty column is missing
 data the analyst can see; a fabricated affiliation or reference list is a false
 finding inside someone else's co-citation network.
 
-### 2.6 Two interfaces for researchers who do not write Python
+### 2.7 Two interfaces for researchers who do not write Python
 
 `python -m corpusslr` opens a guided terminal menu built on the standard library
 alone: no curses, no third-party console library, no ANSI colour, 80 columns.
@@ -206,6 +216,11 @@ export. A Colab notebook covers the same workflow in 26 cells for users without
 a local Python installation.
 
 ## 3. Illustrative examples
+
+
+The whole workflow also runs in the browser with no local installation, as a
+notebook of 26 cells:
+<https://colab.research.google.com/github/s-matysik/CorpusSLR/blob/main/notebooks/corpusslr_colab.ipynb>.
 
 ### 3.1 Deduplication against a published gold standard
 

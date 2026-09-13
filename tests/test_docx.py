@@ -175,7 +175,7 @@ def test_the_code_metadata_table_is_present_and_current(built):
     assert tables, "the manuscript has no tables at all"
     meta = tables[0]
     labels = [meta.rows[i].cells[0].text.strip() for i in range(1, len(meta.rows))]
-    assert labels == ["C%d" % k for k in range(1, 10)], labels
+    assert labels == ["C%d" % k for k in range(1, 9)], labels
     version_cell = meta.rows[1].cells[-1].text.strip()
     assert version_cell == corpusslr.__version__, (
         "C1 says %s, the package is %s" % (version_cell, corpusslr.__version__))
@@ -383,3 +383,74 @@ def test_no_paragraph_is_written_twice():
         counts = Counter(b for b in blocks if len(b.split()) >= 25)
         repeated = [b[:70] for b, n in counts.items() if n > 1]
         assert not repeated, "%s repeats a paragraph: %s" % (rel, repeated)
+
+
+# --------------------------------------------------------------------------
+# The markdown and the article must not drift apart.
+#
+# MANUSCRIPT.md is the source the submitted Word file is generated from, and
+# the article source is what compiles to the submitted PDF. Both were edited by
+# hand for a long time while only the article source was audited, and the
+# markdown ended up saying four disciplines where the article said fifteen,
+# naming the superseded study's smallest arms, repeating a paragraph, and
+# carrying two code metadata values the article had already corrected. The
+# Word file hid the last of these, because the converter regenerates that table
+# from the article, so nothing failed while the two files disagreed.
+# --------------------------------------------------------------------------
+
+def _metadata_rows_from_tex(text):
+    import re
+    start = text.index("Code metadata")
+    segment = text[start:text.index("end{table}", start)]
+    rows = {}
+    for match in re.finditer(r"(C\d)\s*&\s*(.+?)\s*&\s*(.+?)\s*\\\\", segment, re.S):
+        value = " ".join(match.group(3).split())
+        value = re.sub(r"\\url\{([^}]+)\}", r"\1", value)
+        value = re.sub(r"\\texttt\{([^}]+)\}", r"\1", value)
+        value = value.replace("\\_", "_").replace("\\&", "&").replace("\\%", "%")
+        rows[match.group(1)] = value
+    return rows
+
+
+def _metadata_rows_from_markdown(text):
+    import re
+    return {m.group(1): " ".join(m.group(2).split())
+            for m in re.finditer(r"^\| (C\d) \|.+?\|(.+?)\|\s*$", text, re.M)}
+
+
+def test_the_markdown_and_the_article_agree_on_the_code_metadata():
+    import pathlib
+    root = pathlib.Path(__file__).resolve().parents[1]
+    tex = _metadata_rows_from_tex(
+        (root / "paper" / "corpusslr_softwarex.tex").read_text(encoding="utf-8"))
+    mdn = _metadata_rows_from_markdown(
+        (root / "MANUSCRIPT.md").read_text(encoding="utf-8"))
+    assert set(tex) == set(mdn) == {"C%d" % k for k in range(1, 9)}, (
+        "expected C1 to C8 in both: %s vs %s" % (sorted(tex), sorted(mdn)))
+    disagree = [(k, tex[k][:60], mdn[k][:60]) for k in sorted(tex)
+                if _normalise(tex[k]) != _normalise(mdn[k])]
+    assert not disagree, "code metadata differs between the article and the markdown: %s" % disagree
+
+
+def test_the_markdown_and_the_article_agree_on_the_discipline_count():
+    """Both name the same number of disciplines, and it matches the data."""
+    import csv
+    import pathlib
+    import re
+    root = pathlib.Path(__file__).resolve().parents[1]
+    with open(root / "validation" / "domains_15_final.csv", encoding="utf-8",
+              newline="") as handle:
+        measured = len(list(csv.DictReader(handle)))
+    words = {4: "four", 15: "fifteen"}
+    for rel in ("MANUSCRIPT.md", "paper/corpusslr_softwarex.tex"):
+        text = (root / rel).read_text(encoding="utf-8")
+        stated = set()
+        for match in re.finditer(r"\b(\w+|\d+)[\s~]+disciplines\b", text):
+            token = match.group(1).lower()
+            for value, word in words.items():
+                if token in (word, str(value)):
+                    stated.add(value)
+        assert stated, "%s states no discipline count" % rel
+        wrong = sorted(v for v in stated if v != measured)
+        assert not wrong, ("%s states %s disciplines; the table has %d"
+                           % (rel, wrong, measured))
