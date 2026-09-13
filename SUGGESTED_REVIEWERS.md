@@ -1,5 +1,8 @@
 # Suggested reviewers
 
+7 names in 6 suggestions across 4 areas; the ASySD suggestion names two authors of the
+same paper, which is why the two counts differ.
+
 Each name below is an author of work the manuscript cites, so the basis for the
 suggestion is checkable rather than asserted. Names and, where the Crossref
 record carries them, affiliations were read from the record of the cited paper
