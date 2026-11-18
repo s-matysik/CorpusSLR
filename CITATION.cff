@@ -6,7 +6,7 @@ authors:
     given-names: "Sebastian"
     affiliation: "University of Szczecin, Institute of Management, Doctoral School, Szczecin, Poland"
     email: "sebastian.matysik@usz.edu.pl"
-version: 1.1.0
+version: 1.2.0
 license: MIT
 repository-code: "https://github.com/s-matysik/CorpusSLR"
 abstract: >-

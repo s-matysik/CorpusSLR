@@ -114,8 +114,8 @@ def test_negative_control_the_pattern_does_catch_the_old_instruction():
                 "pip install corpusslr==1.0.0", "pip install corpusslr[docx]",
                 "pip install corpusslr            # PyPI"):
         assert bad.search(old), old
-    for good in ("pip install https://github.com/s-matysik/CorpusSLR/archive/refs/tags/v1.1.0.zip",
-                 'pip install "corpusslr[docx] @ https://github.com/s-matysik/CorpusSLR/archive/refs/tags/v1.1.0.zip"'):
+    for good in ("pip install https://github.com/s-matysik/CorpusSLR/archive/refs/tags/v1.2.0.zip",
+                 'pip install "corpusslr[docx] @ https://github.com/s-matysik/CorpusSLR/archive/refs/tags/v1.2.0.zip"'):
         assert not bad.search(good), good
 
 

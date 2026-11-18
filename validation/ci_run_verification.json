@@ -1,32 +1,38 @@
 {
- "verified_on": "2026-09-10T07:32:54Z",
+ "verified_on": "2026-11-18T17:16:29Z",
  "repository": "s-matysik/CorpusSLR",
  "method": "read from the GitHub Actions REST API, not asserted: the conclusion of the most recent run of each workflow, with the commit each ran against",
- "total_runs": 7,
+ "total_runs": 44,
  "workflows": {
+  "install-from-release": {
+   "conclusion": "success",
+   "run_id": 44356330074,
+   "head_sha": "52d2d3a8a2aa",
+   "created_at": "2026-11-18T17:13:59Z"
+  },
   "pages": {
    "conclusion": "success",
-   "run_id": 34413544958,
-   "head_sha": "34e7a63681b0",
-   "created_at": "2026-09-09T22:42:36Z"
+   "run_id": 44356313756,
+   "head_sha": "52d2d3a8a2aa",
+   "created_at": "2026-11-18T17:13:54Z"
   },
   "pages build and deployment": {
    "conclusion": "success",
-   "run_id": 34413544803,
-   "head_sha": "34e7a63681b0",
-   "created_at": "2026-09-09T22:42:36Z"
+   "run_id": 44356312878,
+   "head_sha": "52d2d3a8a2aa",
+   "created_at": "2026-11-18T17:13:54Z"
   },
   "quality": {
    "conclusion": "success",
-   "run_id": 34413545057,
-   "head_sha": "34e7a63681b0",
-   "created_at": "2026-09-09T22:42:36Z"
+   "run_id": 44356313644,
+   "head_sha": "52d2d3a8a2aa",
+   "created_at": "2026-11-18T17:13:54Z"
   },
   "tests": {
    "conclusion": "success",
-   "run_id": 34413544973,
-   "head_sha": "34e7a63681b0",
-   "created_at": "2026-09-09T22:42:36Z"
+   "run_id": 44356313780,
+   "head_sha": "52d2d3a8a2aa",
+   "created_at": "2026-11-18T17:13:54Z"
   }
  },
  "all_succeeded": true

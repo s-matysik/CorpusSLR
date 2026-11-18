@@ -1,6 +1,6 @@
 # API reference
 
-Generated from the installed package (`corpusslr 1.1.0`) by `validation/generate_api_reference.py` -- every entry is introspected from the code, so a renamed or removed symbol cannot linger here. `tests/test_docs_examples.py` asserts that every public symbol appears.
+Generated from the installed package (`corpusslr 1.2.0`) by `validation/generate_api_reference.py` -- every entry is introspected from the code, so a renamed or removed symbol cannot linger here. `tests/test_docs_examples.py` asserts that every public symbol appears.
 
 For a narrative walkthrough see [`user_guide.md`](user_guide.md).
 
@@ -727,6 +727,10 @@ Read the stored credentials, returning ``{}`` when there are none.
 ### `looks_binary(data: 'bytes') -> 'str'`
 
 Return a description of the container format, or ``""`` for text.
+
+### `notebook`
+
+Module-level module.
 
 ### `pair_metrics(clusters: 'Iterable[Sequence[str]]', truth: 'Dict[str, str]') -> 'Dict[str, float]'`
 

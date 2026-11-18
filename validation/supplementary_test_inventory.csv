@@ -14,7 +14,8 @@ tests/test_install_verification.py,Release metadata,9,12
 tests/test_integration_e2e.py,End-to-end pipeline,2,2
 tests/test_integrity.py,Publication integrity,13,25
 tests/test_metadata_consistency.py,Release metadata,15,15
-tests/test_notebook.py,Colab notebook,24,24
+tests/test_notebook.py,Colab notebook,26,26
+tests/test_notebook_helpers.py,Colab notebook,11,14
 tests/test_parser_utils.py,File-format parsers,16,92
 tests/test_parsers.py,File-format parsers,6,6
 tests/test_parsers_bibtex.py,File-format parsers,40,83

@@ -127,7 +127,7 @@ No API key and no database subscription are needed: the raw responses are in
 `harvest_archive/`.
 
 ```bash
-pip install https://github.com/s-matysik/CorpusSLR/archive/refs/tags/v1.1.0.zip
+pip install https://github.com/s-matysik/CorpusSLR/archive/refs/tags/v1.2.0.zip
 python - <<'PY'
 from corpusslr import (CrossrefSource, SearchQuery, replay_harvest,
                        verify_archive)

@@ -7,8 +7,8 @@ suite rather than misleading a reader.
 ## 1. Install
 
 ```bash
-pip install https://github.com/s-matysik/CorpusSLR/archive/refs/tags/v1.1.0.zip                 # core: requests only
-pip install "corpusslr[docx] @ https://github.com/s-matysik/CorpusSLR/archive/refs/tags/v1.1.0.zip"   # adds the .docx PRISMA-S appendix
+pip install https://github.com/s-matysik/CorpusSLR/archive/refs/tags/v1.2.0.zip                 # core: requests only
+pip install "corpusslr[docx] @ https://github.com/s-matysik/CorpusSLR/archive/refs/tags/v1.2.0.zip"   # adds the .docx PRISMA-S appendix
 ```
 
 The package is distributed from its GitHub release, not from PyPI.

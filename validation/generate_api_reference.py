@@ -10,7 +10,18 @@ Usage:  python validation/generate_api_reference.py
 import inspect
 import os
 
+import importlib
+import pkgutil
+
 import corpusslr as C
+
+# A submodule becomes an attribute of the package only once something has
+# imported it, so the public list depended on what the process had imported
+# before. Importing the direct submodules here makes the reference the same
+# whichever way it is generated (a test run imports them all).
+for _m in pkgutil.iter_modules(C.__path__):
+    if not _m.name.startswith("_") and not _m.ispkg:
+        importlib.import_module("corpusslr." + _m.name)
 
 GROUPS = [
     ("Core data model", ["Record", "Corpus", "SearchQuery", "SearchEvent",

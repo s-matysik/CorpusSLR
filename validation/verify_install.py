@@ -14,10 +14,10 @@ package from SOURCE, and then does what a reviewer would do first:
 
 SOURCE is anything ``pip install`` accepts: a directory, a wheel, a source
 archive, a ``git+https://`` address or an archive URL such as
-``https://github.com/s-matysik/CorpusSLR/archive/refs/tags/v1.1.0.zip``.
+``https://github.com/s-matysik/CorpusSLR/archive/refs/tags/v1.2.0.zip``.
 
     python validation/verify_install.py .
-    python validation/verify_install.py https://github.com/s-matysik/CorpusSLR/archive/refs/tags/v1.1.0.zip
+    python validation/verify_install.py https://github.com/s-matysik/CorpusSLR/archive/refs/tags/v1.2.0.zip
 
 Exit status 0 only if every step succeeded. ``--system-site-packages`` and
 ``--no-build-isolation`` exist for machines with no route to the package index

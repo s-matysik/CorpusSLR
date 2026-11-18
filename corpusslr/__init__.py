@@ -8,7 +8,7 @@ registry after Gusenbauer & Haddaway (2020), cascading auditable
 deduplication, PRISMA 2020 flow diagram and a PRISMA-S search-reporting
 appendix.
 """
-__version__ = "1.1.0"
+__version__ = "1.2.0"
 
 from .record import is_identifier_only_title, Record, normalize_doi, normalize_title           # noqa: F401
 from .corpus import Corpus, SearchEvent, SourceResult                 # noqa: F401

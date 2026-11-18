@@ -349,7 +349,11 @@ def test_the_api_existence_check_detects_a_renamed_function():
 
 def test_the_notebook_writes_the_scopus_csv_as_the_canonical_export(notebook):
     body = "".join(cell_source(c) for c in code_cells(notebook))
-    assert "to_scopus_csv" in body
+    assert "write_scopus_csv" in body
+    # the helper must write it with the package's own exporter
+    from corpusslr import notebook as helper
+    import inspect
+    assert "to_scopus_csv(" in inspect.getsource(helper.write_scopus_csv)
     prose = "".join("".join(c["source"]) for c in notebook["cells"]
                     if c["cell_type"] == "markdown")
     for tool in ("bibliometrix", "VOSviewer", "EmbedSLR"):
@@ -359,9 +363,9 @@ def test_the_notebook_writes_the_scopus_csv_as_the_canonical_export(notebook):
 def test_the_notebook_covers_the_whole_review(notebook):
     """The deliverables the task defines must each be reachable."""
     body = "".join(cell_source(c) for c in code_cells(notebook))
-    for expected in ("getpass", "DATABASES", "validate_config",
-                     "compile_for", "corpusslr_main", "to_scopus_csv",
-                     "prisma_s_appendix", "make_archive"):
+    for expected in ("getpass", "list_databases", "make_config", "show_queries",
+                     "run_review", "read_summary", "write_scopus_csv",
+                     "show_appendix", "download_results"):
         assert expected in body, expected
 
 
@@ -375,7 +379,10 @@ def test_the_notebook_explains_the_methodology_not_only_the_clicks(notebook):
 
 def test_the_download_step_is_present_and_degrades_outside_colab(notebook):
     """Colab discards the runtime; an un-downloaded corpus is lost work."""
-    body = "".join(cell_source(c) for c in code_cells(notebook))
+    import inspect
+    from corpusslr import notebook as helper
+    assert "download_results" in "".join(cell_source(c) for c in code_cells(notebook))
+    body = inspect.getsource(helper.download_results)
     assert "google.colab" in body
     assert "ImportError" in body        # runs in plain Jupyter too
 
@@ -420,3 +427,51 @@ def test_the_generator_refuses_to_write_a_broken_notebook(monkeypatch,
     monkeypatch.setattr(sys, "stderr", io.StringIO())
     assert build_colab_notebook.main() == 1
     assert not (tmp_path / "out.ipynb").exists()
+
+
+# ---------------------------------------------------------------------------
+# the notebook shows the package, not glue around it
+# ---------------------------------------------------------------------------
+def workflow_problems(cell_lines_list, max_total=100, max_cell=12):
+    """What is wrong with a notebook's code, as a list; empty means fine."""
+    problems = []
+    total = sum(len(x) for x in cell_lines_list)
+    if total > max_total:
+        problems.append("%d code lines, limit %d" % (total, max_total))
+    for i, lines in enumerate(cell_lines_list[3:], 3):    # after install, e-mail, keys
+        if len(lines) > max_cell:
+            problems.append("cell %d has %d lines, limit %d" % (i, len(lines), max_cell))
+    body = "\n".join("\n".join(x) for x in cell_lines_list[3:])
+    for name in NAMES_FROM_HELPER:
+        if name + "(" not in body:
+            problems.append("no call to " + name)
+    return problems
+
+
+NAMES_FROM_HELPER = ("list_databases", "make_config", "show_queries", "run_review",
+                     "read_summary", "write_scopus_csv", "show_appendix",
+                     "download_results")
+
+
+def _lines_of(notebook):
+    return [[ln for ln in cell_source(c).split("\n")
+             if ln.strip() and not ln.strip().startswith("#")]
+            for c in code_cells(notebook)]
+
+
+def test_most_workflow_cells_are_calls_into_the_package(notebook):
+    """A reviewer found the first notebook was mostly code around the package.
+
+    Install, e-mail and key entry are setup and stay in the notebook, where a
+    reader can see that no key is stored. Every cell after them must be a short
+    call into corpusslr.notebook, and the whole notebook must stay small.
+    """
+    assert workflow_problems(_lines_of(notebook)) == []
+
+
+def test_negative_control_the_guard_rejects_the_old_glue_heavy_notebook(notebook):
+    lines = _lines_of(notebook)
+    glue = lines[:3] + [["x = input('block: ')"] * 36] + lines[4:]
+    found = workflow_problems(glue)
+    assert any("cell 3 has 36 lines" in f for f in found), found
+    assert any("no call to" in f for f in workflow_problems(lines[:3] + [["pass"]])), "calls"

@@ -230,10 +230,10 @@ later and `pip`.
 
 ```bash
 # 1. From the release archive. Needs no git, and is the shortest.
-python -m pip install https://github.com/s-matysik/CorpusSLR/archive/refs/tags/v1.1.0.zip
+python -m pip install https://github.com/s-matysik/CorpusSLR/archive/refs/tags/v1.2.0.zip
 
 # 2. With git, to track the repository.
-python -m pip install "git+https://github.com/s-matysik/CorpusSLR.git@v1.1.0"
+python -m pip install "git+https://github.com/s-matysik/CorpusSLR.git@v1.2.0"
 
 # 3. From a clone, which is also the way to run the tests.
 git clone https://github.com/s-matysik/CorpusSLR.git
@@ -242,7 +242,7 @@ python -m pip install .
 ```
 
 For the `.docx` appendix add the extra, written as a direct reference:
-`python -m pip install "corpusslr[docx] @ https://github.com/s-matysik/CorpusSLR/archive/refs/tags/v1.1.0.zip"`
+`python -m pip install "corpusslr[docx] @ https://github.com/s-matysik/CorpusSLR/archive/refs/tags/v1.2.0.zip"`
 (or `pip install ".[docx]"` from a clone).
 
 Check the installation with the command line, which prints the version, and with
@@ -252,12 +252,19 @@ the canonical CSV, without any network access):
 
 ```bash
 corpusslr --version
-python validation/verify_install.py https://github.com/s-matysik/CorpusSLR/archive/refs/tags/v1.1.0.zip
+python validation/verify_install.py https://github.com/s-matysik/CorpusSLR/archive/refs/tags/v1.2.0.zip
 ```
 
 In a browser, with nothing installed locally, open
 `notebooks/corpusslr_colab.ipynb` in Google Colab; its first cell installs the
 package from the same address.
+
+The notebook is short on purpose: you edit one cell (the databases, the query
+and the years) and every other cell is a one-line call into
+`corpusslr.notebook` (`make_config`, `show_queries`, `run_review`,
+`read_summary`, `write_scopus_csv`, `show_appendix`, `download_results`), which
+are also usable from a script. API keys are typed into a `getpass` cell that
+prints presence and never a value.
 
 ## Command line: one configuration file, one command
 
@@ -507,7 +514,7 @@ a distinct class of error found by inspecting every residual mistake:
 | + co-publication override | one work with two publisher DOIs | 2 | 2 |
 | + conference/article split | abstract and article are separate reports | **0** | **1** |
 
-Measured as a single-pass ablation on 1.1.0, switching one mechanism on per row.
+Measured as a single-pass ablation on 1.2.0, switching one mechanism on per row.
 Two further repairs act at normalization and cannot be switched off by
 parameter, so they are present in every row: spreadsheet-damaged page ranges
 (`11-Sep` and `Nov-19` are one range; 38 of 1845 records) and article-number
@@ -538,7 +545,7 @@ microseconds between 6 000 and 60 000 records. Environment and method are in
 calibration data are in [`validation/`](validation/).
 
 ```bash
-python -m pytest tests -q                 # 2193 offline tests, 98% coverage
+python -m pytest tests -q                 # 2209 offline tests, 98% coverage
 python validation/eval_asysd.py --gold validation/labelled_test_set.csv
 ```
 

@@ -13,7 +13,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "release to install, e.g. 1.1.0 (default: the version in pyproject.toml)"
+        description: "release to install, e.g. 1.2.0 (default: the version in pyproject.toml)"
         required: false
 
 jobs:

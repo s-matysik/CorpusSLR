@@ -25,6 +25,35 @@ point; they should not be quoted as properties of the current version.
 
 Nothing yet.
 
+## [1.2.0] - 2026-11-18
+
+Released as the version the article cites. Tag v1.1.0 had already been
+published when the notebook below was rewritten, and a published tag is not
+moved, so the changes made after it ship as 1.2.0.
+
+### Changed
+
+- **The Colab notebook calls the package instead of surrounding it.** A reviewer
+  found it was mostly code around the package. The menus built with `input()`,
+  the hand-written configuration dictionary, the JSON reading and the file
+  handling moved into `corpusslr/notebook.py`, where they are tested. The
+  notebook went from 214 to 60 lines of code in 11 code cells (24 cells in all),
+  one of which is edited; every cell after the key entry is a one-line call.
+  A test fails if the notebook grows past 100 lines or a workflow cell past 12,
+  and was shown to fail on a glue-heavy cell. The whole workflow was run end to
+  end from those calls on a small live Crossref query (25 records, exit code 0,
+  appendix written, archive created).
+- A style pass on the article removed a dozen "rather than" and "so that"
+  constructions that added no information, which a reviewer had described as
+  formulaic.
+
+### Added
+
+- `corpusslr.notebook`: `list_databases`, `make_config`, `show_queries`,
+  `run_review`, `read_summary`, `write_scopus_csv`, `show_appendix` and
+  `download_results`. It reads no credential and never touches `os.environ`; a
+  test checks both.
+
 ## [1.1.0] - 2026-11-18
 
 The release that answers the first review. Tag v1.0.0 was pushed to GitHub

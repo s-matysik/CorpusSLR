@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "corpusslr"
-version = "1.1.0"
+version = "1.2.0"
 description = "From one structured query to a PRISMA-documented corpus: multi-database retrieval, export parsing, auditable deduplication, PRISMA 2020 flow diagram and PRISMA-S appendix for systematic literature reviews."
 readme = "README.md"
 requires-python = ">=3.9"

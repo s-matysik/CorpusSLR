@@ -56,6 +56,7 @@ AREA_OF = {
     "test_integrity.py": "Publication integrity",
     "test_metadata_consistency.py": "Release metadata",
     "test_notebook.py": "Colab notebook",
+    "test_notebook_helpers.py": "Colab notebook",
     "test_parser_utils.py": "File-format parsers",
     "test_parsers.py": "File-format parsers",
     "test_parsers_bibtex.py": "File-format parsers",
