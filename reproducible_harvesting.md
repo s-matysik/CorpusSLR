@@ -239,7 +239,7 @@ You need neither an API key nor a database subscription. The archive holds the
 raw responses.
 
 ```bash
-pip install corpusslr
+pip install https://github.com/s-matysik/CorpusSLR/archive/refs/tags/v1.1.0.zip
 ```
 
 ```python

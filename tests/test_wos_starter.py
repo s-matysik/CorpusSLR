@@ -523,7 +523,7 @@ def test_corpus_integration_records_the_search_event():
 def test_to_wos_blocks_repeat_the_field_tag():
     s = _query().to_wos()
     assert 'TS=("artificial intelligence" OR "machine learning")' in s
-    assert 'TS=("adoption")' in s
+    assert 'TS=(adoption)' in s
     assert s.count("TS=") == 2          # every clause carries its own tag
     assert " AND " in s
 
@@ -552,7 +552,7 @@ def test_to_wos_languages_use_english_names():
 
 def test_to_wos_title_only_switches_the_field_tag():
     s = SearchQuery(blocks=[["ai"]], title_only=True).to_wos()
-    assert s == 'TI=("ai")'
+    assert s == 'TI=(ai)'
     assert "TS=" not in s
 
 
@@ -592,14 +592,14 @@ def test_to_wos_strips_quotes_and_commas_like_the_other_compilers():
 
 
 def test_to_wos_skips_empty_blocks_and_terms():
-    assert SearchQuery(blocks=[[], ["ai"], ["  "]]).to_wos() == 'TS=("ai")'
+    assert SearchQuery(blocks=[[], ["ai"], ["  "]]).to_wos() == 'TS=(ai)'
     assert SearchQuery(blocks=[]).to_wos() == ""
 
 
 def test_to_wos_full_query_shape():
     q = SearchQuery(blocks=[["ai"], ["sme"]], years=(2020, 2024),
                     doc_types=["article", "review"], languages=["en"])
-    assert q.to_wos() == ('TS=("ai") AND TS=("sme") AND PY=2020-2024 AND '
+    assert q.to_wos() == ('TS=(ai) AND TS=(sme) AND PY=2020-2024 AND '
                           'DT=(Article OR Review) AND LA=(English)')
 
 
@@ -607,7 +607,7 @@ def test_compile_all_includes_wos():
     q = SearchQuery(blocks=[["a"], ["b"]])
     out = q.compile_all()
     assert "wos" in out
-    assert out["wos"] == 'TS=("a") AND TS=("b")'
+    assert out["wos"] == 'TS=(a) AND TS=(b)'
     # The pre-existing backends are untouched.
     assert {"scopus", "openalex", "pubmed", "crossref", "semanticscholar",
             "arxiv", "warnings"} <= set(out)
@@ -666,3 +666,33 @@ def test_401_and_403_do_not_collapse_into_one_diagnosis():
     assert "different Clarivate product" not in msg401, (
         "the wrong-product wording belongs to 403, not 401")
     assert "API key" in msg401
+
+
+# --------------------------------------------------------------------------
+# Quoting in Web of Science. A quoted term is an exact phrase and is not
+# lemmatised, so quoting every single word lost records: measured live against
+# the Expanded API, one query returned 6 098 records with "software" OR "tool"
+# quoted and 9 129 unquoted, and two others differed by 75 and 2. Scopus and
+# PubMed returned identical counts either way. A hyphenated term is the
+# exception: unquoted "meta-analysis" returned 6 169 records where the quoted
+# form returned 5 845, so a hyphen keeps its quotation marks.
+# --------------------------------------------------------------------------
+
+def test_wos_leaves_a_plain_single_word_unquoted_and_quotes_everything_else():
+    q = SearchQuery(blocks=[["tool", "econom*", "COVID19", "meta-analysis",
+                             "machine learning", "Alzheimer's", "C++"]])
+    assert q.to_wos() == ('TS=(tool OR econom* OR COVID19 OR "meta-analysis" OR '
+                          '"machine learning" OR "Alzheimer\'s" OR "C++")')
+
+
+def test_the_other_compilers_still_quote_every_term():
+    q = SearchQuery(blocks=[["tool", "meta-analysis"]])
+    assert q.to_scopus() == '(TITLE-ABS-KEY("tool" OR "meta-analysis"))'
+
+
+def test_negative_control_a_bare_phrase_would_be_split_into_operands():
+    # the rule must never leave a multi-word term unquoted
+    from corpusslr.query import _PLAIN_TOKEN
+    assert _PLAIN_TOKEN.fullmatch("tool") and _PLAIN_TOKEN.fullmatch("econom*")
+    for risky in ("machine learning", "meta-analysis", "C++", "AT&T", "o'brien", "a OR b"):
+        assert not _PLAIN_TOKEN.fullmatch(risky), risky

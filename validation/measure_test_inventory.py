@@ -40,6 +40,10 @@ AREA_OF = {
     "test_arxiv.py": "arXiv client",
     "test_cli.py": "Command-line interface",
     "test_dedup_prisma_ext.py": "Deduplication",
+    "test_dedup_equivalence.py": "Deduplication",
+    "test_query_compiler_validation.py": "Query compiler",
+    "test_references.py": "Record model",
+    "test_install_verification.py": "Release metadata",
     "test_docs_examples.py": "Documentation consistency",
     "test_docx.py": "Submission documents",
     "test_push_tree.py": "Submission documents",
@@ -90,8 +94,29 @@ def count_functions(path: str) -> int:
                and node.name.startswith("test_"))
 
 
+def count_cases():
+    """Test cases per file as pytest collects them, parametrised variants expanded.
+
+    The inventory used to carry only test functions, and the supplement quoted
+    pytest's case total beside a table that summed to the function total, so a
+    reviewer found the two did not reconcile. Both quantities are real and
+    different; the table now carries both, each measured on its own.
+    """
+    import re
+    import subprocess
+    import sys
+    env = dict(os.environ, PYTHONPATH=REPO)
+    out = subprocess.run(
+        [sys.executable, "-m", "pytest", "tests", "-p", "no:cacheprovider",
+         "--collect-only", "-q"], cwd=REPO, capture_output=True, text=True,
+        env=env).stdout
+    return {m.group(1): int(m.group(2))
+            for m in re.finditer(r"^(tests/\S+\.py): (\d+)$", out, re.M)}
+
+
 def measure():
     rows, unmapped = [], []
+    cases = count_cases()
     for name in sorted(os.listdir(TESTS)):
         if not (name.startswith("test_") and name.endswith(".py")):
             continue
@@ -100,16 +125,19 @@ def measure():
             unmapped.append(name)
             continue
         rows.append({"file": "tests/" + name, "area": area,
-                     "tests": count_functions(os.path.join(TESTS, name))})
+                     "tests": count_functions(os.path.join(TESTS, name)),
+                     "cases": cases.get("tests/" + name, 0)})
     return rows, unmapped
 
 
 def area_rows(rows):
     agg = {}
     for r in rows:
-        a = agg.setdefault(r["area"], {"area": r["area"], "files": 0, "tests": 0})
+        a = agg.setdefault(r["area"], {"area": r["area"], "files": 0, "tests": 0,
+                                       "cases": 0})
         a["files"] += 1
         a["tests"] += r["tests"]
+        a["cases"] += r["cases"]
     # Largest first, as the supplementary table presents it.
     return sorted(agg.values(), key=lambda a: (-a["tests"], a["area"]))
 
@@ -138,26 +166,28 @@ def main(argv=None) -> int:
 
     if args.check:
         with open(INVENTORY, encoding="utf-8", newline="") as fh:
-            old = {r["file"]: int(r["tests"]) for r in csv.DictReader(fh)}
-        new = {r["file"]: r["tests"] for r in rows}
+            old = {r["file"]: (int(r["tests"]), int(r.get("cases") or -1))
+                   for r in csv.DictReader(fh)}
+        new = {r["file"]: (r["tests"], r["cases"]) for r in rows}
         if old == new:
-            print("inventory is current: %d files, %d test functions"
-                  % (len(rows), total))
+            print("inventory is current: %d files, %d test functions, "
+                  "%d pytest cases" % (len(rows), total,
+                                       sum(r["cases"] for r in rows)))
             return 0
         print("inventory is stale: %d files / %d functions on disk, "
               "%d / %d in the table" % (len(new), total, len(old),
                                         sum(old.values())))
         for f in sorted(set(new) - set(old)):
-            print("  added:   %s (%d)" % (f, new[f]))
+            print("  added:   %s (%d, %d)" % ((f,) + new[f]))
         for f in sorted(set(old) - set(new)):
-            print("  removed: %s (%d)" % (f, old[f]))
+            print("  removed: %s (%d, %d)" % ((f,) + old[f]))
         for f in sorted(set(old) & set(new)):
             if old[f] != new[f]:
-                print("  changed: %s %d -> %d" % (f, old[f], new[f]))
+                print("  changed: %s %s -> %s" % (f, old[f], new[f]))
         return 1
 
-    write(INVENTORY, ["file", "area", "tests"], rows)
-    write(AREAS, ["area", "files", "tests"], areas)
+    write(INVENTORY, ["file", "area", "tests", "cases"], rows)
+    write(AREAS, ["area", "files", "tests", "cases"], areas)
     print("wrote %s and %s: %d files, %d areas, %d test functions"
           % (os.path.relpath(INVENTORY, REPO), os.path.relpath(AREAS, REPO),
              len(rows), len(areas), total))

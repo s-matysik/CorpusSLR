@@ -506,8 +506,10 @@ def test_negative_control_a_non_idempotent_normaliser_is_detected(tmp_path):
     assert injured == "Lynch J.G."
     # not a fixed point: the assertion that now passes would have failed
     assert normalize_author_name(injured) != injured
-    # and the surname was the initials, not the family name
-    assert surname(injured) == "j g"
+    # surname() applies the normaliser itself, so even the injured form now
+    # yields the family name; the failure the control shows is the fixed-point
+    # assertion above, which the old code path does not satisfy
+    assert surname(injured) == "lynch"
     assert surname(normalize_author_name(injured)) == "lynch"
 
 

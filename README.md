@@ -224,10 +224,40 @@ figures and a copy-paste "how to repeat this harvest" section for reviewers, and
 
 ## Install
 
+The package is installed from its GitHub release; it is not on PyPI. Any one of
+the three commands below works, and none of them needs more than Python 3.9 or
+later and `pip`.
+
 ```bash
-pip install corpusslr            # PyPI
-pip install corpusslr[docx]      # + .docx appendix support
+# 1. From the release archive. Needs no git, and is the shortest.
+python -m pip install https://github.com/s-matysik/CorpusSLR/archive/refs/tags/v1.1.0.zip
+
+# 2. With git, to track the repository.
+python -m pip install "git+https://github.com/s-matysik/CorpusSLR.git@v1.1.0"
+
+# 3. From a clone, which is also the way to run the tests.
+git clone https://github.com/s-matysik/CorpusSLR.git
+cd CorpusSLR
+python -m pip install .
 ```
+
+For the `.docx` appendix add the extra, written as a direct reference:
+`python -m pip install "corpusslr[docx] @ https://github.com/s-matysik/CorpusSLR/archive/refs/tags/v1.1.0.zip"`
+(or `pip install ".[docx]"` from a clone).
+
+Check the installation with the command line, which prints the version, and with
+the short offline workflow that `validation/verify_install.py` runs in a fresh
+virtual environment (it parses two small exports, deduplicates them and writes
+the canonical CSV, without any network access):
+
+```bash
+corpusslr --version
+python validation/verify_install.py https://github.com/s-matysik/CorpusSLR/archive/refs/tags/v1.1.0.zip
+```
+
+In a browser, with nothing installed locally, open
+`notebooks/corpusslr_colab.ipynb` in Google Colab; its first cell installs the
+package from the same address.
 
 ## Command line: one configuration file, one command
 
@@ -477,7 +507,7 @@ a distinct class of error found by inspecting every residual mistake:
 | + co-publication override | one work with two publisher DOIs | 2 | 2 |
 | + conference/article split | abstract and article are separate reports | **0** | **1** |
 
-Measured as a single-pass ablation on 1.0.0, switching one mechanism on per row.
+Measured as a single-pass ablation on 1.1.0, switching one mechanism on per row.
 Two further repairs act at normalization and cannot be switched off by
 parameter, so they are present in every row: spreadsheet-damaged page ranges
 (`11-Sep` and `Nov-19` are one range; 38 of 1845 records) and article-number
@@ -496,23 +526,19 @@ it is randomly shuffled. No data is lost in any ordering: empty fields are
 filled from the removed copies and conflicting fields are resolved by majority
 across the cluster.
 
-Deduplication scales close to linearly: 60 000 records take 9.6 s (titles
-sharing one opening) to 25.3 s (mixed vocabulary), peaking at 109 MB and 310 MB.
-Cost per record is not perfectly flat - it grows 1.11x (shared opening) to 1.62x
-(mixed vocabulary) as the corpus goes from 6 000 to 60 000 records, because a
-larger corpus puts more records in each token block. Two mechanisms keep the fuzzy
-stage off the critical path, and their contributions are very different when
-measured separately: memoising the normalized title is worth **7.0-8.0x**
-(7.14x at 6 000 records with mixed vocabulary, 7.24x at 4 000 with a narrow
-one), while the exact length bound that rejects a pair before the sequence
-matcher runs is **within noise of 1x** on both corpus shapes - it is retained
-because it is a proven necessary condition that cannot change a result, not
-because it is a measured speed-up. Full report,
-reproduction script and the calibration and performance data are in
-[`validation/`](validation/).
+Deduplication is superlinear in corpus size, because a larger corpus puts more
+records in each token block (capped at 400). Measured by
+`validation/benchmark_dedup.py`, median of five runs on an arm64 Apple-silicon
+machine with 10 logical cores and 24 GiB of memory: 60 000 records with no
+identifiers and a natural-language word distribution take 33.9 s (30.4 to 36.2 s)
+and peak at 1.49 GB of Python allocations; the same size with every title opening
+identically takes 2.5 s and 79 MB. Cost per record rises from 179 to 566
+microseconds between 6 000 and 60 000 records. Environment and method are in
+`validation/dedup_benchmark_environment.json`. The accuracy reports and the
+calibration data are in [`validation/`](validation/).
 
 ```bash
-python -m pytest tests -q                 # 2122 offline tests, 98% coverage
+python -m pytest tests -q                 # 2191 offline tests, 98% coverage
 python validation/eval_asysd.py --gold validation/labelled_test_set.csv
 ```
 

@@ -214,5 +214,23 @@
   "verified_on": "2026-09-09",
   "verified_from": "Crossref work record, api.crossref.org/works/10.1016/j.softx.2026.102583",
   "journal_check": "ISSN 2352-7110 present on the Crossref record"
+ },
+ "petticrew2006": {
+  "doi": "10.1002/9780470754887",
+  "citation": "Petticrew M, Roberts H. Systematic Reviews in the Social Sciences: A Practical Guide. Blackwell Publishing; 2006.",
+  "verified_on": "2026-11-18",
+  "verified_against": "Crossref record (type monograph)",
+  "claims_supported": [
+   "systematic reviews are established in the social sciences; cited at a reviewer's suggestion for the Introduction"
+  ]
+ },
+ "clark2020": {
+  "doi": "10.5195/jmla.2020.834",
+  "citation": "Clark JM et al. Improving the translation of search strategies using the Polyglot Search Translator: a randomized controlled trial. J Med Libr Assoc. 2020;108(2).",
+  "verified_on": "2026-11-18",
+  "verified_against": "Crossref record; Crossref gives no page range, so none is cited",
+  "claims_supported": [
+   "the Polyglot Search Translator translates a written search strategy between database syntaxes and was evaluated in a randomized trial"
+  ]
  }
 }

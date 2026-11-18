@@ -1,25 +1,26 @@
-area,files,tests
-File-format parsers,10,263
-Command-line interface,1,164
-Scopus client and export,4,162
-Terminal interface,1,98
-Reproducible harvesting,1,79
-Web of Science clients,2,76
-Deduplication,1,71
-Documentation site,1,60
-Submission documents,3,44
-Reviewer package,1,39
-Validation protocol,1,39
-Release metadata,2,38
-Preprint servers,1,33
-Source registry,1,31
-Export formats,2,26
-Colab notebook,1,24
-API clients,1,22
-Semantic Scholar client,1,21
-arXiv client,1,21
-Documentation consistency,1,18
-Publication integrity,1,13
-End-to-end pipeline,2,7
-PRISMA reporting,1,7
-Record model,1,6
+area,files,tests,cases
+File-format parsers,10,263,568
+Command-line interface,1,164,176
+Scopus client and export,4,162,273
+Terminal interface,1,98,98
+Reproducible harvesting,1,79,79
+Web of Science clients,2,79,109
+Deduplication,2,73,101
+Documentation site,1,60,109
+Submission documents,3,48,65
+Release metadata,3,45,132
+Reviewer package,1,39,44
+Validation protocol,1,39,45
+Preprint servers,1,33,33
+Source registry,1,31,94
+Export formats,2,26,26
+Colab notebook,1,24,24
+API clients,1,22,22
+Semantic Scholar client,1,21,31
+arXiv client,1,21,21
+Documentation consistency,1,19,24
+Record model,2,18,35
+Publication integrity,1,13,25
+End-to-end pipeline,2,7,7
+PRISMA reporting,1,7,32
+Query compiler,1,4,18

@@ -142,3 +142,74 @@ def test_the_builder_refuses_to_run_without_ignore_rules(tmp_path, monkeypatch):
     with pytest.raises(SystemExit) as excinfo:
         bpt.build(str(tmp_path / "norules"), write_zip=False, quiet=True)
     assert "ignore rules" in str(excinfo.value)
+
+
+# --------------------------------------------------------------------------
+# The push tree is a copy of the repository, so it must never be written inside
+# the repository. It once was: the builder defaulted to the repository root, a
+# later "git add -A" committed the complete copy (211 files, 21 MB, a second
+# instance of the third-party dataset), and the public remote carried it until
+# a reviewer-facing audit counted the tracked files.
+# --------------------------------------------------------------------------
+
+def test_the_builder_does_not_default_to_the_repository(monkeypatch, tmp_path):
+    import importlib.util
+    import pathlib
+    import sys
+    root = pathlib.Path(__file__).resolve().parents[1]
+    spec = importlib.util.spec_from_file_location(
+        "build_push_tree_default", root / "tools" / "build_push_tree.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    captured = {}
+
+    def fake_build(outdir, write_zip=True, quiet=False):
+        captured["outdir"] = outdir
+        return {}
+
+    monkeypatch.setattr(module, "build", fake_build)
+    monkeypatch.setattr(sys, "argv", ["build_push_tree.py", "--no-zip"])
+    module.main() if hasattr(module, "main") else None
+    out = pathlib.Path(captured["outdir"]).resolve()
+    assert root not in (out, *out.parents), (
+        "the default output directory %s is inside the repository" % out)
+
+
+def test_no_tracked_file_lives_in_a_nested_copy_of_the_repository():
+    import pathlib
+    import subprocess
+    root = pathlib.Path(__file__).resolve().parents[1]
+    listing = subprocess.run(["git", "ls-files"], cwd=str(root),
+                             capture_output=True, text=True)
+    if listing.returncode != 0 or not listing.stdout.strip():
+        import pytest
+        pytest.skip("not a git checkout; the archive carries no index")
+    nested = sorted({p.rsplit("/", 1)[0] for p in listing.stdout.split("\n")
+                     if p.endswith("/pyproject.toml")})
+    assert not nested, "a copy of the project is tracked inside it: %s" % nested
+
+
+# --------------------------------------------------------------------------
+# A pattern with a leading slash is anchored to the repository root.
+#
+# The parser stripped the slash, so "/asysd_metrics.csv" (the stray copy that an
+# evaluation script writes into the working directory) became a bare name and
+# also excluded the tracked validation/asysd_metrics.csv, plus two more files of
+# the same kind. The reviewer-package self-test failed inside the pushed tree
+# because of it; the repository itself was never affected, since git anchors the
+# pattern correctly.
+# --------------------------------------------------------------------------
+
+def test_a_leading_slash_anchors_the_pattern_to_the_root(tmp_path):
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "bpt_anchor", os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                                   "tools", "build_push_tree.py"))
+    bpt = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(bpt)
+    (tmp_path / ".gitignore").write_text("/asysd_metrics.csv\n__pycache__/\ndist/\n", encoding="utf-8")
+    pats = bpt.read_ignore_patterns(str(tmp_path))
+    assert bpt.is_ignored("asysd_metrics.csv", pats, False)
+    assert not bpt.is_ignored("validation/asysd_metrics.csv", pats, False)
+    assert bpt.is_ignored("pkg/__pycache__/x.pyc", pats, False), "bare names still match at any depth"
+    assert bpt.is_ignored("dist/a.whl", pats, False)

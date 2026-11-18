@@ -3,7 +3,7 @@
   "@type": "SoftwareSourceCode",
   "identifier": "corpusslr",
   "name": "CorpusSLR",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "CorpusSLR automates the identification phase of systematic literature reviews. One structured query is compiled to the native syntax of multiple bibliographic databases, records from APIs and file exports are harmonized and enriched, duplicates are removed by a cascading auditable procedure, and the PRISMA 2020 flow diagram together with the PRISMA-S search-reporting appendix is generated from the recorded audit trail.",
   "applicationCategory": "Information Science",
   "programmingLanguage": [

@@ -150,6 +150,7 @@ def test_collapse_ws():
 # 0.9996 (TP 1260, FN 1) once it is parsed. The earlier figure was reachable
 # only by preprocessing the file in the evaluation harness, i.e. by a step the
 # package's own users do not have.
+# Since the surname fix in record.py the unsplit cell reaches 0.9996 as well.
 # --------------------------------------------------------------------------
 
 def test_a_separatorless_author_list_is_split():

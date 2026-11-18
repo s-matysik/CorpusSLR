@@ -112,6 +112,20 @@ def surname(author: Optional[str]) -> str:
     if not author:
         return ""
     a = str(author).strip()
+    if "," not in a:
+        # "Nowak A." and "Nowak AB" are Family-Initials, the form Scopus, Web of
+        # Science and PubMed use. Read as "Given Family" they yielded the
+        # surname "a", so the same person written "Nowak, A" in another export
+        # failed the first-author comparison and two copies of one record were
+        # never merged. The parsers normalise names before they reach a Record,
+        # which hid this for every path except a Record built by hand, from a
+        # data frame or by a custom client. The normaliser that already exists
+        # is applied here too, so the result no longer depends on the route.
+        try:
+            from .parsers._util import normalize_author_name
+            a = normalize_author_name(a) or a
+        except Exception:                                   # pragma: no cover
+            pass
     if "," in a:
         s = a.split(",", 1)[0]
     else:
@@ -146,6 +160,7 @@ class Record:
     #: the co-authorship-by-institution network is empty even though Web of
     #: Science and Scopus both return the addresses.
     affiliations: List[str] = field(default_factory=list)
+    references: List[str] = field(default_factory=list)
     url: str = ""
     open_access: Optional[bool] = None
     cited_by: Optional[int] = None
@@ -235,6 +250,9 @@ class Record:
             seen_a = {a.lower() for a in self.affiliations}
             self.affiliations += [a for a in other.affiliations
                                   if a.lower() not in seen_a]
+        if other.references:
+            from .references import merge_references
+            merge_references(self.references, other.references)
         if other.cited_by is not None:
             self.cited_by = max(self.cited_by or 0, other.cited_by)
         if self.open_access is None:

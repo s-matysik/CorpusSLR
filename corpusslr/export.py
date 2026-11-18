@@ -208,7 +208,7 @@ def to_scopus_csv(records: Iterable[Record], path: str) -> str:
     ``convert2df``, whereas an *empty* column is missing data it reports; and
     a file with the genuine header can be concatenated with a real Scopus
     download.  Columns with no counterpart in the record schema
-    (``Affiliations``, ``References``, ``Funding Details``, the conference
+    (``Funding Details``, the conference
     block, ...) are therefore written **empty and never invented** -- an
     affiliation string synthesised out of nothing would silently become a
     finding in someone's collaboration map.
@@ -261,6 +261,10 @@ def to_scopus_csv(records: Iterable[Record], path: str) -> str:
                 # distinct addresses with "; ", so joining that way is what the
                 # downstream parser expects.
                 "Affiliations": "; ".join(r.affiliations),
+                # One cited reference per entry, as the source wrote it (see
+                # corpusslr.references). Nothing is synthesised: a record that
+                # carries no reference list gets an empty cell.
+                "References": "; ".join(r.references),
                 "ISSN": r.issn,
                 "PubMed ID": r.pmid,
                 "Language of Original Document": r.language,

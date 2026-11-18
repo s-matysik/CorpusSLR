@@ -8,6 +8,8 @@ inconsistency in multi-database SLR searches.
 """
 from __future__ import annotations
 
+import re
+
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Tuple
 
@@ -71,6 +73,15 @@ def _clean(term: str) -> str:
     return term.replace('"', "").replace(",", " ").strip()
 
 
+#: One word of letters, digits, underscores and the WoS wildcards ``*``, ``?``
+#: and ``$``. Anything else keeps its quotation marks: a space, an apostrophe,
+#: ``+`` or ``&`` could be misread as an operator, and a hyphen changes what is
+#: matched -- measured live, ``meta-analysis`` unquoted returned 6 169 records
+#: in one query where the quoted form returned 5 845, so a hyphenated term is
+#: left exactly as written.
+_PLAIN_TOKEN = re.compile(r"[\w*?$]+")
+
+
 @dataclass
 class SearchQuery:
     """blocks: list of OR-groups, joined with AND."""
@@ -95,13 +106,27 @@ class SearchQuery:
             self.warnings.append(message)
 
     # ------------------------------------------------------------------
-    def _or_group(self, terms: List[str], quote: bool = True) -> str:
+    def _or_group(self, terms: List[str], quote: bool = True,
+                  bare_single: bool = False) -> str:
+        """OR-join *terms*, quoting each as an exact phrase.
+
+        ``bare_single`` leaves a term that is one plain token unquoted. Web of
+        Science treats a quoted term as an exact phrase and switches off its
+        lemmatisation, so ``"tool"`` does not retrieve "tools"; measured live,
+        quoting the single words of one query returned 6 098 records where the
+        unquoted form returned 9 129 (``validation/query_compiler_validation.csv``).
+        Scopus and PubMed returned identical counts either way, so only the
+        Web of Science compiler asks for this.
+        """
         parts = []
         for t in terms:
             t = _clean(t)
             if not t:
                 continue
-            parts.append(f'"{t}"' if quote else t)
+            if bare_single and _PLAIN_TOKEN.fullmatch(t):
+                parts.append(t)
+            else:
+                parts.append(f'"{t}"' if quote else t)
         return " OR ".join(parts)
 
     # ------------------------------------------------------------------
@@ -329,7 +354,7 @@ class SearchQuery:
         tag = "TI" if self.title_only else "TS"
         clauses = []
         for b in self.blocks:
-            group = self._or_group(b)
+            group = self._or_group(b, bare_single=True)
             if group:
                 clauses.append("{}=({})".format(tag, group))
         if self.years:

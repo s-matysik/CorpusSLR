@@ -596,7 +596,7 @@ def validate_config(data: Any, origin: str = "config") -> Dict[str, Any]:
             raise ConfigError(
                 '"output.appendix" must be "md" or "docx", got {!r}. The '
                 ".docx writer needs the optional python-docx extra "
-                "(pip install corpusslr[docx]).".format(out["appendix"]))
+                "(pip install python-docx).".format(out["appendix"]))
         out["appendix"] = ap
     if "svg" in out:
         _require_type(out["svg"], bool, '"output.svg"')

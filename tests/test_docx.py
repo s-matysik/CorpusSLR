@@ -41,6 +41,22 @@ def built(tmp_path_factory):
             "supplement_counts": sup_counts}
 
 
+@pytest.fixture(scope="module")
+def built_all(tmp_path_factory):
+    """All three submission documents, built now from the sources in this tree.
+
+    Three tests used to read paper/docx/, which is a build product and is not
+    in a fresh checkout (it is ignored), so they failed there; and when it was
+    present it could be older than the sources, so they could pass or fail on a
+    stale file. They now build their own.
+    """
+    out = str(tmp_path_factory.mktemp("docx_all"))
+    build_docx.build_manuscript(out)
+    build_docx.build_supplementary(out)
+    build_docx.build_cover_letter(out)
+    return out
+
+
 def _text(path):
     return "\n".join(p.text for p in docx.Document(path).paragraphs)
 
@@ -330,15 +346,12 @@ def _normalise(text):
     return " ".join(text.split())
 
 
-def test_no_markdown_sentence_is_dropped_in_conversion():
+def test_no_markdown_sentence_is_dropped_in_conversion(built_all):
     import pathlib
     import re
     from docx import Document
     root = pathlib.Path(__file__).resolve().parents[1]
-    doc = root / "paper" / "docx" / "CorpusSLR_SoftwareX_manuscript.docx"
-    if not doc.exists():                       # built by tools/build_docx.py
-        import pytest
-        pytest.fail("the Word manuscript is not built; run tools/build_docx.py")
+    doc = pathlib.Path(built_all) / "CorpusSLR_SoftwareX_manuscript.docx"
     body = _normalise("\n".join(p.text for p in Document(str(doc)).paragraphs)
                       + "\n" + "\n".join(c.text for t in Document(str(doc)).tables
                                          for r in t.rows for c in r.cells))
@@ -460,16 +473,13 @@ def test_the_markdown_and_the_article_agree_on_the_discipline_count():
 # The cover letter is generated too, so what reaches the editor is testable.
 # --------------------------------------------------------------------------
 
-def test_the_cover_letter_is_built_and_carries_the_headline_figures():
+def test_the_cover_letter_is_built_and_carries_the_headline_figures(built_all):
     import csv
     import pathlib
     from docx import Document
     from docx.oxml.ns import qn
     root = pathlib.Path(__file__).resolve().parents[1]
-    path = root / "paper" / "docx" / "CorpusSLR_SoftwareX_cover_letter.docx"
-    if not path.exists():
-        import pytest
-        pytest.fail("the cover letter is not built; run tools/build_docx.py")
+    path = pathlib.Path(built_all) / "CorpusSLR_SoftwareX_cover_letter.docx"
     doc = Document(str(path))
     body = _normalise("\n".join(p.text for p in doc.paragraphs))
     # The letter restates the article's headline result, so it must agree with
@@ -491,3 +501,31 @@ def test_the_cover_letter_is_built_and_carries_the_headline_figures():
               if b.strip() and b.strip()[0] not in "#|!%-"]
     missing = [_normalise(b)[:80] for b in blocks if _normalise(b) not in body]
     assert not missing, "absent from the letter: %s" % missing[:2]
+
+
+# --------------------------------------------------------------------------
+# Every table the text mentions has a caption, and the numbering has no gaps.
+# A reviewer found "Table 1" referred to in the introduction of the submitted
+# Word file while its first caption read "Table 2".
+# --------------------------------------------------------------------------
+
+def test_table_numbers_are_continuous_and_every_reference_has_a_caption(built_all):
+    import pathlib
+    import re
+    from docx import Document
+    for name in ("CorpusSLR_SoftwareX_manuscript.docx",
+                 "CorpusSLR_SoftwareX_supplementary.docx"):
+        path = pathlib.Path(built_all) / name
+        doc = Document(str(path))
+        paragraphs = [p.text.strip() for p in doc.paragraphs]
+        captions = [int(m.group(1)) for t in paragraphs
+                    for m in [re.match(r"^Table\s+(\d+)\.", t)] if m]
+        mentioned = {int(n) for t in paragraphs if not re.match(r"^Table\s+\d+\.", t)
+                     for n in re.findall(r"\bTable\s+(\d+)\b", t)}
+        if "manuscript" in name:
+            assert captions == list(range(1, len(captions) + 1)), (name, captions)
+        else:
+            captions = captions or [0]
+        dangling = sorted(n for n in mentioned if "manuscript" in name
+                          and n not in captions)
+        assert not dangling, "%s refers to tables with no caption: %s" % (name, dangling)

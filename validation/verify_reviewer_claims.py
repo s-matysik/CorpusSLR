@@ -53,8 +53,8 @@ REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # (2023): a cluster counts as correctly resolved when the member the gold
 # standard marks "unique" is the survivor, which credits the clustering rather
 # than the arbitrary choice of representative.
-GOLD_TP, GOLD_FP, GOLD_FN = 1257, 0, 4
-GOLD_F1 = 0.9984
+GOLD_TP, GOLD_FP, GOLD_FN = 1260, 0, 1
+GOLD_F1 = 0.9996
 
 DOMAIN_RECORDS = 13809
 DOMAIN_PAIRS = 2584
@@ -970,13 +970,13 @@ def _refresh_scratch_inventory(work: str) -> None:
         return
     with open(os.path.join(work, "data", "supplementary_test_inventory.csv"),
               "w", encoding="utf-8", newline="") as fh:
-        w = csv.DictWriter(fh, fieldnames=["file", "area", "tests"],
+        w = csv.DictWriter(fh, fieldnames=["file", "area", "tests", "cases"],
                            lineterminator="\n")
         w.writeheader()
         w.writerows(rows)
     with open(os.path.join(work, "data", "supplementary_test_areas.csv"),
               "w", encoding="utf-8", newline="") as fh:
-        w = csv.DictWriter(fh, fieldnames=["area", "files", "tests"],
+        w = csv.DictWriter(fh, fieldnames=["area", "files", "tests", "cases"],
                            lineterminator="\n")
         w.writeheader()
         w.writerows(area_rows(rows))

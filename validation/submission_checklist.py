@@ -8,6 +8,7 @@ Usage:  python validation/submission_checklist.py
 """
 import json
 import os
+import re
 import subprocess
 import sys
 
@@ -18,6 +19,30 @@ def sh(cmd):
     env = dict(os.environ, PYTHONPATH=HERE)
     return subprocess.run(["bash", "-c", cmd], cwd=HERE, capture_output=True,
                           text=True, env=env).stdout.strip()
+
+
+def install_item(root):
+    """Whether the recorded install check covers the declared release.
+
+    Returns (closed, evidence). Closed only when validation/install_verification.json
+    names the archive address of the version pyproject.toml declares, and that
+    version is what was installed.
+    """
+    path = os.path.join(root, "validation", "install_verification.json")
+    if not os.path.exists(path):
+        return False, ("not yet verified against the release address; after pushing the "
+                       "tag run: python validation/verify_install.py <archive address> "
+                       "--record validation/install_verification.json")
+    with open(path, encoding="utf-8") as fh:
+        rec = json.load(fh)
+    with open(os.path.join(root, "pyproject.toml"), encoding="utf-8") as fh:
+        declared = re.search(r'^version = "([^"]+)"', fh.read(), re.M).group(1)
+    want = "https://github.com/s-matysik/CorpusSLR/archive/refs/tags/v%s.zip" % declared
+    if rec.get("source") == want and rec.get("installed_version") == declared:
+        return True, "installed from {} and ran, on Python {} ({})".format(
+            rec.get("source"), rec.get("python"), rec.get("verified_on"))
+    return False, "the record is for {!r} at {!r}, not for {!r} at {!r}".format(
+        rec.get("source"), rec.get("installed_version"), want, declared)
 
 
 def collect():
@@ -127,9 +152,12 @@ def collect():
           "validation/wos_live_verification.json and validation/live_wos_prisma_s.md."
           if wos_ok else
           "no entitled Clarivate key; covered by recorded-response tests only")
-    check("Zenodo DOI minted", False,
-          ".zenodo.json prepares the deposit; the version DOI exists only after "
-          "archiving, and CITATION.cff gains its doi: field then")
+    # The first submission was rejected because a reviewer could not install the
+    # package, so this item is the one that matters most. It is closed only by a
+    # recorded run of validation/verify_install.py against the exact address the
+    # article gives, at the version the repository declares.
+    inst_ok, inst_note = install_item(HERE)
+    check("Installs from the release address given in the article", inst_ok, inst_note)
     return items
 
 

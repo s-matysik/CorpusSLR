@@ -788,9 +788,17 @@ def deduplicate(corpus: Corpus | List[Record],
             continue
         if conflict:
             report.copublication_merges += 1
+        # The conjunction below is order-independent (every predicate is pure),
+        # so the cheap year and first-author tests run first and the string
+        # matcher, which dominates the running time, only sees the pairs that
+        # could still be merged. Measured on a corpus with a natural-language
+        # word distribution this removed the large majority of matcher calls
+        # without changing a single decision (the output is compared with the
+        # previous ordering in tests/test_dedup_equivalence.py).
+        if not (_years_ok(a, b, year_tolerance) and _authors_ok(a, b)):
+            continue
         ratio = _title_ratio(a, b)
-        if (ratio >= need and _years_ok(a, b, year_tolerance)
-                and _authors_ok(a, b)
+        if (ratio >= need
                 and not (separate_by_locus and _separating_field(a, b))
                 and not (separate_conference and _conference_vs_article(a, b))):
             root = uf.union(ri, rj)

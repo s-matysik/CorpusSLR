@@ -136,8 +136,12 @@ def _pairs(groups):
     return out
 
 
-def evaluate(rows):
-    """Score one discipline. Returns the metric dict for its CSV row."""
+def evaluate(rows, dedup_kwargs=None):
+    """Score one discipline. Returns the metric dict for its CSV row.
+
+    ``dedup_kwargs`` is passed to ``deduplicate()`` so the ablation script can
+    switch one mechanism off and rescore with everything else unchanged.
+    """
     kept, by_source = [], {}
     for d in rows:
         by_source.setdefault(d.get("source"), []).append(d)
@@ -152,7 +156,7 @@ def evaluate(rows):
     by_uid = {r.uid: r for r in records}
 
     blinded = hide_identifiers(records)
-    result = deduplicate(blinded)
+    result = deduplicate(blinded, **(dedup_kwargs or {}))
     clusters = clusters_from_decisions(result.report.decisions,
                                        [r.uid for r in blinded])
 
@@ -202,7 +206,7 @@ def evaluate(rows):
     return row
 
 
-def build():
+def build(dedup_kwargs=None):
     rows = []
     for track in TRACKS:
         by_domain = {}
@@ -211,7 +215,7 @@ def build():
             if name:
                 by_domain.setdefault(name, []).append(d)
         for domain in sorted(by_domain):
-            row = evaluate(by_domain[domain])
+            row = evaluate(by_domain[domain], dedup_kwargs)
             row.update(track=track, domain=domain)
             rows.append({k: row.get(k, 0) for k in FIELDS})
     rows.sort(key=lambda r: (-r["f1"], r["domain"]))

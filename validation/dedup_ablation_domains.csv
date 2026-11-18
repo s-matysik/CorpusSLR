@@ -1,7 +1,7 @@
 mechanism,origin,precision,recall,f1,delta_f1
-shipped defaults,-,0.9189,0.9635,0.9407,0.0
-conflicting-identifier override,this work,0.9189,0.9635,0.9407,0.0
-identifier guarded by title,this work,0.9189,0.9635,0.9407,0.0
-shared-locus guard,this work,0.8702,0.9678,0.9164,0.0242
-multi-round blocking,ASySD (Hair et al. 2023),0.9203,0.9562,0.9379,0.0028
-conference/article separation,this work,0.9189,0.9635,0.9407,0.0
+shipped defaults,-,0.9417,0.9632,0.9524,0.0
+identifier guarded by title,this work,0.9417,0.9632,0.9524,0.0
+shared-locus guard,this work,0.9131,0.9675,0.9395,0.0129
+multi-round blocking,ASySD (Hair et al. 2023),0.9428,0.9563,0.9495,0.0029
+conflicting-identifier override,this work,0.9417,0.9632,0.9524,0.0
+conference/article separation,this work,0.9417,0.9632,0.9524,0.0

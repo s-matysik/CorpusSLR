@@ -59,6 +59,7 @@ def _parse_work(w: dict) -> Record:
         url=loc.get("landing_page_url") or "",
         open_access=oa,
         cited_by=w.get("cited_by_count"),
+        references=[u.rsplit("/", 1)[-1] for u in (w.get("referenced_works") or []) if u],
         source="OpenAlex",
         source_id=(w.get("id") or "").rsplit("/", 1)[-1],
         raw=w,
@@ -72,7 +73,7 @@ class OpenAlexSource(BaseSource):
 
     SELECT = ("id,doi,ids,display_name,title,publication_year,language,type,"
               "primary_location,biblio,authorships,cited_by_count,open_access,"
-              "abstract_inverted_index")
+              "abstract_inverted_index,referenced_works")
 
     def search(self, query: SearchQuery, max_results: int = 2000) -> SourceResult:
         filt = query.to_openalex()

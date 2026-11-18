@@ -7,10 +7,11 @@ suite rather than misleading a reader.
 ## 1. Install
 
 ```bash
-pip install corpusslr                 # core: requests only
-pip install "corpusslr[docx]"         # adds the .docx PRISMA-S appendix
+pip install https://github.com/s-matysik/CorpusSLR/archive/refs/tags/v1.1.0.zip                 # core: requests only
+pip install "corpusslr[docx] @ https://github.com/s-matysik/CorpusSLR/archive/refs/tags/v1.1.0.zip"   # adds the .docx PRISMA-S appendix
 ```
 
+The package is distributed from its GitHub release, not from PyPI.
 Python 3.9 or newer. The library has one required dependency (`requests`); the
 test suite runs entirely offline.
 

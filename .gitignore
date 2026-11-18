@@ -72,3 +72,20 @@ build_check/
 # and validation/*.png are the provenance of every accuracy figure quoted in
 # the documentation and in the manuscript, so they are tracked deliberately and
 # must never be added here.
+
+# Output of tools/build_push_tree.py. It once defaulted to the repository root
+# and a later git add -A committed a complete copy of the tree inside itself.
+CorpusSLR-push/
+CorpusSLR-push.zip
+
+# Outputs written into the working directory when an evaluation script or the
+# CLI is run from the repository root. The reviewed copies live in validation/;
+# these root copies went stale (asysd_metrics.csv still carried early figures).
+/_view_001_multidomain_validation.png
+/asysd_metrics.csv
+/corpus_scopus.csv
+/dedup_performance.csv
+/error_analysis.csv
+/eval_summary.json
+/threshold_calibration.csv
+/threshold_calibration.png

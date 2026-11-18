@@ -34,6 +34,7 @@ import re
 from typing import Dict, List, Optional, Sequence, Tuple
 
 from ..record import Record
+from ..references import split_reference_cell
 from ._io import csv_field_limit, looks_like_html, read_export_text
 from ._report import ParseReport, _ensure
 from ._util import (clean_pages, collapse_ws, map_doc_type, parse_int,
@@ -78,6 +79,7 @@ _SCOPUS = {
     "keywords": ["Author Keywords"],
     "keywords2": ["Index Keywords"],
     "affiliations": ["Affiliations"],
+    "references": ["References"],
     "doc_type": ["Document Type"],
     "language": ["Language of Original Document", "Language"],
     "cited_by": ["Cited by"],
@@ -102,6 +104,7 @@ _WOS = {
     "keywords": ["Author Keywords"],
     "keywords2": ["Keywords Plus"],
     "affiliations": ["Addresses", "Affiliations"],
+    "references": ["Cited References", "References"],
     "doc_type": ["Document Type", "Publication Type"],
     "language": ["Language"],
     "cited_by": ["Times Cited, All Databases", "Times Cited, WoS Core"],
@@ -189,6 +192,7 @@ _GENERIC = {
     "keywords2": ["Index Keywords", "Keywords Plus", "IEEE Terms"],
     "affiliations": ["Affiliations", "Addresses", "Author Address",
                      "Author affiliation", "Author Affiliations"],
+    "references": ["References", "Cited References"],
     "doc_type": ["Document Type", "Publication Type", "Type", "Item Type"],
     "language": ["Language"],
     "cited_by": ["Cited by", "Times cited", "Times Cited, All Databases",
@@ -554,6 +558,7 @@ def _rows_to_records(rows, index: Dict[str, str], dialect: str,
             abstract=cell("abstract"),
             authors=split_authors(cell("authors")),
             affiliations=affiliations,
+            references=split_reference_cell(cell("references")),
             year=parse_year(cell("year")),
             journal=cell("journal"),
             doi=doi,

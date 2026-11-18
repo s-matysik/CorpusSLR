@@ -725,6 +725,11 @@ def build_manuscript(outdir):
     add_heading(doc, 1, "Metadata")
     rows = [("Nr", "Code metadata description", "Metadata")] + code_metadata_rows()
     add_table(doc, [list(r) for r in rows])
+    # The article numbers this table 1 and the text refers to it by number, but
+    # the Word file emitted it without a caption, so a reader of the Word
+    # file met "Table 1" in the introduction and a first caption reading
+    # "Table 2". A reviewer reported exactly that.
+    add_caption(doc, "Table 1. Code metadata.")
     counts = render(doc, src, os.path.join(HERE, "paper", "figures"),
                     skip_headings=("Metadata",))
     counts["tables"] += 1

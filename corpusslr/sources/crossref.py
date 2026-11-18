@@ -43,6 +43,9 @@ def _parse_item(it: dict) -> Record:
         language=it.get("language", "") or "",
         url=it.get("URL", "") or "",
         cited_by=it.get("is-referenced-by-count"),
+        references=[ref for ref in (
+            (x.get("DOI") or x.get("unstructured") or "").strip()
+            for x in (it.get("reference") or [])) if ref],
         source="Crossref",
         source_id=it.get("DOI", ""),
         raw=it,

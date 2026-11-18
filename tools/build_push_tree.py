@@ -19,6 +19,7 @@ Usage::
 import argparse
 import fnmatch
 import os
+import tempfile
 import shutil
 import sys
 import zipfile
@@ -69,7 +70,14 @@ def read_ignore_patterns(root):
                 # pretending otherwise would silently include something.
                 continue
             dir_only = line.endswith("/")
-            out.append((line.rstrip("/").lstrip("/"), dir_only))
+            # A leading slash anchors the pattern to the repository root, which
+            # git honours: "/asysd_metrics.csv" ignores the stray root copy and
+            # NOT validation/asysd_metrics.csv. Stripping it made the pattern a
+            # bare name that matched at any depth, so the push tree silently
+            # lost tracked files of the same name inside validation/.
+            anchored = line.startswith("/")
+            name = line.rstrip("/").lstrip("/")
+            out.append(("/" + name if anchored else name, dir_only))
     return out
 
 
@@ -91,7 +99,9 @@ def is_ignored(rel, patterns, is_dir):
     rel = rel.replace(os.sep, "/").strip("/")
     parts = rel.split("/")
     for pattern, dir_only in patterns:
-        if "/" in pattern:
+        anchored = pattern.startswith("/")
+        pattern = pattern.lstrip("/")
+        if anchored or "/" in pattern:
             # Anchored, and it may carry a glob: "paper/docx" names a
             # directory and everything under it, while "paper/*.aux" names
             # files. Matching only the literal prefix let every LaTeX
@@ -189,7 +199,10 @@ def build(outdir, write_zip=True, quiet=False):
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--outdir", default=HERE)
+    # Never the repository itself: the tree is a copy of the repository, and an
+    # output directory inside it gets committed by the next git add -A.
+    ap.add_argument("--outdir", default=os.path.join(tempfile.gettempdir(),
+                                                     "corpusslr_push"))
     ap.add_argument("--no-zip", action="store_true")
     args = ap.parse_args(argv)
     build(args.outdir, write_zip=not args.no_zip)

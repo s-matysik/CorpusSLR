@@ -66,3 +66,51 @@ def test_repeated_compilation_does_not_duplicate_warnings():
         q.to_openalex_filters()
         q.compile_all()
     assert q.warnings and len(q.warnings) == len(set(q.warnings))
+
+
+# --------------------------------------------------------------------------
+# One person, one surname, whichever way the export wrote the name.
+#
+# surname("Nowak A.") returned "a": the last token was read as the family name,
+# so the Family-Initials form that Scopus, Web of Science and PubMed use never
+# matched "Nowak, A" from another export, and the first-author comparison in
+# deduplication rejected two copies of the same record. The parsers normalise
+# names before they reach a Record, which hid it on every route except a Record
+# built by hand, from a data frame or by a custom client.
+# --------------------------------------------------------------------------
+
+import pytest as _pytest_authors
+
+
+@_pytest_authors.mark.parametrize("written", [
+    "Nowak, A", "Nowak, A.", "Nowak A", "Nowak A.", "Nowak AB", "Nowak A. B.",
+    "A. Nowak", "Andrzej Nowak", "Nowak, Andrzej", "NOWAK A",
+])
+def test_every_common_author_form_yields_the_same_surname(written):
+    from corpusslr.record import surname
+    assert surname(written) == "nowak", written
+
+
+@_pytest_authors.mark.parametrize("a, b", [
+    (["Nowak A.", "Kowalski B."], ["Nowak, A", "Kowalski, B"]),
+    (["Nowak A", "Kowalski B"], ["Andrzej Nowak", "Bogdan Kowalski"]),
+    (["Nowak, Andrzej"], ["Nowak AJ"]),
+])
+def test_deduplication_merges_a_pair_whose_authors_are_written_differently(a, b):
+    from corpusslr import Record, deduplicate
+    title = "Effect of metformin on cardiovascular outcomes in obese patients"
+    one = Record(uid="A", title=title, year=2019, authors=a, journal="Diabetologia",
+                 source="pubmed")
+    two = Record(uid="B", title=title.lower(), year=2019, authors=b,
+                 journal="Diabetologia", source="scopus")
+    assert deduplicate([one, two]).report.removed == 1
+
+
+def test_different_first_authors_are_still_not_merged():
+    from corpusslr import Record, deduplicate
+    title = "Effect of metformin on cardiovascular outcomes in obese patients"
+    one = Record(uid="A", title=title, year=2019, authors=["Nowak A."],
+                 journal="Diabetologia", source="pubmed")
+    two = Record(uid="B", title=title, year=2019, authors=["Kowalski B."],
+                 journal="Diabetologia", source="scopus")
+    assert deduplicate([one, two]).report.removed == 0

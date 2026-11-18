@@ -25,6 +25,48 @@ point; they should not be quoted as properties of the current version.
 
 Nothing yet.
 
+## [1.1.0] - 2026-11-18
+
+The release that answers the first review. Tag v1.0.0 was pushed to GitHub
+before those changes, so the work listed under "Changed after the first review"
+in the 1.0.0 entry below was made after that tag and ships in this version; the
+version number was raised so that the address given in the article points at the
+code the article describes.
+
+### Changed
+
+- **Installation.** The package is installed from its GitHub release, not from
+  PyPI: the README, the user guide, the reproducible-harvest instructions, the
+  example script, the data-package README and the Colab notebook now give the
+  release archive address, and a test fails if any of them tells a reader to
+  `pip install corpusslr` by name, which would install whatever project holds
+  that name on the index. A reviewer who could not install the package had been
+  unable to assess the software at all.
+- **Web of Science queries.** The compiler no longer wraps a plain single word in
+  quotation marks. Measured live against the Expanded API with the twelve
+  reference queries, quoting every word returned fewer records in three cases
+  (1 699 against 1 774, 3 299 against 3 301 and 6 098 against 9 129) because a
+  quoted term is an exact phrase and is not lemmatised. A hyphenated term keeps
+  its quotation marks: the unquoted form returned 6 169 records where the quoted
+  one returned 5 845. After the change the compiled and the reference query
+  returned the same count for all 36 query and database pairs on PubMed, Scopus
+  and Web of Science. The Scopus and PubMed compilers are unchanged.
+- The package discovery pattern in `pyproject.toml` lists `corpusslr` and
+  `corpusslr.*` explicitly, so a stray top-level directory cannot be picked up.
+
+### Added
+
+- `validation/verify_install.py` builds a fresh virtual environment, installs
+  the package from any source `pip` accepts, runs `corpusslr --version` and a
+  short offline workflow, and with `--record` writes the outcome as evidence. It
+  removes `PYTHONPATH` from the child environment: with it set, a correctly
+  installed wheel reported an import failure on Python 3.9.
+- The submission checklist item "Installs from the release address given in the
+  article" is closed only by that record, and only when it names the archive of
+  the version `pyproject.toml` declares. The "Zenodo DOI minted" item is
+  removed: SoftwareX does not require it, and `.zenodo.json` stays as optional
+  metadata.
+
 ## [1.0.0] - 2026-09-09
 
 First public release. Nothing before this was published: the numbered entries
@@ -32,6 +74,59 @@ under *Pre-release development history* below are internal milestones from the
 audit, hardening and validation work, kept because that trail is part of the
 submission. They are not releases, and the version numbers they carry were
 never distributed.
+
+### Changed after the first review
+
+The first submission was rejected. One reviewer could not install the package
+from an index, so the software itself was never assessed; the other found the
+work technically sound and listed specific points. Each was checked against the
+repository before anything was changed, and what follows is what that checking
+led to. No release has been tagged, so these changes belong to 1.0.0.
+
+- **Surname defect.** `surname("Nowak A.")` returned `"a"` because the last token
+  was read as the family name. Differently written copies of one author then
+  failed the first-author comparison for any record not built through the
+  parsers. The surname now goes through the existing name normaliser. On the
+  gold standard the package alone, with the author cell left as the file stores
+  it, now reaches TP 1260, FP 0, FN 1, F1 0.9996.
+- **Faster matching, identical decisions.** The year and first-author tests,
+  which are cheap and pure, now run before the string matcher. On a corpus with
+  a natural-language word distribution this is 16 to 18 times faster; on the
+  corpus in which every title opens identically it makes no difference.
+  `tests/test_dedup_equivalence.py` holds digests of the decisions taken from
+  the code before the change and requires them to be reproduced exactly.
+- **Benchmark reproducible.** `validation/benchmark_dedup.py` runs each
+  repetition in a fresh interpreter, reports the median with minimum and
+  maximum, measures memory in a separate run and records the environment. The
+  earlier timings came from a run with allocation tracing on and could not be
+  regenerated. The corpus generator's vocabulary depended on the hash seed; it
+  is now sorted before it is cut. Scaling is superlinear, not "close to linear":
+  cost per record rose from 179 to 566 microseconds between 6 000 and 60 000
+  records.
+- **Cited references.** `Record.references`, merged by a stated rule
+  (`corpusslr/references.py`), read from Scopus and Web of Science exports,
+  Web of Science plain text, Crossref and OpenAlex, written to the `References`
+  column of the canonical export, with `cited_but_absent` and
+  `reference_coverage` for backward snowballing. The Scopus and Web of Science
+  API clients do not request reference lists.
+- **Query compiler validation.** `validation/validate_query_compiler.py` holds
+  twelve hand-written reference queries. All 36 compiled strings meet the syntax
+  conditions; on PubMed the compiled and the reference query returned the same
+  number of records in all 12 cases. Scopus and Web of Science were not compared
+  live for this release.
+- **Intervals and ablation.** `validation/intervals_domains_15.py` adds 95 %
+  intervals to the fifteen-discipline table. `validation/eval_mechanism_ablation.py`
+  regenerates both ablation tables, and the ablation figure is drawn from them.
+  The earlier domain ablation had described an older state; the deltas in
+  Table 2 changed accordingly.
+- **Wording.** "PRISMA-compliant" became "PRISMA-documented". The compiled
+  per-database strings, not the configuration checksum, are the content of
+  PRISMA-S Item 8. The independence of the gold-standard result is disclosed:
+  the Diabetes set was the development benchmark, and the fifteen-discipline
+  study is not held out either.
+- **Tests.** The supplement's suite table is generated from the inventory and a
+  test ties it to the CSV; it reports test functions and pytest cases
+  separately.
 
 ### Added
 
@@ -284,8 +379,8 @@ never distributed.
     plus one that recompiles the document.
   - the figure order predated the renumbering: Figure 1 is the ablation.
 
-  Measured now, the bibliography has 22 entries, the
-  article is 7 pages, the main text is exactly 3000 words with zero margin, the
+  Measured at that release, the bibliography had 22 entries, the
+  article was 7 pages (at that release), the main text is exactly 3000 words with zero margin, the
   self-test injects 11 faults into the source plus one that recompiles the
   document, and Figure 1 is the ablation. The file also opened under the
   heading "SoftwareX manuscript" with a sentence fragment about the template,

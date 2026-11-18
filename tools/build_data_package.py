@@ -90,6 +90,15 @@ INVENTORY = (
      "disciplines/false_merges",
      "As above, natural sciences and humanities."),
 
+    # --- confidence intervals and the query compiler -----------------------
+    ("validation/domains_15_intervals.csv", "disciplines",
+     ("Article section 3.3: 95 % intervals for precision, recall and F1 of the "
+      "fifteen-discipline table, and for the pooled and median figures.")),
+    ("validation/query_compiler_validation.csv", "query_compiler",
+     ("Article section 2.1: twelve hand-written reference queries against the "
+      "compiled queries for PubMed, Scopus and Web of Science, with the hit "
+      "counts of the live PubMed comparison.")),
+
     # --- mechanism ablation -----------------------------------------------
     ("validation/dedup_mechanism_ablation.csv", "ablation",
      ("Article Figure 1 and Supplement S4: F1 lost when each deduplication "
@@ -101,9 +110,12 @@ INVENTORY = (
       "field, the defect that merged unrelated works.")),
 
     # --- performance and downstream compatibility --------------------------
-    ("validation/dedup_performance.csv", "performance",
-     ("Article section 3.3: runtime and peak memory against corpus size, for "
-      "both corpus shapes.")),
+    ("validation/dedup_benchmark.csv", "performance",
+     ("Article section 3.4: median runtime over repeated runs, with minimum and "
+      "maximum, and peak memory against corpus size, for three corpus shapes.")),
+    ("validation/dedup_benchmark_environment.json", "performance",
+     ("The processor, memory, operating system, interpreter and method behind "
+      "those timings.")),
     ("validation/bibliometrix_verification.json", "downstream",
      ("Supplement S5: the executed round trip through bibliometrix, including "
       "the affiliation defect it found and the institution count after the "
@@ -305,7 +317,8 @@ UNRESOLVED_NOTE = (
 
 def _commands():
     return [
-        "pip install corpusslr==%s" % corpusslr.__version__,
+        ("pip install https://github.com/s-matysik/CorpusSLR/archive/refs/tags/"
+         "v%s.zip" % corpusslr.__version__),
         "",
         "# accuracy on the published gold standard (Supplement S2)",
         "cd gold_standard",

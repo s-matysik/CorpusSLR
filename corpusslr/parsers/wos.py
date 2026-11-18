@@ -115,6 +115,7 @@ def _build(f: Dict[str, List[str]], source_name: str) -> Record:
         language=joined("LA").lower(),
         keywords=kws,
         cited_by=int(cited) if cited.isdigit() else None,
+        references=[ln.strip() for ln in f.get("CR", []) if ln.strip()],
         source=source_name,
         source_id=joined("UT"),
         raw={"tags": dict(f)},

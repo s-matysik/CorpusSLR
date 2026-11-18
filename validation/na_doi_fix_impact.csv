@@ -1,3 +1,4 @@
 stage,FP,FN,precision,recall,f1
 before fix (v1.6.0),1,9,0.9992,0.9929,0.996
-after fix,0,4,1.0,0.9968,0.9984
+NA literal rejected as an identifier (development milestone),0,4,1.0,0.9968,0.9984
+after fix (1.0.0; first-author surname read through the name normaliser),0,1,1.0,0.9992,0.9996

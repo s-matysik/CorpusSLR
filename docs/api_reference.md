@@ -1,6 +1,6 @@
 # API reference
 
-Generated from the installed package (`corpusslr 1.0.0`) by `validation/generate_api_reference.py` -- every entry is introspected from the code, so a renamed or removed symbol cannot linger here. `tests/test_docs_examples.py` asserts that every public symbol appears.
+Generated from the installed package (`corpusslr 1.1.0`) by `validation/generate_api_reference.py` -- every entry is introspected from the code, so a renamed or removed symbol cannot linger here. `tests/test_docs_examples.py` asserts that every public symbol appears.
 
 For a narrative walkthrough see [`user_guide.md`](user_guide.md).
 
@@ -15,7 +15,7 @@ A single harmonized bibliographic record.
 - `richness() -> 'float'` - Heuristic completeness score used to pick the record to keep.
 - `to_dict() -> 'dict'` - see source
 
-Fields: `title`, `abstract`, `authors`, `year`, `journal`, `doi`, `pmid`, `openalex_id`, `scopus_id`, `issn`, `volume`, `issue`, `pages`, `doc_type`, `language`, `keywords`, `affiliations`, `url`, `open_access`, `cited_by`, `source`, `source_id`, `search_id`, `uid`, `provenance`, `raw`
+Fields: `title`, `abstract`, `authors`, `year`, `journal`, `doi`, `pmid`, `openalex_id`, `scopus_id`, `issn`, `volume`, `issue`, `pages`, `doc_type`, `language`, `keywords`, `affiliations`, `references`, `url`, `open_access`, `cited_by`, `source`, `source_id`, `search_id`, `uid`, `provenance`, `raw`
 
 ### `Corpus`
 
@@ -632,6 +632,10 @@ Construct the argument parser (exposed so that it can be tested).
 
 Verify retraction status against Crossref's structured relations.
 
+### `cited_but_absent(records: 'List[Record]', min_citing: 'int' = 1) -> 'List[Tuple[str, int]]'`
+
+Backward-snowballing candidates: cited DOIs that are not in the corpus.
+
 ### `cli`
 
 Module-level module.
@@ -803,6 +807,18 @@ Fill missing/short abstracts from OpenAlex by DOI. Returns stats.
 ### `redact_params(params: 'Optional[dict]') -> 'Dict[str, str]'`
 
 Return request parameters safe to archive.
+
+### `reference_coverage(records: 'List[Record]') -> 'Dict[str, int]'`
+
+Counts needed to judge whether snowballing from this corpus is possible.
+
+### `reference_key(entry: 'str') -> 'str'`
+
+Key under which two reference entries count as the same cited work.
+
+### `references`
+
+Module-level module.
 
 ### `request_key(url: 'str', params: 'Optional[dict]' = None) -> 'str'`
 

@@ -131,9 +131,15 @@ INVENTORY = [
     ("validation/threshold_calibration.csv", "data",
      ("That the shipped similarity threshold was chosen on a grid rather than "
       "guessed, and how flat the surface is around it.")),
-    ("validation/dedup_performance.csv", "data",
-     ("Runtime and peak memory against corpus size, for mixed and pathological "
-      "title vocabularies.")),
+    ("validation/dedup_benchmark.csv", "data",
+     ("Median runtime over repeated runs, with minimum and maximum, and peak "
+      "memory against corpus size, for three title vocabularies.")),
+    ("validation/dedup_benchmark_environment.json", "data",
+     "The processor, memory, operating system, interpreter and method behind those timings."),
+    ("validation/domains_15_intervals.csv", "data",
+     "95 % intervals for the fifteen-discipline table and for its pooled and median figures."),
+    ("validation/query_compiler_validation.csv", "data",
+     "Twelve hand-written reference queries against the compiled queries, with PubMed hit counts."),
     ("validation/domains_15_final.csv", "data",
      ("The headline cross-disciplinary result: 15 disciplines, 13809 records, "
       "2584 judgeable pairs, median F1 0.9592, false merges split into version "
@@ -237,8 +243,6 @@ INVENTORY = [
     ("validation/fig_ablation.png", "figures",
      ("Manuscript Figure 2: F1 lost per mechanism on both corpora, showing the "
       "ranking inversion.")),
-    ("validation/dedup_performance.png", "figures",
-     "Runtime and peak memory against corpus size."),
     ("validation/asysd_validation.png", "figures",
      "The gold-standard result in the form the ASySD paper reports it."),
     ("validation/multidomain_validation.png", "figures",
@@ -780,12 +784,14 @@ else held fixed:
 | author handling | TP | FP | FN | precision | recall | F1 |
 |---|---:|---:|---:|---:|---:|---:|
 | split by the harness regex | 1260 | 0 | 1 | 1.0000 | 0.9992 | 0.9996 |
-| left as the file stores it | 1257 | 0 | 4 | 1.0000 | 0.9968 | 0.9984 |
+| left as the file stores it | 1260 | 0 | 1 | 1.0000 | 0.9992 | 0.9996 |
 
-The manuscript, the supplementary material and this package quote the second
-row, F1 0.9984. `reproduce/verify_reviewer_claims.py` check C1 measures it
-without the harness step, so the number the package publishes is the
-conservative one.
+The two rows now agree. They did not before the first-author surname was read
+through the package's own name normaliser: the opaque cell then yielded a
+meaningless first-author surname, so the second row was TP 1257, FN 4, F1
+0.9984, and the harness step was worth three true duplicates. The manuscript
+quotes 0.9996, and `reproduce/verify_reviewer_claims.py` check C1 measures it
+without the harness step, so the number is the package's own.
 
 Separately: the same score is reached whether the literal `NA` is stripped by
 the harness before the package sees it or left in place for the package's own
