@@ -37,7 +37,12 @@ corpusslr = "corpusslr.cli:main"
 
 [project.optional-dependencies]
 docx = ["python-docx>=1.1"]
-dev = ["pytest>=7", "pytest-cov>=4"]
+# setuptools and wheel are listed because tests/test_install_verification.py
+# builds the package into a fresh environment without network access, which
+# needs the build tools in the running interpreter. Python 3.12 and later no
+# longer put setuptools in a new environment, so without this the test fails
+# there (it did, on the first CI run of the release).
+dev = ["pytest>=7", "pytest-cov>=4", "setuptools>=68", "wheel"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

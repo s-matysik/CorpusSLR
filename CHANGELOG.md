@@ -54,6 +54,17 @@ code the article describes.
 - The package discovery pattern in `pyproject.toml` lists `corpusslr` and
   `corpusslr.*` explicitly, so a stray top-level directory cannot be picked up.
 
+### Fixed
+
+- The first CI run of this release failed on Python 3.12 and 3.13 (and in the
+  sdist check, which runs 3.12). `tests/test_install_verification.py` builds the
+  package into a fresh environment without network access, which needs
+  setuptools in the running interpreter, and Python 3.12 and later no longer
+  ship it in a new environment. `setuptools` and `wheel` are now in the `dev`
+  extra, and `validation/verify_install.py` says what is missing instead of
+  failing inside pip. Reproduced locally with an interpreter that has no
+  setuptools before the change was made.
+
 ### Added
 
 - `validation/verify_install.py` builds a fresh virtual environment, installs

@@ -97,6 +97,11 @@ def main(argv=None):
         # "UNKNOWN" package. Without a route to the package index the build
         # tools of the invoking interpreter are the only current ones, so the
         # wheel is built with those and the venv only installs it.
+        have = run([args.python, "-c", "import setuptools"])
+        if have.returncode:
+            print("1. build wheel      : FAILED\n   --no-build-isolation needs setuptools in "
+                  + args.python + "; install it (pip install setuptools wheel) or drop the flag")
+            return 1
         wheeldir = os.path.join(root, "wheel")
         w = run([args.python, "-m", "pip", "wheel", "--quiet", "--no-build-isolation",
                  "--no-deps", "--no-index", "-w", wheeldir, args.source])
