@@ -1,0 +1,50 @@
+name: install-from-release
+
+# What a reviewer does first: install the package from the address the article
+# gives, on a clean machine, with the ordinary pip and the package index
+# available. The first submission of this software was rejected because that
+# step failed, so it is checked on every supported Python, on a release tag and
+# on demand. The check itself is validation/verify_install.py, which builds a
+# fresh virtual environment and runs the command and a short offline workflow.
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "release to install, e.g. 1.1.0 (default: the version in pyproject.toml)"
+        required: false
+
+jobs:
+  install:
+    name: install from the release archive (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install from the archive address, in a fresh environment
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+          if [ -z "$VERSION" ]; then
+            VERSION=$(python -c "import re; print(re.search(r'^version = \"([^\"]+)\"', open('pyproject.toml').read(), re.M).group(1))")
+          fi
+          URL="https://github.com/${{ github.repository }}/archive/refs/tags/v${VERSION}.zip"
+          echo "installing $URL"
+          python validation/verify_install.py "$URL"
+
+      - name: Install from git at the same tag
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+          if [ -z "$VERSION" ]; then
+            VERSION=$(python -c "import re; print(re.search(r'^version = \"([^\"]+)\"', open('pyproject.toml').read(), re.M).group(1))")
+          fi
+          python validation/verify_install.py "git+https://github.com/${{ github.repository }}.git@v${VERSION}"
