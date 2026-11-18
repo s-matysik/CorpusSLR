@@ -111,7 +111,12 @@ def main(argv=None):
         spec = os.path.join(wheeldir, sorted(os.listdir(wheeldir))[0])
         print("   wheel built      :", os.path.basename(spec))
         pip += ["--no-index", "--no-deps"]
-    r = run(pip + [spec])
+    # --ignore-installed: with --system-site-packages, a copy of the package that
+    # is already installed in the base interpreter satisfies pip's requirement,
+    # nothing is installed into the new environment, the import still works and
+    # the command-line script is missing. That is what CI showed, after an
+    # earlier step had installed the package into the runner's Python.
+    r = pipout = run(pip + ["--ignore-installed", spec])
     print("1. pip install      :", "ok" if r.returncode == 0 else "FAILED")
     if r.returncode:
         print(r.stderr[-1200:])
@@ -122,6 +127,16 @@ def main(argv=None):
         return 1
     version = r.stdout.strip()
     exe = os.path.join(venv, "bin", "corpusslr")
+    if not os.path.exists(exe):
+        # The import works but the command was not installed: say where the
+        # package came from and what the environment's bin directory holds,
+        # rather than raising FileNotFoundError out of subprocess.
+        where = run([py, "-c", "import corpusslr; print(corpusslr.__file__)"], cwd=root)
+        print("3. corpusslr command: FAILED, %s does not exist" % exe)
+        print("   package imported from:", where.stdout.strip())
+        print("   bin directory        :", sorted(os.listdir(os.path.dirname(exe))))
+        print("   pip output was       :", (pipout.stdout + pipout.stderr)[-500:].strip())
+        return 1
     r = run([exe, "--version"], cwd=root)
     print("3. corpusslr command:", r.stdout.strip() if r.returncode == 0 else "FAILED\n" + r.stderr[-600:])
     if r.returncode:

@@ -70,6 +70,11 @@ code the article describes.
   running the suite from it. A test now requires every markdown file the
   document builder reads to be listed in the manifest, and was shown to fail
   when the line is removed.
+- `validation/verify_install.py` installs with `--ignore-installed` and reports
+  a missing `corpusslr` command with the package location and the contents of
+  the environment's `bin` directory, instead of raising `FileNotFoundError`.
+  The first push of the release failed its install test in the sdist job at
+  exactly that point, in an interpreter that already had the package installed.
 - The workflows are pinned to `ubuntu-24.04`: `ubuntu-latest` moved to Ubuntu
   26.04, which has no Python 3.9, so the declared minimum version could not be
   set up.
