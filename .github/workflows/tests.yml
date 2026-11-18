@@ -19,10 +19,12 @@ concurrency:
   group: tests-${{ github.ref }}
   cancel-in-progress: true
 
+# Pinned: ubuntu-latest moved to Ubuntu 26.04, which has no Python 3.9 build,
+# so the declared minimum version could not be tested on it.
 jobs:
   test:
     name: pytest (Python ${{ matrix.python-version }})
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
@@ -80,7 +82,7 @@ jobs:
 
   build:
     name: build and check distributions
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
 
@@ -130,7 +132,7 @@ jobs:
 
   metadata:
     name: citation metadata consistency
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
 

@@ -538,7 +538,7 @@ microseconds between 6 000 and 60 000 records. Environment and method are in
 calibration data are in [`validation/`](validation/).
 
 ```bash
-python -m pytest tests -q                 # 2191 offline tests, 98% coverage
+python -m pytest tests -q                 # 2193 offline tests, 98% coverage
 python validation/eval_asysd.py --gold validation/labelled_test_set.csv
 ```
 

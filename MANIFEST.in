@@ -87,6 +87,7 @@ include PUBLISHING.md
 # audit, and validation/multidomain_validation.md is rendered as a page and is
 # picked up by the `recursive-include validation *.md` rule above.
 include MANUSCRIPT.md
+include COVER_LETTER.md
 
 # The generated site itself is never distributed. It is rebuilt from the
 # markdown by `python tools/build_site.py` in under a second, and shipping a

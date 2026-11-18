@@ -64,6 +64,15 @@ code the article describes.
   extra, and `validation/verify_install.py` says what is missing instead of
   failing inside pip. Reproduced locally with an interpreter that has no
   setuptools before the change was made.
+- `COVER_LETTER.md` was read by `tools/build_docx.py` but missing from
+  `MANIFEST.in`, so the suite passed in a checkout and failed in the unpacked
+  sdist, which is how a packager runs it. Reproduced by building the sdist and
+  running the suite from it. A test now requires every markdown file the
+  document builder reads to be listed in the manifest, and was shown to fail
+  when the line is removed.
+- The workflows are pinned to `ubuntu-24.04`: `ubuntu-latest` moved to Ubuntu
+  26.04, which has no Python 3.9, so the declared minimum version could not be
+  set up.
 
 ### Added
 

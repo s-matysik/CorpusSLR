@@ -10,7 +10,7 @@ tests/test_enrich_quality_export.py,Export formats,20,20
 tests/test_export_scopus.py,Scopus client and export,49,109
 tests/test_file_export_integration.py,Export formats,6,6
 tests/test_harvest.py,Reproducible harvesting,79,79
-tests/test_install_verification.py,Release metadata,7,10
+tests/test_install_verification.py,Release metadata,9,12
 tests/test_integration_e2e.py,End-to-end pipeline,2,2
 tests/test_integrity.py,Publication integrity,13,25
 tests/test_metadata_consistency.py,Release metadata,15,15

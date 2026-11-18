@@ -117,3 +117,27 @@ def test_negative_control_the_pattern_does_catch_the_old_instruction():
     for good in ("pip install https://github.com/s-matysik/CorpusSLR/archive/refs/tags/v1.1.0.zip",
                  'pip install "corpusslr[docx] @ https://github.com/s-matysik/CorpusSLR/archive/refs/tags/v1.1.0.zip"'):
         assert not bad.search(good), good
+
+
+def test_every_markdown_file_the_document_builder_reads_ships_in_the_sdist():
+    """COVER_LETTER.md was read by tools/build_docx.py but missing from MANIFEST.in.
+
+    The suite passed in a checkout and failed in the unpacked sdist, which is how
+    a reviewer or packager runs it; CI caught it on the first push of the release.
+    """
+    builder = os.path.join(ROOT, "tools", "build_docx.py")
+    manifest = os.path.join(ROOT, "MANIFEST.in")
+    if not (os.path.exists(builder) and os.path.exists(manifest)):
+        pytest.fail("tools/build_docx.py or MANIFEST.in is not in this tree")
+    read = set(re.findall(r'os\.path\.join\(HERE,\s*"([A-Za-z_]+\.md)"\)',
+                          open(builder, encoding="utf-8").read()))
+    assert read, "the pattern found no markdown file; the guard would be vacuous"
+    listed = set(re.findall(r"^include\s+(\S+\.md)\s*$",
+                            open(manifest, encoding="utf-8").read(), re.M))
+    assert read <= listed, sorted(read - listed)
+
+
+def test_negative_control_the_manifest_guard_sees_a_missing_file():
+    manifest_text = "include README.md\ninclude MANUSCRIPT.md\n"
+    listed = set(re.findall(r"^include\s+(\S+\.md)\s*$", manifest_text, re.M))
+    assert "COVER_LETTER.md" not in listed
