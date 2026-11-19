@@ -47,6 +47,15 @@ moved, so the changes made after it ship as 1.2.0.
   constructions that added no information, which a reviewer had described as
   formulaic.
 
+### Fixed
+
+- The article said nothing about how to install the package, the point on which
+  the first submission was rejected; it carried only the repository link in the
+  metadata table. Section 3 now states the install command with the release
+  address and that the package is not published on PyPI, and the cover letter
+  says the same and names the previous submission. Documentation only: the
+  code in tag v1.2.0 is unchanged.
+
 ### Added
 
 - `corpusslr.notebook`: `list_databases`, `make_config`, `show_queries`,
