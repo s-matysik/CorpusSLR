@@ -537,9 +537,9 @@ Deduplication is superlinear in corpus size, because a larger corpus puts more
 records in each token block (capped at 400). Measured by
 `validation/benchmark_dedup.py`, median of five runs on an arm64 Apple-silicon
 machine with 10 logical cores and 24 GiB of memory: 60 000 records with no
-identifiers and a natural-language word distribution take 33.9 s (30.4 to 36.2 s)
+identifiers and a natural-language word distribution take 40.8 s (35.9 to 54.5 s)
 and peak at 1.49 GB of Python allocations; the same size with every title opening
-identically takes 2.5 s and 79 MB. Cost per record rises from 179 to 566
+identically takes 2.9 s and 79 MB. Cost per record rises from 243 to 679
 microseconds between 6 000 and 60 000 records. Environment and method are in
 `validation/dedup_benchmark_environment.json`. The accuracy reports and the
 calibration data are in [`validation/`](validation/).

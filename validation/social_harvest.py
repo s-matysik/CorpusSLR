@@ -27,7 +27,7 @@ import sys
 import time
 from typing import Dict, List
 
-sys.path.insert(0, "/Users/sebastianmatysik/!!!CorpusSLR/corpusslr")
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import requests
 
@@ -37,7 +37,7 @@ from corpusslr.sources.crossref import _parse_item
 
 from social_queries import SOCIAL_QUERIES, MAX_PER_DB
 
-REPO = "/Users/sebastianmatysik/!!!CorpusSLR/corpusslr"
+REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(REPO, "validation", "domains_social_raw.jsonl.gz")
 CROSSREF_URL = "https://api.crossref.org/works"
 

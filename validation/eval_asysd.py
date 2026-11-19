@@ -31,10 +31,13 @@ import pandas as pd
 # --------------------------------------------------------------------------
 # 0. CLI / package import
 # --------------------------------------------------------------------------
-DEFAULT_GOLD = ("/Users/sebastianmatysik/.claude-science/orgs/"
-                "acfa7c51-4bf1-49a5-9495-3958c15db03d/artifacts/proj_81eae4e3524e/"
-                "2e07aa6d-00b7-40db-815b-a8dfd90914c5/v4b81c865_labelled_test_set.csv")
-DEFAULT_PKG = "/Users/sebastianmatysik/!!!CorpusSLR/corpusslr"
+import os as _os
+
+_REPO = _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
+#: The benchmark file ships with the repository, so a run without arguments
+#: finds it. (It used to point into a private application directory.)
+DEFAULT_GOLD = _os.path.join(_REPO, "validation", "labelled_test_set.csv")
+DEFAULT_PKG = _REPO
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--gold", default=DEFAULT_GOLD)

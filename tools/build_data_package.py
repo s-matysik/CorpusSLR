@@ -62,6 +62,15 @@ INVENTORY = (
     ("validation/domains_15_final.csv", "disciplines",
      ("Article Table 2 and Supplement S3: the pooled per-discipline result, "
       "identifier-blind, behind the headline accuracy figures.")),
+    ("validation/domains_15_intervals.csv", "disciplines",
+     ("Article section 3.2: 95% intervals for F1 per discipline, sampling of "
+      "pairs only.")),
+    ("validation/asysd_rule_comparison.csv", "disciplines",
+     ("Article section 2.4 and Supplement S8: the transcribed ASySD rule and "
+      "this package's rule on identical candidate pairs, per discipline.")),
+    ("validation/compare_asysd_rule.py", "disciplines",
+     ("Regenerates asysd_rule_comparison.csv from the raw archives; the "
+      "rule is transcribed from the ASySD source.")),
     ("validation/eval_domains_15.py", "disciplines",
      ("Regenerates domains_15_final.csv from the raw archives below, and "
       "documents why it differs from the per-track files.")),

@@ -42,7 +42,7 @@ import sys
 import time
 from typing import Dict, List, Optional, Sequence, Tuple
 
-REPO = "/Users/sebastianmatysik/!!!CorpusSLR/corpusslr"
+REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if REPO not in sys.path:
     sys.path.insert(0, REPO)
 

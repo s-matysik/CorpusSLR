@@ -4,11 +4,11 @@
  "ram_gib": 24,
  "operating_system": "macOS-15.1-arm64-arm-64bit-Mach-O",
  "python": "CPython 3.13.15",
- "corpusslr": "1.0.0",
+ "corpusslr": "1.2.0",
  "time_measurement": "time.perf_counter() around deduplicate(), tracemalloc off, corpus construction excluded",
  "memory_measurement": "tracemalloc peak of allocations made during deduplicate() (separate run), and peak resident set size of the whole process",
  "repetitions": 5,
  "statistic": "median of the repetitions, with minimum and maximum",
  "environment_source": "Processor family, core count and memory are the figures reported by the host that ran the benchmark; sysctl is blocked in the sandbox, so benchmark_dedup.py could not read them itself.",
- "concurrent_load": "Light unrelated work (editing, short test runs) ran on the same machine during the benchmark; no other benchmark did."
+ "note": "Measured on the working tree of release 1.2.0 (deduplication code identical to the tag). An earlier run of the same script gave about 20% shorter times and identical memory."
 }
