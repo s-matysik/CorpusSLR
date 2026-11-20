@@ -545,7 +545,7 @@ microseconds between 6 000 and 60 000 records. Environment and method are in
 calibration data are in [`validation/`](validation/).
 
 ```bash
-python -m pytest tests -q                 # 2248 offline tests, 98% coverage
+python -m pytest tests -q                 # 2261 offline tests, 98% coverage
 python validation/eval_asysd.py --gold validation/labelled_test_set.csv
 ```
 
@@ -554,35 +554,65 @@ python validation/eval_asysd.py --gold validation/labelled_test_set.csv
 A static page runs the package in the browser, with no server and nothing to install:
 https://s-matysik.github.io/CorpusSLR/app/
 
-It compiles one query into seven dialects, searches OpenAlex, Crossref, PubMed, Semantic
-Scholar and Scopus, imports export files in the formats the parsers read, deduplicates with
-the same cascade and logs every merge, and produces the PRISMA 2020 diagram, the PRISMA-S
-appendix, the strategy audit, the data-quality report and the exports (Scopus CSV, CSV, RIS,
-BibTeX, screening CSV, merge log) as one zip. The engine is the unmodified package, run by
-Pyodide and served from the same site, so a visit makes no request to a CDN.
+It compiles one query for each of the nine databases the package supports (a native query
+for seven; for bioRxiv and medRxiv the server returns a date window and the query is applied
+locally), searches them through their APIs, imports export files in the formats the parsers read,
+deduplicates with the same cascade and logs every merge, and produces the PRISMA 2020
+diagram, the PRISMA-S appendix, the strategy audit, the data-quality report and the exports
+(Scopus CSV, CSV, RIS, BibTeX, screening CSV, merge log) as one zip. The engine is the
+unmodified package, run by Pyodide and served from the same site, so a visit makes no request
+to a CDN.
 
-What it does not do, and why:
+| database | how the page reaches it | key |
+|---|---|---|
+| OpenAlex, Crossref | directly | none |
+| PubMed, Semantic Scholar | directly | optional |
+| Scopus | directly | Elsevier key |
+| bioRxiv, medRxiv | directly | none |
+| Web of Science | through your proxy | Clarivate Expanded API key |
+| arXiv | through your proxy | none |
 
-- Web of Science and arXiv cannot be searched from a page, because their APIs send no CORS
-  header (measured). Import their exports instead.
+"Directly" means the database sends a CORS header (measured), so a browser may read its
+answers. Web of Science (`api.clarivate.com`) and arXiv (`export.arxiv.org`) answer requests
+but send no CORS header to any origin, so no static page can read them. For those two the
+page sends the request to a proxy that you run and that adds the header. `app/proxy/worker.js`
+is that proxy: a Cloudflare Worker (free tier) of about 80 lines that serves two routes, only
+for the origins you list, forwards only the key and `Accept`, and neither logs nor stores
+anything.
+
+```
+cd app/proxy && npx wrangler deploy
+```
+
+Paste the address it prints into the "Proxy address" field of the page. The key passes through
+whoever runs the proxy, so run your own and do not use one that someone else operates. Without
+a proxy, import the Web of Science or arXiv export file instead.
+
+Other limits, stated plainly:
+
 - API keys are typed into fields, used for the requests of one search and cleared afterwards.
   They are never written to storage, and error messages are scrubbed of them. A key typed into
   any web page is exposed to that page's code; for a key you cannot afford to expose, use the
   command line.
-- A search retrieves up to the number you set. Exhaustive harvests belong to the command line.
+- A search retrieves up to the number you set. bioRxiv and medRxiv list a date window and
+  filter locally, with a scan budget the package reports; narrow the years. Exhaustive harvests
+  belong to the command line.
 
 How it is tested, and what is not: `tests/test_web_bridge.py` and `tests/test_web_app.py` run
-offline in the main suite. `app/test/run_pyodide_tests.mjs` runs the page's Python layer inside
-the real Pyodide runtime in Node, and `app/test/run_ui_tests.mjs` drives the real page in a
-DOM emulation (jsdom) on top of it. Layout, styling and the web worker are not exercised by
-those tests, and the page has not been tried in a real browser by the author of the tests.
+offline in the main suite. In Node, `app/test/run_proxy_tests.mjs` tests the proxy,
+`app/test/run_pyodide_tests.mjs` runs the page's Python layer inside the real Pyodide runtime,
+and `app/test/run_ui_tests.mjs` drives the real page in a DOM emulation (jsdom) on top of it.
+The proxy code and the bridge were also run together against the live Web of Science and
+arXiv services, and the bridge against the live preprint servers, from Node and Python, not
+from a browser. Layout, styling and the web worker are not exercised by any of those tests,
+and the page has not been tried in a real browser by the author of the tests.
 
 Build and test locally:
 
 ```
 cd app && npm ci
 cd .. && python tools/build_app.py --out app/dist
-cd app && node --test test/run_pyodide_tests.mjs test/run_ui_tests.mjs
+cd app && node --test test/run_proxy_tests.mjs test/run_pyodide_tests.mjs test/run_ui_tests.mjs
 ```
 
 ## If you would rather not write a configuration file

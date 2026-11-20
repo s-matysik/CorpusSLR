@@ -73,10 +73,17 @@ SPEC = {"blocks": [["deep learning"], ["diabetic retinopathy"]], "years": [2020,
 
 def test_every_dialect_is_compiled_and_the_browser_reachable_ones_are_marked():
     r = json.loads(W.compile_query(json.dumps(SPEC)))
-    assert r["ok"] and set(r["queries"]) == {
-        "scopus", "wos", "pubmed", "openalex", "crossref", "semanticscholar", "arxiv"}
+    assert r["ok"]
     assert r["queries"]["scopus"]["query"].startswith("TITLE-ABS-KEY(")
-    assert r["queries"]["wos"]["browser"] is False and r["queries"]["wos"]["note"]
+    assert set(r["queries"]) == {"scopus", "wos", "pubmed", "openalex", "crossref",
+                                 "semanticscholar", "arxiv", "biorxiv", "medrxiv"}
+    assert all(v["query"] for v in r["queries"].values()), "every database compiles"
+    direct = {k for k, v in r["queries"].items() if v["browser"]}
+    proxied = {k for k, v in r["queries"].items() if v["via_proxy"]}
+    assert direct == {"openalex", "crossref", "pubmed", "semanticscholar", "scopus",
+                      "biorxiv", "medrxiv"}
+    assert proxied == {"wos", "arxiv"} and not (direct & proxied)
+    assert all("proxy" in r["queries"][k]["note"] for k in proxied)
     assert r["queries"]["openalex"]["browser"] is True
 
 
@@ -114,11 +121,49 @@ def test_status_zero_explains_cors_instead_of_a_bare_network_error():
     assert r["report"][0]["ok"] is False and "CORS" in r["report"][0]["error"]
 
 
-@pytest.mark.parametrize("alias", ["wos", "arxiv"])
-def test_databases_without_cors_are_refused_with_a_pointer_to_file_import(alias):
-    W.set_transport(Net())
-    r = json.loads(W.run_search(json.dumps(SPEC), json.dumps({alias: {}}), 5))
-    assert r["report"][0]["ok"] is False and "import" in r["report"][0]["error"].lower()
+@pytest.mark.parametrize("cred, fragment", [
+    ({"api_key": SECRET}, "proxy"),                                   # no proxy at all
+    ({"api_key": SECRET, "proxy": "http://example.org"}, "https"),    # key over plain http
+    ({"api_key": SECRET, "proxy": "https://api.clarivate.com"}, "Clarivate"),
+    ({"api_key": SECRET, "proxy": "https://user:pw@p.example.org"}, "credentials"),
+    ({"api_key": SECRET, "proxy": "https://p.example.org/?k=1"}, "query"),
+    ({"proxy": "https://p.example.org"}, "key"),                      # no key
+])
+def test_web_of_science_refuses_an_unsafe_or_missing_proxy_without_any_request(cred, fragment):
+    net = Net()
+    W.set_transport(net)
+    r = json.loads(W.run_search(json.dumps(SPEC), json.dumps({"wos": cred}), 5))
+    assert r["report"][0]["ok"] is False and fragment.lower() in r["report"][0]["error"].lower()
+    assert net.calls == [] and SECRET not in json.dumps(r)
+
+
+def _wos_page(n):
+    from test_wos_expanded import _payload, _rec
+    recs = [_rec({"seq_no": 1, "role": "author", "full_name": "Smith, A"}, doi="10.5001/p%d" % i,
+                 uid="WOS:%04d" % i) for i in range(n)]
+    return json.dumps(_payload(recs, found=n))
+
+
+def test_a_web_of_science_search_goes_through_the_proxy_and_never_to_clarivate():
+    net = Net({"proxy.example.workers.dev": (200, _wos_page(2), {})})
+    W.set_transport(net)
+    cred = {"api_key": SECRET, "proxy": "https://proxy.example.workers.dev/"}
+    r = json.loads(W.run_search(json.dumps(SPEC), json.dumps({"wos": cred}), 10))
+    assert r["report"][0]["ok"] and r["report"][0]["retrieved"] == 2, r
+    assert net.calls and all(c[1].startswith("https://proxy.example.workers.dev/wos/api/wos") for c in net.calls)
+    assert not any("clarivate.com" in c[1] for c in net.calls)
+    # the key travels in the header the proxy forwards, never in the address
+    assert all(c[2].get("X-ApiKey") == SECRET and SECRET not in c[1] for c in net.calls)
+    assert SECRET not in json.dumps(r)
+    assert W.S.corpus.identified_by_source() == {"Web of Science Core Collection": 2}
+
+
+def test_a_proxy_error_message_never_contains_the_key():
+    net = Net({"proxy.example.workers.dev": (401, "bad key " + SECRET, {})})
+    W.set_transport(net)
+    cred = {"api_key": SECRET, "proxy": "https://proxy.example.workers.dev"}
+    r = json.loads(W.run_search(json.dumps(SPEC), json.dumps({"wos": cred}), 5))
+    assert r["report"][0]["ok"] is False and SECRET not in json.dumps(r)
 
 
 def test_search_and_import_are_merged_and_every_output_is_produced(tmp_path):
@@ -259,3 +304,93 @@ def test_the_sleep_shim_is_removed_after_the_search_and_real_back_off_is_kept(mo
     session.blocked = True
     shim.sleep(4)
     assert slept == [2]
+
+
+ARXIV_FEED = """<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:arxiv="http://arxiv.org/schemas/atom"
+      xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/">
+  <opensearch:totalResults>1</opensearch:totalResults>
+  <entry><id>http://arxiv.org/abs/2401.01234v2</id><published>2024-01-02T18:00:00Z</published>
+    <title>Deep learning for retinopathy</title><summary>Abstract text.</summary>
+    <author><name>Jan Kowalski</name></author><arxiv:doi>10.1000/arxiv.test</arxiv:doi></entry>
+</feed>"""
+
+BIORXIV_PAGE = json.dumps({
+    "messages": [{"status": "ok", "interval": "x", "cursor": 0, "count": 1, "total": 1}],
+    "collection": [{"doi": "10.1101/2024.01.01.123456", "title": "Deep learning for diabetic retinopathy",
+                    "authors": "Kowalski, J.", "date": "2024-03-15", "version": "1",
+                    "type": "new results", "category": "bioinformatics",
+                    "abstract": "Deep learning applied to diabetic retinopathy.", "server": "biorxiv"}]})
+
+
+def test_arxiv_goes_through_the_proxy_on_its_own_route_and_never_to_arxiv_directly():
+    net = Net({"proxy.example.workers.dev": (200, ARXIV_FEED, {})})
+    W.set_transport(net)
+    cred = {"proxy": "https://proxy.example.workers.dev"}
+    r = json.loads(W.run_search(json.dumps(SPEC), json.dumps({"arxiv": cred}), 10))
+    assert r["report"][0]["ok"] and r["report"][0]["retrieved"] == 1, r
+    assert net.calls and all(c[1].startswith("https://proxy.example.workers.dev/arxiv/api/query")
+                             for c in net.calls), [c[1] for c in net.calls]
+    assert not any("arxiv.org" in c[1].split("/arxiv/")[0] for c in net.calls)
+    assert not any(c[1].startswith(("http://export.arxiv.org", "https://export.arxiv.org"))
+                   for c in net.calls)
+
+
+def test_arxiv_needs_a_proxy_but_no_key():
+    net = Net()
+    W.set_transport(net)
+    r = json.loads(W.run_search(json.dumps(SPEC), json.dumps({"arxiv": {}}), 5))
+    assert r["report"][0]["ok"] is False and "proxy" in r["report"][0]["error"].lower()
+    assert net.calls == []
+
+
+def test_the_two_proxied_databases_use_separate_routes_in_one_search():
+    net = Net({"/wos/api/wos": (200, _wos_page(1), {}), "/arxiv/api/query": (200, ARXIV_FEED, {})})
+    W.set_transport(net)
+    p = {"proxy": "https://proxy.example.workers.dev"}
+    r = json.loads(W.run_search(json.dumps(SPEC), json.dumps(
+        {"wos": dict(p, api_key=SECRET), "arxiv": p}), 10))
+    assert [x["ok"] for x in r["report"]] == [True, True], r
+    assert W.S.corpus.identified_by_source() == {"Web of Science Core Collection": 1, "arXiv": 1}
+    urls = [c[1] for c in net.calls]
+    assert any("/wos/api/wos" in u for u in urls) and any("/arxiv/api/query" in u for u in urls)
+
+
+@pytest.mark.parametrize("alias, label", [("biorxiv", "bioRxiv"), ("medrxiv", "medRxiv")])
+def test_the_preprint_servers_are_called_directly_without_a_proxy_or_key(alias, label):
+    net = Net({"api.biorxiv.org": (200, BIORXIV_PAGE, {})})
+    W.set_transport(net)
+    r = json.loads(W.run_search(json.dumps(SPEC), json.dumps({alias: {}}), 10))
+    assert r["report"][0]["ok"], r
+    assert net.calls and all(c[1].startswith("https://api.biorxiv.org/details/" + alias)
+                             for c in net.calls), [c[1] for c in net.calls]
+    assert r["report"][0]["retrieved"] == 1
+    assert list(W.S.corpus.identified_by_source()) == [label]
+
+
+def test_every_entry_point_installs_the_requests_stand_in_before_importing_the_package():
+    """The page's worker happens to call version() first, which hid an import that
+    ran before the stand-in existed. Each entry point must work as the first call
+    on a runtime that has no requests library."""
+    import subprocess
+    here = os.path.dirname(__file__)
+    calls = {"compile": "W.compile_query(json.dumps(SPEC))",
+             "search": "W.run_search(json.dumps(SPEC), '{}', 5)",
+             "prisma": "W.prisma('{}')"}
+    for name, expr in calls.items():
+        src = (
+            "import builtins, json, sys\n"
+            "sys.path[:0] = [%r, %r]\n"
+            "real = builtins.__import__\n"
+            "def no_req(n, *a, **k):\n"
+            "    if (n == 'requests' or n.startswith('requests.')) and 'requests' not in sys.modules:\n"
+            "        raise ImportError('no requests here')\n"
+            "    return real(n, *a, **k)\n"
+            "builtins.__import__ = no_req\n"
+            "import corpusslr_web as W\n"
+            "SPEC = %r\n"
+            "print(type(json.loads(%s)['ok']).__name__)\n"
+        ) % (os.path.join(here, "..", "app", "py"), os.path.join(here, ".."), SPEC, expr)
+        r = subprocess.run([sys.executable, "-c", src], capture_output=True, text=True,
+                           cwd=os.path.join(here, ".."))
+        assert r.returncode == 0 and r.stdout.strip() == "bool", (name, r.stderr[-600:])

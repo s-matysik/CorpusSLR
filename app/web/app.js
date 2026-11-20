@@ -58,16 +58,18 @@
 
   // ---------------------------------------------------------------- state
   var state = { blocks: [[], []], ready: false, tab: "records", rows: null, decisions: null, last: {}, total: 0 };
+  // direct: the API sends a CORS header, so the page calls it itself.
+  // proxy: it sends none, so the page calls the user's own proxy (app/proxy).
   var SOURCES = [
     { id: "openalex", label: "OpenAlex", keys: [], note: "No key needed." },
     { id: "crossref", label: "Crossref", keys: [], note: "No key needed. Relevance search; treat as supplementary." },
     { id: "pubmed", label: "PubMed", keys: [{ k: "api_key", label: "NCBI API key (optional)" }], note: "A key raises the rate limit." },
     { id: "semanticscholar", label: "Semantic Scholar", keys: [{ k: "api_key", label: "API key (optional)" }], note: "Relevance search; treat as supplementary." },
-    { id: "scopus", label: "Scopus", keys: [{ k: "api_key", label: "Elsevier API key" }, { k: "insttoken", label: "Institutional token (optional)" }], note: "Requires a key." }
-  ];
-  var BLOCKED = [
-    { id: "wos", label: "Web of Science", note: "The API does not allow requests from a browser page. Export from Web of Science and import the file." },
-    { id: "arxiv", label: "arXiv", note: "The API does not allow requests from a browser page. Import an arXiv export file." }
+    { id: "scopus", label: "Scopus", keys: [{ k: "api_key", label: "Elsevier API key" }, { k: "insttoken", label: "Institutional token (optional)" }], note: "Requires a key." },
+    { id: "wos", label: "Web of Science", proxy: true, keys: [{ k: "api_key", label: "Expanded API key (Clarivate)" }], note: "Requires a key and your proxy." },
+    { id: "arxiv", label: "arXiv", proxy: true, keys: [], note: "No key needed; requires your proxy." },
+    { id: "biorxiv", label: "bioRxiv", keys: [], note: "No key needed. Lists a date window and filters locally, about 75 s for one year; narrow the years." },
+    { id: "medrxiv", label: "medRxiv", keys: [], note: "No key needed. Lists a date window and filters locally, about 75 s for one year; narrow the years." }
   ];
 
   // ---------------------------------------------------------------- helpers
@@ -138,7 +140,7 @@
       Object.keys(r.queries).forEach(function (k) {
         var q = r.queries[k];
         var head = el("header", {}, [el("span", { text: q.label }), el("span", {}, [
-          el("span", { class: "badge " + (q.browser ? "live" : "file"), text: q.browser ? "searchable here" : "import export file" }), " ",
+          el("span", { class: "badge " + (q.browser ? "live" : "file"), text: q.browser ? "searchable here" : q.via_proxy ? "needs your proxy" : "import export file" }), " ",
           el("button", { type: "button", class: "copy", "data-copy": k, text: "Copy" })])]);
         var body = q.error ? "Could not be compiled: " + q.error : (q.query + (q.filters ? "\n\nfilters: " + q.filters : ""));
         out.appendChild(el("div", { class: "q" }, [head, el("pre", { text: body, id: "q-" + k })]));
@@ -162,16 +164,14 @@
       }
       root.appendChild(box);
     });
-    BLOCKED.forEach(function (s) {
-      root.appendChild(el("div", { class: "src off" }, [el("div", { class: "row" }, [
-        el("label", {}, [el("input", { type: "checkbox", disabled: "disabled" }), s.label]),
-        el("span", { class: "badge file", text: "file import only" })]), el("p", { class: "small", text: s.note })]));
-    });
   }
   function chosenSources() {
     var out = {};
     $$("input[data-src]").filter(function (c) { return c.checked; }).forEach(function (c) {
       var id = c.getAttribute("data-src"), cred = {};
+      var src = SOURCES.filter(function (s) { return s.id === id; })[0];
+      var proxy = ($("#proxy") ? $("#proxy").value : "").trim();
+      if (src && src.proxy && proxy) cred.proxy = proxy;
       $$("input[data-key]").forEach(function (k) {
         var parts = k.getAttribute("data-key").split(":"), v = k.value.trim();
         if (parts[0] === id && v) cred[parts[1]] = v;

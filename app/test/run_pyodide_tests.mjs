@@ -69,7 +69,7 @@ test("a query compiles to every dialect inside the browser runtime", () => {
   const r = call("compile_query", JSON.stringify(SPEC));
   assert.equal(r.ok, true);
   assert.deepEqual(Object.keys(r.queries).sort(),
-    ["arxiv", "crossref", "openalex", "pubmed", "scopus", "semanticscholar", "wos"]);
+    ["arxiv", "biorxiv", "crossref", "medrxiv", "openalex", "pubmed", "scopus", "semanticscholar", "wos"]);
   assert.match(r.queries.scopus.query, /^TITLE-ABS-KEY\(/);
 });
 

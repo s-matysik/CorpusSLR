@@ -1,0 +1,12 @@
+# Cloudflare Worker for the CorpusSLR web page's Web of Science and arXiv searches.
+# Deploy:  cd app/proxy && npx wrangler deploy
+# Then paste the worker's address (https://corpusslr-wos-proxy.<you>.workers.dev) into the
+# "Proxy address" field of the page.
+name = "corpusslr-wos-proxy"
+main = "worker.js"
+compatibility_date = "2024-11-01"
+
+[vars]
+# Only pages served from these origins may use the proxy. Add http://localhost:8000
+# for local testing, comma separated.
+ALLOWED_ORIGINS = "https://s-matysik.github.io"

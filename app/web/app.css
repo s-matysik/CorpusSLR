@@ -114,3 +114,4 @@ a{color:var(--brand)}
 @media (max-width:640px){.top{padding:10px 14px}.panel{padding:16px}.hero{padding:24px 18px}}
 @media print{.top,.hero,.tabs,.tools,button{display:none}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.proxy{display:flex;flex-direction:column;gap:4px;margin:6px 0 12px;font-size:14px;color:var(--muted)}

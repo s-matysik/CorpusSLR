@@ -83,7 +83,7 @@ def test_the_page_declares_a_restrictive_content_security_policy():
     hosts = set(re.findall(r"https://[^\s;]+", csp))
     assert hosts == {"https://api.openalex.org", "https://api.crossref.org",
                      "https://eutils.ncbi.nlm.nih.gov", "https://api.semanticscholar.org",
-                     "https://api.elsevier.com"}
+                     "https://api.elsevier.com", "https://api.biorxiv.org"}
 
 
 # --- source guards; each is shown below to catch the error it exists for -----
@@ -97,9 +97,9 @@ def _scan(pattern, text):
     return pattern.findall(code)
 
 
-@pytest.mark.parametrize("name", ["app.js", "worker.js"])
-def test_the_page_stores_nothing_and_builds_no_html_from_data(name):
-    text = (WEB / name).read_text(encoding="utf-8")
+@pytest.mark.parametrize("path", [WEB / "app.js", WEB / "worker.js", ROOT / "app" / "proxy" / "worker.js"])
+def test_the_page_stores_nothing_and_builds_no_html_from_data(path):
+    text = path.read_text(encoding="utf-8")
     assert _scan(STORAGE, text) == [], "a key or a record must not be persisted"
     assert _scan(HTML_SINKS, text) == [], "data must be inserted as text"
 
@@ -122,7 +122,7 @@ def test_a_comment_that_names_a_forbidden_call_is_not_a_violation():
 
 def test_the_app_files_contain_no_absolute_local_paths_and_no_long_dashes():
     for p in list((ROOT / "app" / "web").glob("*")) + list((ROOT / "app" / "py").glob("*.py")) \
-            + list((ROOT / "app" / "test").glob("*.mjs")):
+            + list((ROOT / "app" / "test").glob("*.mjs")) + list((ROOT / "app" / "proxy").glob("*")):
         text = p.read_text(encoding="utf-8")
         assert "/Users/" not in text and "claude-science" not in text, p
         assert "\u2014" not in text and "\u2013" not in text, p

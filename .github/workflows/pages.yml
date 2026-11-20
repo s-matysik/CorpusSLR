@@ -162,12 +162,12 @@ jobs:
         working-directory: app
         env:
           APP_DIST: ${{ github.workspace }}/app/dist
-        run: node --test test/run_pyodide_tests.mjs test/run_ui_tests.mjs
+        run: node --test test/run_proxy_tests.mjs test/run_pyodide_tests.mjs test/run_ui_tests.mjs
 
       - name: Verify the application references only its own files
         # Its own check: unlike the site, it may contain scripts, but every file
-        # it loads must be in the bundle, and the only hosts named are the five
-        # databases that allow browser requests, plus the one credit link.
+        # it loads must be in the bundle. Two outside addresses may appear, both
+        # as plain links: the credit to Pyodide and the proxy instructions.
         run: |
           python - <<'PY'
           import pathlib, re, sys
@@ -177,7 +177,8 @@ jobs:
               text = page.read_text(encoding="utf-8")
               for u in re.findall(r'(?:src|href)="([^"]+)"', text):
                   if re.match(r"^(https?:)?//", u):
-                      if u != "https://pyodide.org":
+                      if u not in ("https://pyodide.org",
+                                   "https://github.com/s-matysik/CorpusSLR/tree/main/app/proxy"):
                           bad.append("%s: %s" % (page.name, u))
                   elif not u.startswith(("#", "..")) and not (root / u).exists():
                       bad.append("%s: missing %s" % (page.name, u))

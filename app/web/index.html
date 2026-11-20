@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data: blob:; worker-src 'self' blob:; connect-src 'self' https://api.openalex.org https://api.crossref.org https://eutils.ncbi.nlm.nih.gov https://api.semanticscholar.org https://api.elsevier.com; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data: blob:; worker-src 'self' blob:; connect-src 'self' https://api.openalex.org https://api.crossref.org https://eutils.ncbi.nlm.nih.gov https://api.semanticscholar.org https://api.elsevier.com https://api.biorxiv.org; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <title>CorpusSLR Web: search, deduplicate and document a literature review</title>
 <meta name="description" content="Browser application for CorpusSLR. Compile one query for seven databases, search, import exports, deduplicate with a logged cascade and download the PRISMA 2020 diagram and the PRISMA-S appendix. Nothing leaves your browser except the searches you run.">
@@ -63,8 +63,9 @@
   <div class="cols">
     <div class="card">
       <h3>Search a database</h3>
-      <p class="small">Runs in your browser. Databases that block browser requests are marked; use their export files instead.</p>
+      <p class="small">Runs in your browser. Seven databases answer the page directly. Web of Science and arXiv send no CORS header, so a browser cannot read them; they go through a proxy that you run (<a href="https://github.com/s-matysik/CorpusSLR/tree/main/app/proxy">app/proxy</a>, free on Cloudflare Workers). Without one, import their export files.</p>
       <div id="sources"></div>
+      <label class="proxy">Proxy address for Web of Science and arXiv (not a secret; leave empty if you do not use them) <input id="proxy" type="url" autocomplete="off" spellcheck="false" placeholder="https://corpusslr-wos-proxy.your-name.workers.dev"></label>
       <div class="grid">
         <label>Records per database <input id="max" type="number" min="10" max="2000" value="100"></label>
         <label>Contact e-mail (optional, raises OpenAlex and Crossref limits) <input id="email" type="email" autocomplete="off" placeholder="you@institution.edu"></label>

@@ -119,6 +119,9 @@ class BrowserSession:
         self.headers: Dict[str, str] = {}
         self.transport = transport or xhr_transport
         self.blocked = False
+        #: (origin to replace, base address to put in its place). Used for the
+        #: one API that sends no CORS header and is reached through a proxy.
+        self.rewrite: Optional[Tuple[str, str]] = None
 
     def get(self, url: str, params: Any = None, headers: Optional[Dict[str, str]] = None,
             timeout: Any = None, **_ignored: Any) -> Response:
@@ -127,6 +130,8 @@ class BrowserSession:
             raise requests.RequestException(self.BLOCKED_MESSAGE)
         if params:
             url += ("&" if "?" in url else "?") + urlencode(params, doseq=True)
+        if self.rewrite and url.startswith(self.rewrite[0]):
+            url = self.rewrite[1] + url[len(self.rewrite[0]):]
         merged = dict(self.headers)
         merged.update(headers or {})
         merged = {k: v for k, v in merged.items() if k.lower() not in FORBIDDEN_HEADERS}
@@ -205,18 +210,27 @@ class _State:
 S = _State()
 
 #: Browsers can reach these; Web of Science and arXiv send no CORS header.
-LIVE_SOURCES = ("openalex", "crossref", "pubmed", "semanticscholar", "scopus")
-FILE_ONLY = {
-    "wos": "The Web of Science API sends no CORS header, so a browser cannot call it. "
-           "Export the records from Web of Science and import the file instead.",
-    "arxiv": "The arXiv API sends no CORS header, so a browser cannot call it. "
-             "Import an arXiv export file instead.",
+LIVE_SOURCES = ("openalex", "crossref", "pubmed", "semanticscholar", "scopus",
+                "biorxiv", "medrxiv")
+#: Their APIs send no CORS header (measured), so they are reached through a proxy
+#: the user runs. Value: the address the package calls, and the proxy route.
+PROXY_ROUTES = {
+    "wos": ("https://api.clarivate.com", "/wos"),
+    "arxiv": ("http://export.arxiv.org", "/arxiv"),
 }
+PROXY_SOURCES = tuple(PROXY_ROUTES)
+PROXY_NEEDED = (
+    "This API sends no CORS header to any origin, so a browser page cannot read its "
+    "answers. Enter the address of your own proxy (app/proxy/worker.js), or import "
+    "an export file.")
 SOURCE_LABELS = {
     "openalex": "OpenAlex", "crossref": "Crossref", "pubmed": "PubMed",
     "semanticscholar": "Semantic Scholar", "scopus": "Scopus",
+    "biorxiv": "bioRxiv", "medrxiv": "medRxiv",
     "wos": "Web of Science", "arxiv": "arXiv",
 }
+ALL_SOURCES = ("scopus", "wos", "pubmed", "openalex", "crossref", "semanticscholar",
+               "arxiv", "biorxiv", "medrxiv")
 
 
 def _pkg():
@@ -271,23 +285,25 @@ def _query(spec: Dict[str, Any]):
 
 def compile_query(spec_json: str) -> str:
     """Compile the query for every supported database (no network)."""
+    _pkg()
     from corpusslr import cli
     try:
         q = _query(json.loads(spec_json))
     except ValueError as exc:
         return json.dumps({"ok": False, "error": str(exc)})
     out = {}
-    for alias in ("scopus", "wos", "pubmed", "openalex", "crossref",
-                  "semanticscholar", "arxiv"):
+    for alias in ALL_SOURCES:
         try:
             c = cli.compile_for(alias, q)
             out[alias] = {"label": SOURCE_LABELS[alias], "query": c["query"],
                           "filters": c.get("filters", ""),
                           "browser": alias in LIVE_SOURCES,
-                          "note": FILE_ONLY.get(alias, "")}
+                          "via_proxy": alias in PROXY_SOURCES,
+                          "note": PROXY_NEEDED if alias in PROXY_SOURCES else ""}
         except Exception as exc:                                  # noqa: BLE001
             out[alias] = {"label": SOURCE_LABELS[alias], "query": "", "filters": "",
-                          "browser": alias in LIVE_SOURCES, "note": "",
+                          "browser": alias in LIVE_SOURCES,
+                          "via_proxy": alias in PROXY_SOURCES, "note": "",
                           "error": "%s: %s" % (type(exc).__name__, exc)}
     return json.dumps({"ok": True, "queries": out, "warnings": list(q.warnings)})
 
@@ -306,13 +322,44 @@ def _build_source(alias: str, cred: Dict[str, str], email: str, session):
         return pkg.PubMedSource(email=email, api_key=key, session=session)
     if alias == "semanticscholar":
         return pkg.SemanticScholarSource(api_key=key, session=session)
+    if alias in PROXY_ROUTES:
+        if alias == "wos" and not key:
+            raise ValueError("Web of Science needs an API key (the Expanded API).")
+        origin, route = PROXY_ROUTES[alias]
+        session.rewrite = (origin, _proxy_base(cred.get("proxy") or "") + route)
+        if alias == "wos":
+            return pkg.WosExpandedSource(api_key=key, mailto=email, session=session)
+        return pkg.ArxivSource(mailto=email, session=session)
+    if alias in ("biorxiv", "medrxiv"):
+        cls = pkg.BiorxivSource if alias == "biorxiv" else pkg.MedrxivSource
+        return cls(mailto=email, session=session)
     if alias == "scopus":
         if not key:
             raise ValueError("Scopus needs an API key.")
         return pkg.ScopusSource(api_key=key,
                                 insttoken=(cred.get("insttoken") or "").strip(),
                                 session=session)
-    raise ValueError(FILE_ONLY.get(alias, "unsupported source " + alias))
+    raise ValueError("unsupported source " + alias)
+
+
+def _proxy_base(raw: str) -> str:
+    """Validate the address of the user's own proxy and return it without a slash."""
+    from urllib.parse import urlparse
+    value = raw.strip().rstrip("/")
+    if not value:
+        raise ValueError(PROXY_NEEDED)
+    u = urlparse(value)
+    local = u.hostname in ("localhost", "127.0.0.1")
+    if u.scheme != "https" and not (u.scheme == "http" and local):
+        raise ValueError("The proxy address must start with https:// (a key must not "
+                         "travel over plain http).")
+    if not u.hostname or u.username or u.password or u.query or u.fragment:
+        raise ValueError("The proxy address must be a plain address with no credentials, "
+                         "query or fragment.")
+    if u.hostname.endswith("clarivate.com"):
+        raise ValueError("That is the Clarivate address itself, which a browser cannot "
+                         "read. Enter the address of your own proxy.")
+    return value
 
 
 def run_search(spec_json: str, sources_json: str, max_results: int = 100,
@@ -323,6 +370,7 @@ def run_search(spec_json: str, sources_json: str, max_results: int = 100,
     ``{"openalex": {}, "scopus": {"api_key": "..."}}``. Keys are used for the
     calls of this invocation only.
     """
+    _pkg()
     from corpusslr.sources.base import SourceError
     spec, creds = json.loads(spec_json), json.loads(sources_json)
     corpus = _corpus()
@@ -367,6 +415,7 @@ def _scrub(text: str, creds: Dict[str, Dict[str, str]]) -> str:
 def import_file(path: str, display_name: str = "", database: str = "",
                 query_note: str = "") -> str:
     """Parse one export file already written to the virtual file system."""
+    _pkg()
     from corpusslr import cli
     corpus = _corpus()
     try:
@@ -457,6 +506,7 @@ def prisma(screening_json: str = "{}") -> str:
     counts are supplied; without them the identification and deduplication
     stages are real and the screening stages are reported as 0.
     """
+    _pkg()
     from corpusslr import cli
     corpus = _corpus()
     if not corpus.records:

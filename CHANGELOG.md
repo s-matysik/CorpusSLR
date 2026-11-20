@@ -29,15 +29,18 @@ Documentation and validation scripts only; the package code is unchanged from
 ### Added
 
 - A browser application under `app/`, published at `/app/` next to the documentation
-  site. It runs the unmodified package in Pyodide in a web worker. Its Python layer
-  (`app/py/corpusslr_web.py`) searches OpenAlex, Crossref, PubMed, Semantic Scholar and
-  Scopus through a synchronous XHR transport, imports export files, deduplicates and
-  writes the PRISMA outputs. Web of Science and arXiv are file-import only because their
-  APIs send no CORS header. A blocked request now fails after one call instead of
-  retrying (a retry loop froze the worker for 49 s on Semantic Scholar). `tools/build_app.py`
-  assembles a reproducible bundle with a manifest of SHA-256 sums. Tests: the Python layer
-  offline, the same code in the real Pyodide runtime, and the page in jsdom. The page is
-  not tested in a real browser.
+  site. It runs the unmodified package in Pyodide in a web worker and reaches all nine
+  databases through their APIs: OpenAlex, Crossref, PubMed, Semantic Scholar, Scopus,
+  bioRxiv and medRxiv directly, Web of Science and arXiv through a proxy the user runs
+  (`app/proxy/worker.js`, a Cloudflare Worker), because those two APIs send no CORS header
+  (measured). The Python layer (`app/py/corpusslr_web.py`) also imports export files,
+  deduplicates and writes the PRISMA outputs. A blocked request now fails after one call
+  instead of retrying (a retry loop froze the worker for 49 s on Semantic Scholar), and
+  every entry point installs the `requests` stand-in before importing the package.
+  `tools/build_app.py` assembles a reproducible bundle with a manifest of SHA-256 sums.
+  Tests: the Python layer offline, the same code in the real Pyodide runtime, the proxy and
+  the page in jsdom; the proxy and bridge were run once against live Web of Science and arXiv.
+  The page is not tested in a real browser.
 - The Pages workflow builds, tests and publishes the application as a separate root, so
   the documentation site keeps its rule of no scripts and no external references.
 
