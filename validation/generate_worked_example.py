@@ -93,6 +93,10 @@ def render(svg_path):
     query, corpus = build_corpus()
     result = deduplicate(corpus)
     flow = PrismaFlow.from_dedup(corpus, result)
+    # The package does not screen. These counts stand in for a reviewer's
+    # decisions so that the diagram is complete; they are not a result.
+    flow.set_screening(records_excluded=1, fulltext_exclusions={"not a primary study": 1},
+                       studies_included=1)
     problems = flow.validate()
     assert not problems, problems
     flow.to_svg(svg_path)
@@ -156,7 +160,9 @@ def render(svg_path):
     md.append("## 4. The PRISMA 2020 flow diagram\n")
     md.append("Generated from the recorded search events and the deduplication result "
               "of section 2, and checked for arithmetic consistency (`PrismaFlow.validate()` "
-              "returned no problems).\n")
+              "returned no problems). The identification and deduplication counts come "
+              "from the package; the screening counts are illustrative, because the "
+              "package does not screen.\n")
     md.append("![PRISMA 2020 flow diagram generated from the example records](worked_example_prisma.svg)\n")
 
     md.append("## 5. The PRISMA-S appendix\n")

@@ -205,9 +205,15 @@ def test_the_manuscript_carries_its_results_table(built):
     assert any("F1" in h for h in headers), headers
 
 
-def test_both_figures_are_embedded_not_just_referenced(built):
+def test_every_figure_is_embedded_not_just_referenced(built):
+    """The expected number is the number of figures the markdown source places,
+    so adding a figure to the article does not need a change here, and a figure
+    that the converter drops is still caught."""
+    with open(os.path.join(ROOT, "MANUSCRIPT.md"), encoding="utf-8") as fh:
+        placed = len(re.findall(r"^!\[[^\]]*\]\([^)]+\.png\)", fh.read(), flags=re.M))
+    assert placed >= 2, placed
     imgs = _images(built["manuscript"])
-    assert len(imgs) == 2, "expected two figures, embedded %d" % len(imgs)
+    assert len(imgs) == placed, "markdown places %d figures, embedded %d" % (placed, len(imgs))
 
 
 def test_every_source_block_reaches_the_manuscript(built):

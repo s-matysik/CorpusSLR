@@ -28,6 +28,14 @@ Documentation and validation scripts only; the package code is unchanged from
 
 ### Added
 
+- Two figures were added to the article: the pipeline with the data quality control at
+  each step (`validation/make_fig_pipeline.py`) and the architecture of the browser
+  application (`validation/make_fig_app.py`); the article now has four figures. Both are
+  drawn from text and carry no measured value.
+- `validation/generate_worked_example.py` failed its own PRISMA validation, because the
+  full-text balance has been checked unconditionally since an earlier release and the
+  example had no screening counts. It now supplies illustrative counts and says so on the
+  page. No test or workflow runs this script.
 - A browser application under `app/`, published at `/app/` next to the documentation
   site. It runs the unmodified package in Pyodide in a web worker and reaches all nine
   databases through their APIs: OpenAlex, Crossref, PubMed, Semantic Scholar, Scopus,
