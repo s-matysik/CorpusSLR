@@ -28,6 +28,9 @@ Documentation and validation scripts only; the package code is unchanged from
 
 ### Added
 
+- A cropped screenshot of the application page was added to the article as Figure 4; the
+  article has five figures. The sentence that repeated section 2.7 was removed from 2.2 to
+  keep the word margin.
 - The application page showed figures written for its first version: five databases
   searched live (now nine) and ten file formats (the coverage table has nine), and said
   that API keys never leave the computer, which is not true for Web of Science and arXiv,
