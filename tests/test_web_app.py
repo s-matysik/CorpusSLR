@@ -21,6 +21,13 @@ sys.path.insert(0, str(ROOT / "tools"))
 import build_app                                             # noqa: E402
 
 WEB = ROOT / "app" / "web"
+WORKFLOWS = ROOT / ".github" / "workflows"
+#: As in tests/test_publishing.py: the workflow files are a property of the
+#: checkout, and a source distribution correctly does not package them.
+requires_checkout_workflows = pytest.mark.skipif(
+    not WORKFLOWS.is_dir(),
+    reason="no .github/workflows: running from an unpacked sdist, which "
+           "correctly does not package it")
 
 
 @pytest.fixture(scope="module")
@@ -121,10 +128,11 @@ def test_the_app_files_contain_no_absolute_local_paths_and_no_long_dashes():
         assert "\u2014" not in text and "\u2013" not in text, p
 
 
+@requires_checkout_workflows
 def test_the_documentation_site_stays_free_of_scripts_because_the_app_is_a_separate_root():
     """The site guard rejects any <script>. The app needs one, so it must be
     built and deployed under its own path, not inside the generated site."""
-    wf = (ROOT / ".github" / "workflows" / "pages.yml").read_text(encoding="utf-8")
+    wf = (WORKFLOWS / "pages.yml").read_text(encoding="utf-8")
     assert "tools/build_app.py" in wf
     assert re.search(r"site\s+--include='\*\.html'", wf) or "site --include" in wf
     assert "_pages/app" in wf
