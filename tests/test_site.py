@@ -1030,7 +1030,7 @@ def test_the_command_line_entry_point_reports_what_it_wrote(tmp_path, capsys):
     code = main(["--out", str(tmp_path / "site"), "--clean"])
     assert code == 0
     out = capsys.readouterr().out
-    assert "wrote 8 pages" in out
+    assert "wrote %d pages" % (len(PAGES) + 1) in out
     assert "index.html" in out
     assert "no long dashes" in out
     assert find_dash_violations(out) == []

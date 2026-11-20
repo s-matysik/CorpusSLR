@@ -71,6 +71,8 @@ def test_no_cache_or_virtualenv_directory_survives(tree):
             assert junk not in dirs, "%s in %s" % (junk, base)
 
 
+@pytest.mark.skipif(not os.path.exists(os.path.join(ROOT, "paper", "corpusslr_softwarex.pdf")),
+                    reason="paper/ is a submission document kept by the author outside the repository")
 def test_the_typeset_article_is_tracked(tree):
     """Deliberate exception to the build-product rule: CI has no LaTeX, so
     ignoring the PDF would leave the repository with no readable article."""

@@ -47,6 +47,8 @@ def test_every_cited_data_file_is_packaged_or_explained(built):
         % built["uncovered"])
 
 
+@pytest.mark.skipif(not os.path.exists(os.path.join(ROOT, "SUPPLEMENTARY.md")),
+                    reason="the article and the supplement is a submission document kept by the author outside the repository")
 def test_the_coverage_check_is_not_vacuous():
     """Prove the rule fires, rather than trusting that it would."""
     cited = bdp.cited_validation_files()

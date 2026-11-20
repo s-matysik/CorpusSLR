@@ -105,8 +105,6 @@ PAGES: Tuple[Page, ...] = (
          "A review from the first query to the PRISMA appendix."),
     Page("docs/api_reference.md", "api_reference.html", "API reference",
          "Every public symbol, its arguments and its return value."),
-    Page("SUPPLEMENTARY.md", "supplementary.html", "Supplementary",
-         "The measured tables behind the accuracy figures."),
     Page("validation/multidomain_validation.md", "multidomain_validation.html",
          "Multi-domain study",
          "Identifier-blind deduplication accuracy across 15 disciplines."),

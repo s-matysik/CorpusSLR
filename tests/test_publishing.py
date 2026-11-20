@@ -32,6 +32,13 @@ if REPO not in sys.path:
 # are about the publication procedure, not about the version number.
 import corpusslr                                             # noqa: E402
 
+_ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+pytestmark = pytest.mark.skipif(
+    not os.path.exists(os.path.join(_ROOT_DIR, "PUBLISHING.md")),
+    reason="PUBLISHING.md are submission documents that the author keeps outside the repository; "
+           "this module tests them")
+
+
 PUBLISHING = os.path.join(REPO, "PUBLISHING.md")
 GITIGNORE = os.path.join(REPO, ".gitignore")
 WORKFLOWS = os.path.join(REPO, ".github", "workflows")
@@ -445,6 +452,7 @@ def test_the_document_does_not_instruct_anyone_to_commit_a_credential(publishing
     assert "credentials" in publishing.lower()
 
 
+@pytest.mark.skipif(not os.path.exists(PUBLISHING), reason="PUBLISHING.md is a submission document kept by the author outside the repository")
 def test_the_document_has_no_long_dash():
     """The typography requirement, on the document itself."""
     from tools.build_site import find_dash_violations

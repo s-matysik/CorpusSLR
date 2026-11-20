@@ -332,6 +332,8 @@ def test_the_example_config_is_the_one_the_cli_documents():
 # it quoted pytest cases.
 # --------------------------------------------------------------------------
 
+@pytest.mark.skipif(not os.path.exists(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "SUPPLEMENTARY.md")),
+                    reason="SUPPLEMENTARY.md is a submission document kept by the author outside the repository")
 def test_supplement_test_table_is_the_inventory():
     import csv
     import pathlib

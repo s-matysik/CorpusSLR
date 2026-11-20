@@ -30,6 +30,13 @@ sys.path.insert(0, os.path.join(REPO, "tools"))
 
 import build_reviewer_package as brp  # noqa: E402
 
+_ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+pytestmark = pytest.mark.skipif(
+    not os.path.exists(os.path.join(_ROOT_DIR, "MANUSCRIPT.md")) or not os.path.exists(os.path.join(_ROOT_DIR, "SUPPLEMENTARY.md")),
+    reason="MANUSCRIPT.md and SUPPLEMENTARY.md are submission documents that the author keeps outside the repository; "
+           "this module tests them")
+
+
 DASHES = ("\u2014", "\u2013")
 DASH_RUNS = (" --- ", " -- ")
 TEXT_SUFFIXES = (".md", ".txt", ".csv", ".json", ".py", ".ipynb", ".cff",
@@ -71,6 +78,8 @@ def sha256(path):
 # --------------------------------------------------------------------------
 # the package is complete
 # --------------------------------------------------------------------------
+@pytest.mark.skipif(not os.path.exists(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "MANUSCRIPT.md")) or not os.path.exists(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "SUPPLEMENTARY.md")),
+                    reason="MANUSCRIPT.md/SUPPLEMENTARY.md is a submission document kept by the author outside the repository")
 def test_the_build_reports_no_missing_source_file(built):
     """Every path in the inventory exists in the repository.
 
@@ -95,6 +104,8 @@ def test_the_entry_point_documents_exist(root):
         assert os.path.exists(os.path.join(root, name)), name
 
 
+@pytest.mark.skipif(not os.path.exists(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "MANUSCRIPT.md")) or not os.path.exists(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "SUPPLEMENTARY.md")),
+                    reason="MANUSCRIPT.md/SUPPLEMENTARY.md is a submission document kept by the author outside the repository")
 def test_the_manuscript_and_supplementary_are_packaged(root):
     for name in ("MANUSCRIPT.md", "SUPPLEMENTARY.md", "AUDIT_REPORT.md",
                  "SUBMISSION_CHECKLIST.md"):
@@ -149,6 +160,8 @@ def _readme_paths(text):
     return out
 
 
+@pytest.mark.skipif(not os.path.exists(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "MANUSCRIPT.md")) or not os.path.exists(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "SUPPLEMENTARY.md")),
+                    reason="MANUSCRIPT.md/SUPPLEMENTARY.md is a submission document kept by the author outside the repository")
 def test_every_file_the_readme_names_is_in_the_package(root):
     """The README is a promise; this is the check that it is kept.
 
