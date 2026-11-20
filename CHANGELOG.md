@@ -28,6 +28,19 @@ Documentation and validation scripts only; the package code is unchanged from
 
 ### Added
 
+- Corrections after the second external audit (2026-11-20). Two F1 cells in the fifteen-discipline
+  table were wrong in the last digit (economics 0.8571, chemistry 0.9671) and a test now ties every
+  row of that table, in the article and the supplement, to `validation/domains_15_final.csv`. The
+  Crossref cap is described as the protocol it is (first 300 Crossref records of a discipline in
+  scoring, up to 150 per search and database in retrieval); `eval_domains_15.py` gained `--cell-cap`
+  and `--false-merges`, and the sensitivity table and the list of the 154 merges are in the data
+  package. `compare_asysd_rule.py` no longer claims identical candidate pairs and its queue table
+  separates its denominators. The statement that the comparator's source does not tabulate recall was
+  wrong and is removed. The "four real Scopus downloads" claim was replaced by a recorded
+  comparison with three (`validation/scopus_header_check.json`). Five SoftwareX articles were added
+  to the references, characterized from their titles only; the article text was shortened to stay
+  within the word limit. The Word builder now sets English alt text from each caption.
+  The audit's wording check no longer reads bibliography lines as suite results.
 - A cropped screenshot of the application page was added to the article as Figure 4; the
   article has five figures. The sentence that repeated section 2.7 was removed from 2.2 to
   keep the word margin.

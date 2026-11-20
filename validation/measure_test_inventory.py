@@ -47,6 +47,7 @@ AREA_OF = {
     "test_install_verification.py": "Release metadata",
     "test_docs_examples.py": "Documentation consistency",
     "test_docx.py": "Submission documents",
+    "test_domains_tables.py": "Validation protocol",
     "test_push_tree.py": "Submission documents",
     "test_data_package.py": "Submission documents",
     "test_enrich_quality_export.py": "Export formats",

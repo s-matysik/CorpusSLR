@@ -338,6 +338,20 @@ def add_reference(doc, text):
     return p
 
 
+def set_alt_text(shape, text, path):
+    """Describe an inline picture in English.
+
+    Word writes its own automatic description when none is set, in the language
+    of the interface (Polish on the author's machine). The caption is the
+    description, so the file carries it whatever the reader's Word is.
+    """
+    text = re.sub(r"\*+", "", text).strip()
+    for node in shape._inline.iter():
+        if node.tag.endswith("}docPr"):
+            node.set("descr", text[:250])
+            node.set("title", os.path.basename(path))
+
+
 def add_figure(doc, path, caption=None, width_in=6.27):
     """Place the image where the text refers to it, caption underneath.
 
@@ -348,6 +362,7 @@ def add_figure(doc, path, caption=None, width_in=6.27):
         raise SystemExit("figure not found, refusing to emit a manuscript "
                          "with a missing figure: %s" % path)
     doc.add_picture(path, width=Inches(width_in))
+    set_alt_text(doc.inline_shapes[-1], caption or os.path.basename(path), path)
     holder = doc.paragraphs[-1]
     holder.alignment = WD_ALIGN_PARAGRAPH.CENTER
     holder.paragraph_format.space_after = Pt(2)
@@ -456,6 +471,7 @@ def render(doc, markdown, figure_root, skip_headings=()):
             alt, target = fig.group(1), fig.group(2)
             add_figure(doc, os.path.join(figure_root, os.path.basename(target)),
                        alt or None)
+            fig_shape = doc.inline_shapes[-1]
             counts["figures"] += 1
             i += 1
             if alt:
@@ -469,6 +485,8 @@ def render(doc, markdown, figure_root, skip_headings=()):
                     j += 1
                 if j < len(lines) and _CAPTION_RE.match(lines[j].strip()):
                     text, j = take_paragraph(j)
+                    set_alt_text(fig_shape, _CAPTION_RE.sub("", text, count=1) or text,
+                                 target)
                     add_caption(doc, text)
                     counts["captions"] += 1
                     i = j

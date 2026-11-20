@@ -57,24 +57,42 @@ INVENTORY = (
      ("Regenerates every S2 number, the threshold sweep and the error "
       "analysis.")),
     ("validation/threshold_calibration.csv", "gold_standard",
-     ("Supplement S2, threshold sweep: F1 across 20 thresholds by 3 year "
-      "tolerances, the evidence that the 0.93 default is not fitted to this "
-      "dataset.")),
+     ("Supplement S2, threshold sweep: F1 across ten thresholds "
+      "(0.80 to 0.98), the evidence that the 0.93 default is not fitted to "
+      "this dataset.")),
+    ("validation/check_scopus_header.py", "downstream",
+     "Compares the exporter's 46 column names with the header row of real exports."),
+    ("validation/scopus_header_check.json", "downstream",
+     ("Article section 2.6: the recorded result of that comparison for three "
+      "real Scopus exports (names and order identical in all three).")),
 
     # --- fifteen disciplines ----------------------------------------------
     ("validation/domains_15_final.csv", "disciplines",
-     ("Article Table 2 and Supplement S3: the pooled per-discipline result, "
+     ("Article Table 4 and Supplement S3: the pooled per-discipline result, "
       "identifier-blind, behind the headline accuracy figures.")),
-    ("validation/domains_15_intervals.csv", "disciplines",
-     ("Article section 3.2: 95% intervals for F1 per discipline, sampling of "
-      "pairs only.")),
+    ("validation/domains_15_false_merges.csv", "disciplines",
+     ("Article section 3.3 and Supplement S3: all 154 merged pairs that the DOI "
+      "reference does not confirm in the final evaluation, each with its "
+      "heuristic class. Written by eval_domains_15.py --false-merges.")),
+    ("validation/domains_15_cap150.csv", "disciplines",
+     ("Article section 3.3: the same table when the first 150 records of every "
+      "search and database are scored instead of the first 300 Crossref "
+      "records of a discipline. Written by eval_domains_15.py --cell-cap 150.")),
     ("validation/asysd_rule_comparison.csv", "disciplines",
-     ("Article section 2.4 and Supplement S8: the transcribed ASySD rule and "
-      "this package's rule on identical candidate pairs, per discipline.")),
+     ("Article section 2.4 and Supplement S8: the transcribed ASySD rule, "
+      "applied to this package's candidate pairs, and this package's own "
+      "end-to-end result, per discipline.")),
+    ("validation/asysd_manual_queue.csv", "disciplines",
+     ("Supplement S8: pairs that satisfy ASySD's manual-review predicate, "
+      "split into those the automatic rule accepts and those that remain, and "
+      "the missed pairs inside and outside the candidate set.")),
+    ("validation/asysd_na_policy_mechanism.csv", "disciplines",
+     ("Supplement S8: false merges admitted, and true pairs lost, by the "
+      "missing-field policy of the transcribed rule.")),
     ("validation/fig_domains.png", "disciplines",
-     "Article Figure 2, as drawn from domains_15_final.csv."),
+     "Article Figure 5, as drawn from domains_15_final.csv."),
     ("validation/make_fig_domains.py", "disciplines",
-     "Regenerates Figure 2 from domains_15_final.csv."),
+     "Regenerates Figure 5 from domains_15_final.csv."),
     ("validation/compare_asysd_rule.py", "disciplines",
      ("Regenerates asysd_rule_comparison.csv from the raw archives; the "
       "rule is transcribed from the ASySD source.")),
@@ -97,18 +115,24 @@ INVENTORY = (
      ("Per-track metrics, natural sciences and humanities, pre-guard state.")),
     ("validation/domains_social_false_positives.csv",
      "disciplines/false_merges",
-     ("Every rejected pair classified by kind. Supports the central claim "
-      "that almost all apparent false merges are version variants of one "
-      "study rather than errors.")),
+     ("HISTORICAL. Rejected pairs of the per-track runs before the three "
+      "guards were added, with that stage's classification. It is not the "
+      "list behind the final table; that is domains_15_false_merges.csv.")),
     ("validation/domains_stem_false_positives.csv", "disciplines/false_merges",
-     "As above, STEM disciplines."),
+     "Historical, as above, STEM disciplines."),
     ("validation/domains_nature_hum_false_positives.csv",
      "disciplines/false_merges",
-     "As above, natural sciences and humanities."),
+     "Historical, as above, natural sciences and humanities."),
+    ("validation/domains_social_profile.csv", "disciplines/profiles",
+     "Metadata completeness per database, social-science disciplines (Supplement S3)."),
+    ("validation/domains_stem_profile.csv", "disciplines/profiles",
+     "Metadata completeness per database, STEM disciplines."),
+    ("validation/domains_nature_hum_profile.csv", "disciplines/profiles",
+     "Metadata completeness per database, natural sciences and humanities."),
 
     # --- confidence intervals and the query compiler -----------------------
     ("validation/domains_15_intervals.csv", "disciplines",
-     ("Article section 3.3: 95 % intervals for precision, recall and F1 of the "
+     ("Article section 3.3: 95% intervals for precision, recall and F1 of the "
       "fifteen-discipline table, and for the pooled and median figures.")),
     ("validation/query_compiler_validation.csv", "query_compiler",
      ("Article section 2.1: twelve hand-written reference queries against the "
@@ -117,7 +141,7 @@ INVENTORY = (
 
     # --- mechanism ablation -----------------------------------------------
     ("validation/dedup_mechanism_ablation.csv", "ablation",
-     ("Article Figure 1 and Supplement S4: F1 lost when each deduplication "
+     ("Article Table 2, Figure 2 and Supplement S4: F1 lost when each deduplication "
       "mechanism is switched off, measured on the gold standard.")),
     ("validation/dedup_ablation_domains.csv", "ablation",
      "Supplement S4: the same ablation across the fifteen disciplines."),
@@ -129,6 +153,9 @@ INVENTORY = (
     ("validation/dedup_benchmark.csv", "performance",
      ("Article section 3.4: median runtime over repeated runs, with minimum and "
       "maximum, and peak memory against corpus size, for three corpus shapes.")),
+    ("validation/benchmark_dedup.py", "performance",
+     ("Generates the synthetic corpora (one duplicate without identifiers "
+      "added per five unique records) and times the deduplication.")),
     ("validation/dedup_benchmark_environment.json", "performance",
      ("The processor, memory, operating system, interpreter and method behind "
       "those timings.")),
@@ -140,6 +167,8 @@ INVENTORY = (
      "The real vendor export used for that round trip, so S5 is repeatable."),
 
     # --- test inventory ----------------------------------------------------
+    ("validation/measure_test_inventory.py", "tests",
+     "Supplement S1: regenerates the two inventory files below from the test modules."),
     ("validation/supplementary_test_inventory.csv", "tests",
      "Supplement S1: every test file with its count and the area it covers."),
     ("validation/supplementary_test_areas.csv", "tests",
@@ -152,6 +181,15 @@ INVENTORY = (
     ("validation/references_verified.json", "provenance",
      ("Every bibliographic anchor confirmed at Crossref, including the claims "
       "that were checked and rejected as unsupported.")),
+    ("validation/live_harvest_metrics.csv", "provenance",
+     ("Article section 3.4: metadata completeness per database on one live "
+      "query run on 2026-08-19 (DOI, abstract, multiple authors, pages).")),
+    ("validation/live_harvest_summary.json", "provenance",
+     ("The same 2026-08-19 run: query, databases searched and unavailable, "
+      "counts before and after deduplication, overlaps and retraction flags.")),
+    ("validation/wos_support_evidence.json", "provenance",
+     ("Responses of the Web of Science Expanded, Lite and Starter APIs to "
+      "a key before its entitlement was provisioned (2026-08-25).")),
     ("validation/wos_live_verification.json", "provenance",
      ("The live Web of Science verification record: what was queried, what "
       "came back, and the metadata completeness per field.")),
@@ -164,8 +202,8 @@ EXCLUDED = {
         "superseded by the fifteen-discipline archives; stands behind no "
         "figure in the submitted version"),
     "multidomain_metrics.csv": (
-        "superseded by domains_15_final.csv; the article cites it only when "
-        "describing the earlier four-discipline study"),
+        "superseded by domains_15_final.csv; neither the article nor the "
+        "supplement cites it"),
 }
 
 MANIFEST_FIELDS = ("path", "supports", "bytes", "sha256", "source")
@@ -289,8 +327,9 @@ def _write_manifest(root, entries):
 
 
 INTRO = (
-    ("Every table and figure in the article and the supplement is backed by a"
-     " file here. MANIFEST.csv lists each file with a SHA-256 checksum and the"
+    ("Every table and figure in the article and the supplement that reports a"
+     " measurement is backed by a file here; Figures 1 and 3 of the article are"
+     " diagrams and report none. MANIFEST.csv lists each file with a SHA-256 checksum and the"
      " element it supports; the same information is grouped by topic below."),
     ("The evaluation reproduces offline. The raw record archives under"
      " disciplines/raw_records/ are the retrieved records themselves, so"
@@ -340,7 +379,7 @@ def _commands():
         "cd gold_standard",
         "python eval_asysd.py --gold labelled_test_set.csv --skip-bench",
         "",
-        "# the fifteen-discipline table (Article Table 2, Supplement S3)",
+        "# the fifteen-discipline table (Article Table 4, Supplement S3)",
         "cd ../disciplines",
         "python eval_domains_15.py --check   # non-zero exit on disagreement",
     ]

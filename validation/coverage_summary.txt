@@ -1,0 +1,2 @@
+pytest --cov=corpusslr, measured 2026-11-20 on the working tree before this round's text edits
+TOTAL                                   7187    170    98%

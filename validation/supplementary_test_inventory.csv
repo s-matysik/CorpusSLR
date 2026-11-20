@@ -5,7 +5,8 @@ tests/test_data_package.py,Submission documents,11,11
 tests/test_dedup_equivalence.py,Deduplication,2,4
 tests/test_dedup_prisma_ext.py,Deduplication,71,97
 tests/test_docs_examples.py,Documentation consistency,19,24
-tests/test_docx.py,Submission documents,23,23
+tests/test_docx.py,Submission documents,24,24
+tests/test_domains_tables.py,Validation protocol,4,5
 tests/test_enrich_quality_export.py,Export formats,20,20
 tests/test_export_scopus.py,Scopus client and export,49,109
 tests/test_file_export_integration.py,Export formats,6,6

@@ -136,19 +136,32 @@ def _pairs(groups):
     return out
 
 
-def evaluate(rows, dedup_kwargs=None):
+def evaluate(rows, dedup_kwargs=None, cell_cap=None, collect=None):
     """Score one discipline. Returns the metric dict for its CSV row.
 
     ``dedup_kwargs`` is passed to ``deduplicate()`` so the ablation script can
     switch one mechanism off and rescore with everything else unchanged.
+
+    The default protocol keeps the first ``CROSSREF_CAP`` Crossref records of the
+    whole discipline, in the order the two searches were pooled. ``cell_cap``
+    gives the alternative protocol: the first ``cell_cap`` records of every
+    (search, database) cell, which is the cap the article describes for the
+    retrieval. ``collect``, if a list, receives one dict per false merge.
     """
     kept, by_source = [], {}
-    for d in rows:
-        by_source.setdefault(d.get("source"), []).append(d)
-    for name, items in by_source.items():
-        if name == "Crossref" and len(items) > CROSSREF_CAP:
-            items = items[:CROSSREF_CAP]
-        kept += items
+    if cell_cap:
+        cells = {}
+        for d in rows:
+            cells.setdefault((d.get("_qid"), d.get("source")), []).append(d)
+        for items in cells.values():
+            kept += items[:cell_cap]
+    else:
+        for d in rows:
+            by_source.setdefault(d.get("source"), []).append(d)
+        for name, items in by_source.items():
+            if name == "Crossref" and len(items) > CROSSREF_CAP:
+                items = items[:CROSSREF_CAP]
+            kept += items
 
     records = [_record(d, i) for i, d in enumerate(kept)
                if (d.get("doc_type") or "").lower() not in NON_WORK]
@@ -177,6 +190,13 @@ def evaluate(rows, dedup_kwargs=None):
     for a, b in false_merges:
         k = _classify(by_uid[a], by_uid[b])
         kinds[k] = kinds.get(k, 0) + 1
+        if collect is not None:
+            ra, rb = by_uid[a], by_uid[b]
+            collect.append(dict(kind=k, uid_a=a, uid_b=b,
+                                doi_a=ra.doi, doi_b=rb.doi,
+                                source_a=ra.source, source_b=rb.source,
+                                year_a=ra.year, year_b=rb.year,
+                                title_a=ra.title, title_b=rb.title))
 
     tp = len(found & true_pairs)
     fp = len(false_merges)
@@ -206,7 +226,7 @@ def evaluate(rows, dedup_kwargs=None):
     return row
 
 
-def build(dedup_kwargs=None):
+def build(dedup_kwargs=None, cell_cap=None, merges=None):
     rows = []
     for track in TRACKS:
         by_domain = {}
@@ -215,8 +235,11 @@ def build(dedup_kwargs=None):
             if name:
                 by_domain.setdefault(name, []).append(d)
         for domain in sorted(by_domain):
-            row = evaluate(by_domain[domain], dedup_kwargs)
+            found = [] if merges is not None else None
+            row = evaluate(by_domain[domain], dedup_kwargs, cell_cap, found)
             row.update(track=track, domain=domain)
+            if merges is not None:
+                merges.extend(dict(domain=domain, **m) for m in found)
             rows.append({k: row.get(k, 0) for k in FIELDS})
     rows.sort(key=lambda r: (-r["f1"], r["domain"]))
     return rows
@@ -228,11 +251,29 @@ def main(argv=None):
                     help="compare against the committed CSV, do not write")
     ap.add_argument("--out", default=None,
                     help="defaults to the committed table, wherever it is")
+    ap.add_argument("--cell-cap", type=int, default=None, metavar="N",
+                    help="alternative protocol: keep the first N records of "
+                         "every (search, database) cell instead of the first "
+                         "%d Crossref records of the discipline" % CROSSREF_CAP)
+    ap.add_argument("--false-merges", default=None, metavar="FILE",
+                    help="also write every merged pair that the DOI reference "
+                         "does not confirm, with its class")
     args = ap.parse_args(argv)
     if args.out is None:
-        args.out = _data_path("domains_15_final.csv")
+        args.out = _data_path("domains_15_final.csv" if not args.cell_cap
+                              else "domains_15_cap{}.csv".format(args.cell_cap))
 
-    rows = build()
+    merges = [] if args.false_merges else None
+    rows = build(cell_cap=args.cell_cap, merges=merges)
+    if merges is not None:
+        merges.sort(key=lambda m: (m["domain"], m["kind"], m["uid_a"], m["uid_b"]))
+        cols = ["domain", "kind", "uid_a", "uid_b", "doi_a", "doi_b", "source_a",
+                "source_b", "year_a", "year_b", "title_a", "title_b"]
+        with open(args.false_merges, "w", newline="", encoding="utf-8") as fh:
+            writer = csv.DictWriter(fh, fieldnames=cols)
+            writer.writeheader()
+            writer.writerows(merges)
+        print("wrote {} ({} merged pairs)".format(args.false_merges, len(merges)))
     if not args.check:
         with open(args.out, "w", newline="", encoding="utf-8") as fh:
             writer = csv.DictWriter(fh, fieldnames=FIELDS)

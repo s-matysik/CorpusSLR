@@ -1,16 +1,16 @@
-domain,asysd_rule_missed,missed_in_manual_queue,recoverable_share,manual_queue_pairs
-biology,26,26,1.0,348
-business informatics,33,28,0.8485,159
-chemistry,27,27,1.0,110
-computer science,10,9,0.9,119
-economics,38,29,0.7632,316
-geography,12,12,1.0,105
-history,33,28,0.8485,105
-logistics,20,18,0.9,195
-management,30,21,0.7,247
-marketing,23,21,0.913,179
-physics,126,126,1.0,404
-political science,17,14,0.8235,119
-sociology,19,18,0.9474,151
-software engineering,43,32,0.7442,220
-transport,16,15,0.9375,197
+domain,asysd_rule_missed,missed_in_manual_queue,missed_in_candidates_and_queue,recoverable_share,manual_queue_pairs,manual_pairs_auto_accepted,manual_pairs_after_auto
+biology,26,26,22,1.0,348,310,38
+business informatics,33,28,28,0.8485,159,102,57
+chemistry,27,27,24,1.0,110,83,27
+computer science,10,9,6,0.9,119,82,37
+economics,38,29,24,0.7632,316,204,112
+geography,12,12,7,1.0,105,94,11
+history,33,28,26,0.8485,105,76,29
+logistics,20,18,12,0.9,195,173,22
+management,30,21,17,0.7,247,204,43
+marketing,23,21,18,0.913,179,157,22
+physics,126,126,116,1.0,404,204,200
+political science,17,14,14,0.8235,119,104,15
+sociology,19,18,15,0.9474,151,136,15
+software engineering,43,32,30,0.7442,220,148,72
+transport,16,15,10,0.9375,197,170,27

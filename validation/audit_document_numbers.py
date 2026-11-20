@@ -575,6 +575,11 @@ def audit():
             line = txt[start:end if end > 0 else len(txt)]
             if not _RESULT_CTX.search(line) or _historical(m.start()):
                 continue
+            # A bibliography entry carries a publication year, and a title may
+            # contain the word "suite" ("SLR suite: a reproducible R workflow
+            # ... (2026)"). A numbered reference line is not a statement.
+            if re.match(r"\s*\[\d+\]\s", line):
+                continue
             # A number introduced by a comparison or an assignment is a limit or
             # a default, not a result: "start+count <= 5000", "max_results=1000".
             before = txt[max(0, m.start() - 12):m.start()]

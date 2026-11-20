@@ -537,3 +537,18 @@ def test_table_numbers_are_continuous_and_every_reference_has_a_caption(built_al
         dangling = sorted(n for n in mentioned if "manuscript" in name
                           and n not in captions)
         assert not dangling, "%s refers to tables with no caption: %s" % (name, dangling)
+
+
+def test_every_figure_has_english_alt_text_from_its_caption(built):
+    """Word fills an empty description with automatic text in the interface
+    language, which was Polish on the author's machine. The description is set
+    explicitly, from the caption."""
+    from docx import Document
+    doc = Document(built["manuscript"])
+    shapes = list(doc.inline_shapes)
+    assert shapes
+    for shape in shapes:
+        docpr = [n for n in shape._inline.iter() if n.tag.endswith("}docPr")][0]
+        descr = docpr.get("descr") or ""
+        assert len(descr) > 20 and descr[0].isupper(), repr(descr)
+        assert not any(ch in descr for ch in "\u0105\u0107\u0119\u0142\u0144\u00f3\u015b\u017a\u017c"), descr

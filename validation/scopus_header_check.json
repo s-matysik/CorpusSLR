@@ -1,0 +1,35 @@
+{
+ "exporter_columns": 46,
+ "files_checked": 3,
+ "all_names_and_order_identical": true,
+ "files": [
+  {
+   "file_size_bytes": 232193566,
+   "records": 14302,
+   "columns": 46,
+   "names_and_order_identical": true,
+   "header_line_sha256": "63000e3cfd05e1c63f8ffd140e8dac9031dd9d62dd16100baa7a174cd59155af",
+   "names_quoted": true,
+   "byte_order_mark": true
+  },
+  {
+   "file_size_bytes": 38231791,
+   "records": 1995,
+   "columns": 46,
+   "names_and_order_identical": true,
+   "header_line_sha256": "63000e3cfd05e1c63f8ffd140e8dac9031dd9d62dd16100baa7a174cd59155af",
+   "names_quoted": true,
+   "byte_order_mark": true
+  },
+  {
+   "file_size_bytes": 1361552,
+   "records": 597,
+   "columns": 46,
+   "names_and_order_identical": true,
+   "header_line_sha256": "2f814dd5c097ec82e54231cc80d9d6ab0a8c0621ad5fc3cf9de8f398b9e4b98a",
+   "names_quoted": false,
+   "byte_order_mark": false
+  }
+ ],
+ "note": "File names are not recorded. Two of the files have quoted names and a byte-order mark and the same header line; the third has unquoted names, so its raw header line differs while the parsed names and order are identical."
+}
