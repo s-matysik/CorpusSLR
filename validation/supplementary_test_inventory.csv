@@ -45,7 +45,7 @@ tests/test_site.py,Documentation site,60,109
 tests/test_sources_offline.py,API clients,22,22
 tests/test_tui.py,Terminal interface,98,98
 tests/test_validate.py,Validation protocol,39,45
-tests/test_web_app.py,Browser application,10,15
+tests/test_web_app.py,Browser application,11,16
 tests/test_web_bridge.py,Browser application,22,33
 tests/test_wos_expanded.py,Web of Science clients,16,20
 tests/test_wos_starter.py,Web of Science clients,63,89

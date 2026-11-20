@@ -136,3 +136,27 @@ def test_the_documentation_site_stays_free_of_scripts_because_the_app_is_a_separ
     assert "tools/build_app.py" in wf
     assert re.search(r"site\s+--include='\*\.html'", wf) or "site --include" in wf
     assert "_pages/app" in wf
+
+
+def test_the_numbers_on_the_page_are_the_measured_ones():
+    """The tiles were written by hand for five databases and ten formats and were
+    not updated when four databases were added. Each is now compared with what
+    the code and the coverage table say."""
+    import csv
+    sys.path.insert(0, str(ROOT))
+    from corpusslr import SearchQuery, cli
+    html = (WEB / "index.html").read_text(encoding="utf-8")
+    tiles = {label: int(n) for n, label in re.findall(
+        r'<div class="tile"><b>(\d+)</b><span>([^<]+)</span>', html)}
+    js = (WEB / "app.js").read_text(encoding="utf-8")
+    block = js[js.index("var SOURCES = ["):js.index("var BLOCKED") if "var BLOCKED" in js else None]
+    live = re.findall(r'\{ id: "([a-z]+)"', block)
+    query = SearchQuery(blocks=[["a"], ["b"]], years=(2020, 2021))
+    native = [s for s in live
+              if "locally" not in str(cli.compile_for(s, query).get("filters", ""))]
+    with open(ROOT / "validation" / "parser_coverage.csv", encoding="utf-8", newline="") as fh:
+        formats = {r["format"] for r in csv.DictReader(fh) if r["level"].startswith("2")}
+    assert tiles["databases searched live"] == len(live) == 9, (tiles, live)
+    assert tiles["query dialects"] == len(native), (tiles, native)
+    assert tiles["file formats imported"] == len(formats), (tiles, formats)
+    assert "API keys stay on this computer" not in html

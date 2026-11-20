@@ -28,6 +28,11 @@ Documentation and validation scripts only; the package code is unchanged from
 
 ### Added
 
+- The application page showed figures written for its first version: five databases
+  searched live (now nine) and ten file formats (the coverage table has nine), and said
+  that API keys never leave the computer, which is not true for Web of Science and arXiv,
+  whose key passes through the user's own proxy. The tiles are now compared with the code
+  and with `validation/parser_coverage.csv` by a test, and the sentence is corrected.
 - Two figures were added to the article: the pipeline with the data quality control at
   each step (`validation/make_fig_pipeline.py`) and the architecture of the browser
   application (`validation/make_fig_app.py`); the article now has four figures. Both are
