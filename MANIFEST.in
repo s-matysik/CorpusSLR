@@ -118,3 +118,8 @@ graft app
 prune app/node_modules
 prune app/dist
 global-exclude package-lock.json
+
+# tests/test_web_app.py reads this workflow to check that the application is
+# published as a separate root from the documentation site, so it travels with
+# the tests that read it.
+include .github/workflows/pages.yml
