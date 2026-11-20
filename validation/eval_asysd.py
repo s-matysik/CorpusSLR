@@ -159,8 +159,10 @@ def survivors(clusters, policy, gold=GOLD) -> set:
     'cluster'  - the gold-standard 'unique' member survives when the cluster
                  contains one (cluster-level scoring: credits the clustering,
                  not the arbitrary choice of representative).
-    'first_id' - lowest record_id survives (what a reviewer importing in
-                 source order would see).
+    'first_id' - the member with the lowest record_id survives. This is a
+                 convention of this script. It is not the order of the rows
+                 in the file (the first rows have identifiers 1, 699, 728,
+                 1447, ...), and it is not what the library returns.
     """
     kept = set()
     for c in clusters:
@@ -184,18 +186,21 @@ BASE_SECONDS = time.perf_counter() - t0
 CL = clusters_of(res.report.decisions)
 BY_METHOD = dict(res.report.by_method)
 
-M_RICHEST = metrics({r.uid for r in res.records})     # survivor = richest record
+# The record the library returns for each cluster. It is the FIRST record
+# encountered in the input (corpusslr/dedup.py, final merge step), so on this
+# file, which is not in search order, it depends on row order.
+M_RETURNED = metrics({r.uid for r in res.records})
 M_CLUSTER = metrics(survivors(CL, "cluster"))
 M_FIRSTID = metrics(survivors(CL, "first_id"))
 M_HUMAN = metrics({u for u, l in HUMAN.items() if l == "In_database"})
 
-# merge-quality measure: how often the shipped 'richest' survivor is exactly
+# merge-quality measure: how often the record the library returns is exactly
 # the record the gold standard marks 'unique'
-_kept_rich = {r.uid for r in res.records}
+_kept_returned = {r.uid for r in res.records}
 CLUST_WITH_UNIQUE = sum(1 for c in CL if any(GOLD[u] == "unique" for u in c))
 SURVIVOR_AGREE = sum(1 for c in CL
                      if any(GOLD[u] == "unique" for u in c)
-                     and all(GOLD[u] == "unique" for u in (set(c) & _kept_rich)))
+                     and all(GOLD[u] == "unique" for u in (set(c) & _kept_returned)))
 
 # --------------------------------------------------------------------------
 # 4. Stage ablation: identifier cascade only (fuzzy disabled)
@@ -365,7 +370,7 @@ def derive(d):
 rows = [
     dict(method="CorpusSLR (defaults, cluster-level)", provenance="this study", **M_CLUSTER),
     dict(method="CorpusSLR (defaults, first-id survivor)", provenance="this study", **M_FIRSTID),
-    dict(method="CorpusSLR (defaults, richest survivor)", provenance="this study", **M_RICHEST),
+    dict(method="CorpusSLR (defaults, record returned by the library, file order)", provenance="this study", **M_RETURNED),
     dict(method="CorpusSLR (identifier cascade only)", provenance="this study, ablation", **M_ID_ONLY),
     dict(method=(f"CorpusSLR + DOI title-guard "
                  f"(min={BEST_GUARD.doi_title_min}, thr={BEST_GUARD.fuzzy_threshold})"),
@@ -637,7 +642,7 @@ SUMMARY = dict(
     base_seconds=round(BASE_SECONDS, 2),
     by_method=BY_METHOD,
     n_clusters=len(CL),
-    metrics=dict(cluster=M_CLUSTER, first_id=M_FIRSTID, richest=M_RICHEST,
+    metrics=dict(cluster=M_CLUSTER, first_id=M_FIRSTID, as_returned=M_RETURNED,
                  id_only=M_ID_ONLY, human_recomputed=M_HUMAN),
     survivor_agreement=dict(agree=SURVIVOR_AGREE, of=CLUST_WITH_UNIQUE),
     fp_from_id_stage=FP_FROM_ID, fp_total=FP_TOTAL,

@@ -221,7 +221,7 @@
   "verified_on": "2026-11-18",
   "verified_against": "Crossref record (type monograph)",
   "claims_supported": [
-   "systematic reviews are established in the social sciences; cited at a reviewer's suggestion for the Introduction"
+   "systematic reviews are established in the social sciences"
   ]
  },
  "clark2020": {
@@ -259,5 +259,60 @@
   ],
   "verified_on": "2026-11-19",
   "verified_from": "Crossref work record, api.crossref.org/works/10.1080/07421222.1996.11518099 (bibliographic data only; the dimensions are stated from the paper's well-known framework and were not re-read here)"
+ },
+ "dqpa2026": {
+  "doi": "10.1016/j.softx.2026.103012",
+  "citation": "Gualo F, Ayuso Y, Caballero I, Piattini M. SoftwareX 35:103012 (2026)",
+  "claims": [
+   "a software platform for ISO/IEC 33000-based self-assessment of data governance, data management and data quality maturity"
+  ],
+  "note": "Identified by DOI in Crossref on 2026-11-20 (title, authors, volume, article number, year). The abstract and the full text were NOT retrieved, so the article cites it only for what its title says.",
+  "source_of_verification": "Crossref record, 2026-11-20"
+ },
+ "contdataqc2025": {
+  "doi": "10.1016/j.softx.2025.102124",
+  "citation": "Pennino MJ, Stamp J, Leppo EW, Gibbs DA, Bierwagen BG. SoftwareX 30:102124 (2025)",
+  "claims": [
+   "an R package and Shiny app for quality control of continuous water quality sensor data"
+  ],
+  "note": "Identified by DOI in Crossref on 2026-11-20 (title, authors, volume, article number, year). The abstract and the full text were NOT retrieved, so the article cites it only for what its title says.",
+  "source_of_verification": "Crossref record, 2026-11-20"
+ },
+ "bibexpy2025": {
+  "doi": "10.1016/j.softx.2025.102098",
+  "citation": "Kara BC, Sahin A, Dirsehan T. SoftwareX 30:102098 (2025)",
+  "claims": [
+   "harmonizes Scopus and Web of Science bibliometric exports (title)"
+  ],
+  "note": "Identified by DOI in Crossref on 2026-11-20 (title, authors, volume, article number, year). The abstract and the full text were NOT retrieved, so the article cites it only for what its title says. The description 'DOI-based deduplication' belongs to a different repository (BibexPy-Lite) and is not attributed to this article.",
+  "source_of_verification": "Crossref record, 2026-11-20; repository title seen in a web search result"
+ },
+ "slrsuite2026": {
+  "doi": "10.1016/j.softx.2026.103101",
+  "citation": "Akbulut M. SoftwareX 36:103101 (2026)",
+  "claims": [
+   "a reproducible R workflow for systematic literature reviews (title)"
+  ],
+  "note": "Identified by DOI in Crossref on 2026-11-20 (title, authors, volume, article number, year). The abstract and the full text were NOT retrieved, so the article cites it only for what its title says.",
+  "source_of_verification": "Crossref record, 2026-11-20"
+ },
+ "snowballslr2026": {
+  "doi": "10.1016/j.softx.2026.103116",
+  "citation": "Matysik S. SoftwareX 36:103116 (2026)",
+  "claims": [
+   "saturation-aware and reproducible citation searching for systematic reviews (title)"
+  ],
+  "note": "Identified by DOI in Crossref on 2026-11-20 (title, authors, volume, article number, year). The abstract and the full text were NOT retrieved, so the article cites it only for what its title says. Same author as the present article.",
+  "source_of_verification": "Crossref record, 2026-11-20"
+ },
+ "cochrane2019_ch4": {
+  "doi": "10.1002/9781119536604.ch4",
+  "citation": "Lefebvre C, Glanville J, Briscoe S, et al. Cochrane Handbook for Systematic Reviews of Interventions, chapter 4. Wiley (2019)",
+  "claims": [
+   "Section 4.6.2: multiple reports of the same study should be collated and secondary reports not discarded",
+   "Section 4.6.3: duplicate records of the same report are removed after merging search results, and multiple reports of one study are linked"
+  ],
+  "note": "Section titles and the two statements were read in excerpts of the online Handbook returned by a web search on 2026-11-20 (training.cochrane.org, version 6.4, and cochrane.org current edition); the full chapter was not read.",
+  "source_of_verification": "Crossref record and Handbook excerpts, 2026-11-20"
  }
 }

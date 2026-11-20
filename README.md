@@ -129,7 +129,7 @@ the insttoken to stay server-side and off the URL.
   normalized titles (Ratcliff-Obershelp similarity, year tolerance,
   first-author agreement). Records carrying *conflicting* identifiers are
   never merged, so distinct works with near-identical titles are preserved.
-  Merging keeps the richest record and unions identifiers.
+  Merging keeps the first record encountered in each cluster, fills its empty fields from the copies and unions identifiers.
 - **PRISMA 2020 flow diagram** as dependency-free SVG (+ Markdown/dict), with
   arithmetic validation that rejects negative counts and unbalanced
   full-text accounting.
@@ -545,7 +545,7 @@ microseconds between 6 000 and 60 000 records. Environment and method are in
 calibration data are in [`validation/`](validation/).
 
 ```bash
-python -m pytest tests -q                 # 2268 offline tests, 98% coverage
+python -m pytest tests -q                 # 2274 offline tests, 98% coverage
 python validation/eval_asysd.py --gold validation/labelled_test_set.csv
 ```
 

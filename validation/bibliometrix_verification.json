@@ -41,5 +41,5 @@
   "package_version_note": "read from the R environment used for this check on 2026-11-20; the check itself was run in that environment"
  },
  "defect_found_and_fixed": "parse_csv_export mapped no affiliation column in any dialect, so 595 of 597 records lost their addresses on import from file. bibliometrix derives C1 -> AU_UN from that column, so the institutional collaboration network returned 'Matrix is empty!!' (0 x 0). The Record.affiliations field existed but only the API clients populated it. After adding the column to all six dialect maps and splitting on '; ': 592/597 carry affiliations and the network resolves to 986 institutions.",
- "supersedes": "an earlier note claimed a 14,302-record run with 31,984 authors; no such export or metrics file exists on this machine and the figure was withdrawn as unsupported"
+ "supersedes": "an earlier note claimed a 14,302-record run with 31,984 authors. A 14,302-record Scopus export does exist and its header was compared with the exporter's (validation/scopus_header_check.json), but it was never imported into bibliometrix, and the 31,984-author figure has no measurement behind it and was withdrawn. The bibliometrix import in this file covers the 597-record export only."
 }

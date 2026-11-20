@@ -153,3 +153,64 @@ def test_no_packaging_note_claims_cc_by_for_the_dataset():
             if re.search(r"said CC BY|not covered by it|article is CC BY", line):
                 continue
             raise AssertionError("%s still claims CC BY: %s" % (rel, line.strip()))
+
+
+# --------------------------------------------------------------------------
+# The package README tells a reviewer to run the scripts from the unpacked
+# directories. A reviewer found that compare_asysd_rule.py --check failed there
+# (FileNotFoundError: it looked for the record archives only in the repository
+# layout) and that the printed eval_asysd.py command writes into the directory
+# of the packaged files. Both are now run the way the README prints them.
+# --------------------------------------------------------------------------
+def _run(args, cwd):
+    import subprocess
+    env = dict(os.environ, PYTHONPATH=ROOT)
+    return subprocess.run([sys.executable] + args, cwd=cwd, env=env,
+                          capture_output=True, text=True, timeout=900)
+
+
+def test_the_comparison_script_runs_from_the_unpacked_package(built):
+    where = os.path.join(built["root"], "disciplines")
+    out = _run(["compare_asysd_rule.py", "--check"], where)
+    try:
+        import jellyfish                                     # noqa: F401
+    except ImportError:
+        # Without the dependency the script must say what is missing, not fail
+        # on a path or a traceback.
+        assert out.returncode != 0 and "jellyfish" in (out.stdout + out.stderr)
+        return
+    assert out.returncode == 0, out.stdout[-400:] + out.stderr[-400:]
+    assert "reproduce from the archived records" in out.stdout
+
+
+def test_the_printed_gold_standard_command_leaves_the_packaged_files_alone(built, tmp_path):
+    gold = os.path.join(built["root"], "gold_standard")
+    missing = []
+    for mod in ("pandas", "matplotlib"):
+        try:
+            __import__(mod)
+        except ImportError:
+            missing.append(mod)
+    before = {n: hashlib.sha256(open(os.path.join(gold, n), "rb").read()).hexdigest()
+              for n in os.listdir(gold)}
+    out = _run(["eval_asysd.py", "--gold", "labelled_test_set.csv", "--skip-bench",
+                "--outdir", str(tmp_path)], gold)
+    if missing:
+        # the README lists these dependencies; without them the failure must
+        # name the module, and nothing of the package may have been touched
+        assert out.returncode != 0 and any(m in out.stderr for m in missing)
+    else:
+        assert out.returncode == 0, out.stderr[-400:]
+    after = {n: hashlib.sha256(open(os.path.join(gold, n), "rb").read()).hexdigest()
+             for n in os.listdir(gold)}
+    assert before == after
+    if not missing:
+        assert os.path.exists(os.path.join(str(tmp_path), "asysd_metrics.csv"))
+
+
+def test_the_readme_prints_the_safe_command_and_the_right_licence_path(built):
+    with open(os.path.join(built["root"], "README.md"), encoding="utf-8") as fh:
+        text = fh.read()
+    assert "--outdir ../reproduced_gold" in text
+    assert "gold_standard/THIRD_PARTY_DATA.md" in text
+    assert "validation/THIRD_PARTY_DATA.md" not in text

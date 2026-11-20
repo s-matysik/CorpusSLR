@@ -98,15 +98,28 @@ BOTH_MISSING = {"abstract": 0.0, "pages": 1.0, "volume": 1.0, "number": 1.0,
 
 
 def _data_path(name):
+    """Find a data file in the repository layout or in the data package.
+
+    In the package this script sits in ``disciplines/`` and the record archives
+    are in ``disciplines/raw_records/``; in the repository everything is in
+    ``validation/``.
+    """
+    here = os.path.dirname(os.path.abspath(__file__))
     for cand in (os.path.join(HERE, "validation", name),
-                 os.path.join(os.path.dirname(os.path.abspath(__file__)), name)):
+                 os.path.join(here, name),
+                 os.path.join(here, "raw_records", name)):
         if os.path.exists(cand):
             return cand
     return os.path.join(HERE, "validation", name)
 
 
 def _jw(a, b):
-    import jellyfish
+    try:
+        import jellyfish
+    except ImportError:
+        raise SystemExit("compare_asysd_rule.py needs the 'jellyfish' package "
+                         "(pip install jellyfish) for the Jaro-Winkler "
+                         "similarity that ASySD's rule uses")
     if a is None or b is None:
         return None
     a, b = str(a).strip(), str(b).strip()

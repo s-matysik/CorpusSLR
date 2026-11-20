@@ -57,9 +57,12 @@ INVENTORY = (
      ("Regenerates every S2 number, the threshold sweep and the error "
       "analysis.")),
     ("validation/threshold_calibration.csv", "gold_standard",
-     ("Supplement S2, threshold sweep: F1 across ten thresholds "
-      "(0.80 to 0.98), the evidence that the 0.93 default is not fitted to "
-      "this dataset.")),
+     ("Not cited in the article or the supplement. Output of an earlier "
+      "version of the sweep: ten thresholds from 0.80 to 0.98, and 0.93, the "
+      "default, is not among them. The current eval_asysd.py writes a longer "
+      "table (60 rows, thresholds by year tolerances, different columns) to "
+      "threshold_calibration.csv in its output directory. It is kept as history "
+      "and is not evidence for how the default was chosen.")),
     ("validation/check_scopus_header.py", "downstream",
      "Compares the exporter's 46 column names with the header row of real exports."),
     ("validation/scopus_header_check.json", "downstream",
@@ -136,8 +139,9 @@ INVENTORY = (
       "fifteen-discipline table, and for the pooled and median figures.")),
     ("validation/query_compiler_validation.csv", "query_compiler",
      ("Article section 2.1: twelve hand-written reference queries against the "
-      "compiled queries for PubMed, Scopus and Web of Science, with the hit "
-      "counts of the live PubMed comparison.")),
+      "compiled queries for PubMed, Scopus and Web of Science (36 comparisons), "
+      "with the record counts that each returned on the live service. The "
+      "counts agree in all 36; this is agreement of counts, not of records.")),
 
     # --- mechanism ablation -----------------------------------------------
     ("validation/dedup_mechanism_ablation.csv", "ablation",
@@ -167,6 +171,8 @@ INVENTORY = (
      "The real vendor export used for that round trip, so S5 is repeatable."),
 
     # --- test inventory ----------------------------------------------------
+    ("validation/coverage_summary.txt", "tests",
+     "Supplement S1: statement coverage of the package measured by pytest-cov (98%)."),
     ("validation/measure_test_inventory.py", "tests",
      "Supplement S1: regenerates the two inventory files below from the test modules."),
     ("validation/supplementary_test_inventory.csv", "tests",
@@ -338,8 +344,14 @@ INTRO = (
 )
 
 HOWTO = (
-    ("The two scripts import the software, so install it first. Both then find"
-     " their data beside themselves and need no network access:"),
+    ("The scripts import the software, so install it first. They then find"
+     " their data beside themselves and need no network access. Their own"
+     " dependencies are pandas and matplotlib for eval_asysd.py, and"
+     " jellyfish for disciplines/compare_asysd_rule.py (pip install pandas"
+     " matplotlib jellyfish)."),
+    ("eval_asysd.py writes its result files into the directory given by"
+     " --outdir. Give it an empty one: run in the directory of the packaged"
+     " files it would overwrite the packaged copies listed in MANIFEST.csv."),
 )
 
 VERIFIED = (
@@ -361,7 +373,7 @@ LICENCE = (
      " article is CC BY but the dataset is not covered by it, and the OSF"
      " project the article names declares no licence on any of its three"
      " nodes. Provenance, checksum and pinned commit:"
-     " validation/THIRD_PARTY_DATA.md."),
+     " gold_standard/THIRD_PARTY_DATA.md."),
 )
 
 UNRESOLVED_NOTE = (
@@ -377,11 +389,14 @@ def _commands():
         "",
         "# accuracy on the published gold standard (Supplement S2)",
         "cd gold_standard",
-        "python eval_asysd.py --gold labelled_test_set.csv --skip-bench",
+        "mkdir -p ../reproduced_gold",
+        ("python eval_asysd.py --gold labelled_test_set.csv --skip-bench"
+         " --outdir ../reproduced_gold"),
         "",
         "# the fifteen-discipline table (Article Table 4, Supplement S3)",
         "cd ../disciplines",
         "python eval_domains_15.py --check   # non-zero exit on disagreement",
+        "python compare_asysd_rule.py --check   # needs jellyfish (Supplement S8)",
     ]
 
 

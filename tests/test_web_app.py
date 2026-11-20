@@ -160,3 +160,12 @@ def test_the_numbers_on_the_page_are_the_measured_ones():
     assert tiles["query dialects"] == len(native), (tiles, native)
     assert tiles["file formats imported"] == len(formats), (tiles, formats)
     assert "API keys stay on this computer" not in html
+
+
+def test_the_footer_and_the_collect_step_give_the_same_advice_for_the_proxied_databases():
+    """The footer said to import the exports of Web of Science and arXiv, while the
+    Collect step describes the proxy that reaches them. Both routes are named in both."""
+    html = (WEB / "index.html").read_text(encoding="utf-8")
+    footer = html[html.index("<footer>"):html.index("</footer>")]
+    assert "proxy" in footer and "import" in footer
+    assert "proxy" in html[:html.index("<footer>")]

@@ -28,6 +28,23 @@ Documentation and validation scripts only; the package code is unchanged from
 
 ### Added
 
+- Corrections after a third assessment (2026-11-20). The gold-standard evaluation labelled its
+  third variant "richest survivor", which the library has not done since the survivor rule changed to
+  the first record encountered; the row, the script and the text now say so, and give the three
+  conventions (cluster level 0.9996, lowest identifier 0.9853, record returned by the library
+  0.8401). Previously stated: the lowest identifier as "the order of import"; the first rows of the
+  file have identifiers 1, 699, 728, 1447 and so on, so it is a convention of the script. In the data
+  package, `compare_asysd_rule.py --check` failed when run from the unpacked layout (it looked for
+  the record archives only in the repository layout) and the printed `eval_asysd.py` command wrote
+  into the directory of the packaged files; both are fixed and tested from the unpacked layout, and
+  the README lists the dependencies (pandas, matplotlib, jellyfish). The threshold table is
+  described as history. `references_verified.json` has entries for the sources that
+  lacked one, with what was actually read. The Word builder writes real document properties and
+  clickable links for autolinks. The application footer names the proxy route as well as the import
+  route. The article's text was changed as the assessment suggested: abstract (starts with the
+  same-DOI case, names the three ways of use), section 2.7 (links to the application, the Colab
+  notebook and the library), the scoring of the gold standard, the Crossref cap, the ASySD
+  manual-review wording, the NA and affiliation counts, and the wording of the PRISMA and Bramer statements and two reference entries. The Data availability paragraph points at the tag `softwarex-submission`.
 - Corrections after the second external audit (2026-11-20). Two F1 cells in the fifteen-discipline
   table were wrong in the last digit (economics 0.8571, chemistry 0.9671) and a test now ties every
   row of that table, in the article and the supplement, to `validation/domains_15_final.csv`. The
