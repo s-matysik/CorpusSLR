@@ -47,18 +47,6 @@ def test_every_cited_data_file_is_packaged_or_explained(built):
         % built["uncovered"])
 
 
-@pytest.mark.skipif(not os.path.exists(os.path.join(ROOT, "SUPPLEMENTARY.md")),
-                    reason="the article and the supplement is a submission document kept by the author outside the repository")
-def test_the_coverage_check_is_not_vacuous():
-    """Prove the rule fires, rather than trusting that it would."""
-    cited = bdp.cited_validation_files()
-    assert cited, "no citations detected at all, so the rule proves nothing"
-    packaged = {os.path.basename(rel) for rel, _s, _w in bdp.INVENTORY}
-    # At least one real citation has to be resolved through the inventory,
-    # otherwise the rule passes only because nothing is ever cited.
-    assert packaged & set(cited), sorted(cited)[:5]
-
-
 def test_the_manifest_checksums_match_the_files(built):
     with open(os.path.join(built["root"], "MANIFEST.csv"),
               encoding="utf-8") as fh:
@@ -146,7 +134,7 @@ def test_no_packaging_note_claims_cc_by_for_the_dataset():
     import pathlib
     import re
     root = pathlib.Path(__file__).resolve().parents[1]
-    for rel in ("tools/build_data_package.py", "tools/build_reviewer_package.py"):
+    for rel in ("tools/build_data_package.py",):
         text = (root / rel).read_text(encoding="utf-8")
         for m in re.finditer(r"[^\n]{0,90}CC BY[^\n]{0,60}", text):
             line = m.group(0)

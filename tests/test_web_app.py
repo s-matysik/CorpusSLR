@@ -22,7 +22,7 @@ import build_app                                             # noqa: E402
 
 WEB = ROOT / "app" / "web"
 WORKFLOWS = ROOT / ".github" / "workflows"
-#: As in tests/test_publishing.py: the workflow files are a property of the
+#: The workflow files are a property of the
 #: checkout, and a source distribution correctly does not package them.
 requires_checkout_workflows = pytest.mark.skipif(
     not WORKFLOWS.is_dir(),

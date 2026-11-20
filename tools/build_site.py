@@ -5,8 +5,7 @@ Why this exists at all
 The published documentation is the same text a reviewer reads in the
 repository, so the site is generated from those files rather than maintained
 separately. A second copy of the user guide would drift from the first, and a
-drifted accuracy figure is exactly the failure mode the number audit in
-`validation/audit_document_numbers.py` exists to prevent.
+drifted accuracy figure is exactly the failure mode a second copy would invite.
 
 Constraints this module is written under, all of them requirements rather
 than preferences:
@@ -105,11 +104,6 @@ PAGES: Tuple[Page, ...] = (
          "A review from the first query to the PRISMA appendix."),
     Page("docs/api_reference.md", "api_reference.html", "API reference",
          "Every public symbol, its arguments and its return value."),
-    Page("validation/multidomain_validation.md", "multidomain_validation.html",
-         "Multi-domain study",
-         "Identifier-blind deduplication accuracy across 15 disciplines."),
-    Page("AUDIT_REPORT.md", "audit_report.html", "Audit report",
-         "Defects found, what was changed and the regression test for each."),
     Page("CHANGELOG.md", "changelog.html", "Changelog",
          "Release history in Keep a Changelog form."),
 )
@@ -139,10 +133,10 @@ COPIED_FILES: Tuple[str, ...] = (
 
 # Figures shown inline on the evidence page.
 FEATURED_FIGURES: Tuple[Tuple[str, str], ...] = (
-    ("validation/fig_domains.png",
-     "Per-domain deduplication F1 across the 15-discipline corpus."),
-    ("validation/fig_ablation.png",
-     "Mechanism ablation: contribution of each matching stage."),
+    ("validation/asysd_validation.png",
+     "Deduplication accuracy on the ASySD gold standard."),
+    ("validation/dedup_performance.png",
+     "Time and memory of deduplication as the corpus grows."),
 )
 
 # A relative source path that a link may point at, mapped to its destination

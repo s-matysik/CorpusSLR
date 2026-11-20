@@ -19,7 +19,7 @@ that, and the most important of them is the first.
    test matrix runs there, because institutional research environments are slow
    to upgrade and a reviewer who cannot install the package cannot check it.
 3. **Every accuracy figure in documentation must come from a measurement.** The
-   numbers in `README.md`, `AUDIT_REPORT.md` and `CHANGELOG.md` trace to a file
+   numbers in `README.md` and `CHANGELOG.md` trace to a file
    under `validation/`. Do not write a figure you have not computed, and do not
    round one in a direction that flatters the package.
 
@@ -106,8 +106,8 @@ enforced by running the suite on the 3.9 interpreter itself.
   made, not only on the parsed result. The `no_sleep` fixture neutralises
   rate-limit delays.
 - When you verify behaviour against a live API, do it ad hoc and then translate
-  the finding into a double. Record what you measured in `AUDIT_REPORT.md` - the
-  measured API limits documented there (Scopus page-size maxima, the offset
+  the finding into a double. Record what you measured in `CHANGELOG.md` - the
+  measured API limits recorded in the project history (Scopus page-size maxima, the offset
   ceiling, the `LANGUAGE()` name requirement) are all findings that no offline
   test could have produced, and they are the reason the doubles are accurate.
 

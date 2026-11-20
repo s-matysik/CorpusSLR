@@ -1,8 +1,6 @@
 """Assemble the validation data that is uploaded alongside the article.
 
-This is narrower than tools/build_reviewer_package.py: that one bundles the
-whole evidence base including the code and the manuscript, whereas this
-produces the "supplementary data" upload the journal attaches to the article -
+This produces the "supplementary data" upload that accompanies the article -
 the measurements behind every table and figure, the inputs needed to recompute
 them, and the scripts that do the recomputing.
 
@@ -92,10 +90,6 @@ INVENTORY = (
     ("validation/asysd_na_policy_mechanism.csv", "disciplines",
      ("Supplement S8: false merges admitted, and true pairs lost, by the "
       "missing-field policy of the transcribed rule.")),
-    ("validation/fig_domains.png", "disciplines",
-     "Article Figure 5, as drawn from domains_15_final.csv."),
-    ("validation/make_fig_domains.py", "disciplines",
-     "Regenerates Figure 5 from domains_15_final.csv."),
     ("validation/compare_asysd_rule.py", "disciplines",
      ("Regenerates asysd_rule_comparison.csv from the raw archives; the "
       "rule is transcribed from the ASySD source.")),
@@ -171,8 +165,6 @@ INVENTORY = (
      "The real vendor export used for that round trip, so S5 is repeatable."),
 
     # --- test inventory ----------------------------------------------------
-    ("validation/coverage_summary.txt", "tests",
-     "Supplement S1: statement coverage of the package measured by pytest-cov (98%)."),
     ("validation/measure_test_inventory.py", "tests",
      "Supplement S1: regenerates the two inventory files below from the test modules."),
     ("validation/supplementary_test_inventory.csv", "tests",

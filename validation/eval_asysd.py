@@ -2,7 +2,7 @@
 """Independent validation and performance benchmark of CorpusSLR deduplication
 against the ASySD gold standard (Hair et al. 2023, BMC Biology 21:189).
 
-Reproduces every number in `asysd_validation_report.md`. Self-contained: only
+Reproduces the gold-standard numbers of the deduplication evaluation. Self-contained: only
 needs pandas + matplotlib + the CorpusSLR package on sys.path.
 
 Usage:

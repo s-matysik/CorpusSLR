@@ -28,6 +28,11 @@ Documentation and validation scripts only; the package code is unchanged from
 
 ### Added
 
+- Submission material removed from the repository (2026-11-20): the article, supplement,
+  cover letter, reviewer list, audit report, known-issues note, the figure and
+  checklist scripts, the reviewer-package and document builders, the earlier
+  four-discipline study and the tests that covered them. The site, manifest and
+  push-tree builders no longer refer to them. The package code is unchanged.
 - Corrections after a third assessment (2026-11-20). The gold-standard evaluation labelled its
   third variant "richest survivor", which the library has not done since the survivor rule changed to
   the first record encountered; the row, the script and the text now say so, and give the three

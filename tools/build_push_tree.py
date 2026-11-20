@@ -46,7 +46,6 @@ REQUIRED = [
     "README.md", "LICENSE", "CITATION.cff", "codemeta.json", ".zenodo.json",
     "pyproject.toml", "MANIFEST.in", "CHANGELOG.md", "CONTRIBUTING.md",
     "CODE_OF_CONDUCT.md", ".gitignore",
-    "KNOWN_ISSUES.md",
     "corpusslr/__init__.py", "tests/conftest.py",
     ".github/workflows/tests.yml", ".github/workflows/quality.yml",
     ".github/workflows/pages.yml",

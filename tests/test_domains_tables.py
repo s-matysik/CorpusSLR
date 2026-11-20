@@ -39,21 +39,6 @@ def test_f1_in_the_csv_follows_from_its_own_counts():
         assert round(2 * tp / (2 * tp + fp + fn), 4) == pytest.approx(float(r["f1"]), abs=1e-4), r["domain"]
 
 
-@pytest.mark.parametrize("doc", ["MANUSCRIPT.md", "SUPPLEMENTARY.md"])
-def test_every_discipline_row_matches_the_csv(doc):
-    if not os.path.exists(os.path.join(ROOT, doc)):
-        pytest.skip("%s is a submission document kept by the author outside the repository" % doc)
-    rows = _table_rows(doc)
-    for r in _csv():
-        cells = [c for c in rows.get(r["domain"].lower(), []) if "0." in " ".join(c)]
-        assert cells, "%s has no table row for %s" % (doc, r["domain"])
-        text = " ".join(cells[0])
-        for key in ("precision", "recall", "f1"):
-            assert "%.4f" % float(r[key]) in cells[0], (
-                "%s, %s: %s should read %.4f in %r" % (doc, r["domain"], key, float(r[key]), text))
-        assert str(int(r["n_records"])) in cells[0] or "{:,}".format(int(r["n_records"])) in text
-
-
 def test_the_cell_cap_option_changes_the_scored_population():
     import eval_domains_15 as E
     rows = [{"_qid": q, "source": "Crossref", "title": "t%d" % i, "doi": "10.1/%d" % i,

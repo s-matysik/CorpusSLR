@@ -125,11 +125,6 @@ ignore = [
 # otherwise linted like any other source, and a separate test compiles each
 # one and rejects any stored output or hardcoded credential.
 "notebooks/*" = ["E402"]
-# tools/build_reviewer_package.py holds the reviewer README as a template
-# string, and a markdown table row cannot be wrapped: a newline inside a row
-# ends the row. The long lines are therefore data, not code, and E501 is
-# excluded for that file alone. Nothing else is excluded there.
-"tools/build_reviewer_package.py" = ["E501"]
 
 [tool.mypy]
 # Rigour level: mypy's defaults plus check_untyped_defs, with missing

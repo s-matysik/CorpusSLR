@@ -332,30 +332,3 @@ def test_the_example_config_is_the_one_the_cli_documents():
 # it quoted pytest cases.
 # --------------------------------------------------------------------------
 
-@pytest.mark.skipif(not os.path.exists(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "SUPPLEMENTARY.md")),
-                    reason="SUPPLEMENTARY.md is a submission document kept by the author outside the repository")
-def test_supplement_test_table_is_the_inventory():
-    import csv
-    import pathlib
-    import re
-    root = pathlib.Path(__file__).resolve().parents[1]
-    text = (root / "SUPPLEMENTARY.md").read_text(encoding="utf-8")
-    with open(root / "validation" / "supplementary_test_areas.csv",
-              encoding="utf-8", newline="") as handle:
-        areas = list(csv.DictReader(handle))
-    rows = {}
-    for m in re.finditer(r"^\| (?!area\b)(?!\*\*Total)([^|]+?) \| (\d+) \| (\d+) \| (\d+) \|$",
-                         text, re.M):
-        rows[m.group(1)] = tuple(int(m.group(i)) for i in (2, 3, 4))
-    want = {r["area"]: (int(r["files"]), int(r["tests"]), int(r["cases"])) for r in areas}
-    assert rows == want, "table differs from the inventory: %s" % sorted(
-        set(rows.items()) ^ set(want.items()))[:4]
-    total = re.search(r"\| \*\*Total\*\* \| \*\*(\d+)\*\* \| \*\*(\d+)\*\* \| \*\*(\d+)\*\* \|", text)
-    assert total, "the table has no total row"
-    assert tuple(int(g) for g in total.groups()) == tuple(
-        sum(v[i] for v in want.values()) for i in range(3))
-    stated = re.search(r"(\d+) test functions across (\d+) files, which pytest collects as \*\*(\d+)\*\*",
-                       text)
-    assert stated, "the paragraph above the table does not state the totals"
-    assert tuple(int(g) for g in stated.groups()) == (total.group(2) and int(total.group(2)),
-                                                       int(total.group(1)), int(total.group(3)))

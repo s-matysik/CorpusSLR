@@ -1,20 +1,19 @@
 file,area,tests,cases
 tests/test_arxiv.py,arXiv client,21,21
 tests/test_cli.py,Command-line interface,164,176
-tests/test_data_package.py,Submission documents,14,14
+tests/test_data_package.py,Submission documents,13,13
 tests/test_dedup_equivalence.py,Deduplication,2,4
 tests/test_dedup_prisma_ext.py,Deduplication,71,97
-tests/test_docs_examples.py,Documentation consistency,19,24
-tests/test_docx.py,Submission documents,26,26
-tests/test_domains_tables.py,Validation protocol,4,5
+tests/test_docs_examples.py,Documentation consistency,18,23
+tests/test_domains_tables.py,Validation protocol,3,3
 tests/test_enrich_quality_export.py,Export formats,20,20
 tests/test_export_scopus.py,Scopus client and export,49,109
 tests/test_file_export_integration.py,Export formats,6,6
 tests/test_harvest.py,Reproducible harvesting,79,79
-tests/test_install_verification.py,Release metadata,9,12
+tests/test_install_verification.py,Release metadata,5,5
 tests/test_integration_e2e.py,End-to-end pipeline,2,2
 tests/test_integrity.py,Publication integrity,13,25
-tests/test_metadata_consistency.py,Release metadata,15,15
+tests/test_metadata_consistency.py,Release metadata,11,11
 tests/test_notebook.py,Colab notebook,26,26
 tests/test_notebook_helpers.py,Colab notebook,11,14
 tests/test_parser_utils.py,File-format parsers,16,92
@@ -30,19 +29,17 @@ tests/test_parsers_vendor_coverage.py,File-format parsers,24,63
 tests/test_pipeline.py,End-to-end pipeline,5,5
 tests/test_preprints.py,Preprint servers,33,33
 tests/test_prisma_s_items.py,PRISMA reporting,7,32
-tests/test_publishing.py,Release metadata,23,107
-tests/test_push_tree.py,Submission documents,14,31
+tests/test_push_tree.py,Submission documents,13,26
 tests/test_query_compiler_validation.py,Query compiler,4,18
 tests/test_record_query.py,Record model,9,20
 tests/test_references.py,Record model,9,15
 tests/test_registry.py,Source registry,31,94
-tests/test_reviewer_package.py,Reviewer package,39,44
 tests/test_same_doi_example.py,Deduplication,4,4
 tests/test_scopus.py,Scopus client and export,56,56
 tests/test_scopus_live_shapes.py,Scopus client and export,37,80
 tests/test_scopus_query_compliance.py,Scopus client and export,20,28
 tests/test_semanticscholar.py,Semantic Scholar client,21,31
-tests/test_site.py,Documentation site,60,109
+tests/test_site.py,Documentation site,60,88
 tests/test_sources_offline.py,API clients,22,22
 tests/test_tui.py,Terminal interface,98,98
 tests/test_validate.py,Validation protocol,39,45

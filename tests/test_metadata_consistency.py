@@ -127,7 +127,6 @@ def test_the_version_is_a_semantic_version():
 
 def test_the_declared_version_is_importable():
     """Guards the case where __init__.py is edited but the package is stale."""
-    import corpusslr
 
     assert corpusslr.__version__ == pyproject_version()
 
@@ -258,70 +257,5 @@ def test_the_changelog_documents_the_current_version():
 # where a stale version does the most damage.
 # --------------------------------------------------------------------------
 
-_PAPER = os.path.join(ROOT, "paper", "corpusslr_softwarex.tex")
-_SUPPLEMENT = os.path.join(ROOT, "SUPPLEMENTARY.md")
 
 
-@pytest.mark.skipif(not os.path.exists(_PAPER),
-                    reason="paper/ is not present in this checkout")
-def test_the_article_metadata_table_states_the_current_version():
-    with open(_PAPER, encoding="utf-8") as fh:
-        tex = fh.read()
-    row = re.search(r"C1\s*&[^&]*&\s*([0-9]+\.[0-9]+\.[0-9]+)", tex)
-    assert row, "the C1 row does not state a version at all"
-    assert row.group(1) == corpusslr.__version__, (
-        "the article's code metadata table says %s, the package is %s"
-        % (row.group(1), corpusslr.__version__))
-
-
-@pytest.mark.skipif(not os.path.exists(_PAPER),
-                    reason="paper/ is not present in this checkout")
-def test_no_superseded_version_survives_in_the_article():
-    """A quoted transcript is evidence, so it has to be current evidence.
-
-    Listing 2 quotes the CLI reporting `corpusslr_version`. Leaving a previous
-    release in there presents output the current code does not produce.
-    """
-    with open(_PAPER, encoding="utf-8") as fh:
-        tex = fh.read()
-    # Only versions the article attributes to THIS package. A bare semantic
-    # version is not enough to go on: the article legitimately names the
-    # interpreter and the R release used for the bibliometrix run, and flagging
-    # those would make the rule fire on correct text.
-    owned = re.findall(
-        r"(?:corpusslr[_-]version\"?\s*[:=]\s*\"?|CorpusSLR\s+v?|corpusslr-|"
-        r"Current code version\s*&\s*)(\d+\.\d+\.\d+)", tex, re.I)
-    stale = {v for v in owned if v != corpusslr.__version__}
-    assert not stale, (
-        "the article attributes these superseded versions to the package: %s"
-        % sorted(stale))
-    assert owned, "the article never names the package version at all"
-
-
-@pytest.mark.skipif(not os.path.exists(_SUPPLEMENT),
-                    reason="SUPPLEMENTARY.md is not present in this checkout")
-def test_the_supplement_title_states_the_current_version():
-    with open(_SUPPLEMENT, encoding="utf-8") as fh:
-        first = fh.readline()
-    assert corpusslr.__version__ in first, (
-        "the supplement title is %r, which does not name version %s"
-        % (first.strip(), corpusslr.__version__))
-
-
-@pytest.mark.skipif(not os.path.exists(_PAPER),
-                    reason="paper/ is not present in this checkout")
-def test_the_markdown_metadata_table_agrees_with_the_article():
-    """The C1-C8 table exists in MANUSCRIPT.md and in the .tex.
-
-    Two copies is what let C1 fall a release behind: the .tex was bumped and
-    the markdown was not, and the Word submission renders from the markdown.
-    The .tex is authoritative, so the copies must agree row for row.
-    """
-    with open(os.path.join(ROOT, "MANUSCRIPT.md"), encoding="utf-8") as fh:
-        md = fh.read()
-    rows = re.findall(r"^\|\s*(C\d)\s*\|[^|]*\|\s*([^|]+?)\s*\|$", md, re.M)
-    assert len(rows) == 8, "the markdown metadata table has %d row(s)" % len(rows)
-    values = dict(rows)
-    assert values["C1"] == corpusslr.__version__, (
-        "the markdown C1 row says %s, the package is %s"
-        % (values["C1"], corpusslr.__version__))

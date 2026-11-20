@@ -71,15 +71,6 @@ def test_no_cache_or_virtualenv_directory_survives(tree):
             assert junk not in dirs, "%s in %s" % (junk, base)
 
 
-@pytest.mark.skipif(not os.path.exists(os.path.join(ROOT, "paper", "corpusslr_softwarex.pdf")),
-                    reason="paper/ is a submission document kept by the author outside the repository")
-def test_the_typeset_article_is_tracked(tree):
-    """Deliberate exception to the build-product rule: CI has no LaTeX, so
-    ignoring the PDF would leave the repository with no readable article."""
-    assert os.path.exists(os.path.join(
-        tree["root"], "paper", "corpusslr_softwarex.pdf"))
-
-
 def test_the_ignore_rules_come_from_the_file_not_from_a_second_list():
     """A restated list would drift from .gitignore; parsing it cannot."""
     patterns = bpt.read_ignore_patterns(ROOT)
@@ -107,13 +98,9 @@ def test_the_ignore_rules_come_from_the_file_not_from_a_second_list():
     ("corpusslr_validation_data.zip", False, True),
     # and everything that must survive
     ("corpusslr/dedup.py", False, False),
-    ("paper/corpusslr_softwarex.tex", False, False),
-    ("paper/corpusslr_softwarex.pdf", False, False),
-    ("paper/references.bib", False, False),
     ("validation/eval_asysd.py", False, False),
     ("validation/eval_domains_15.py", False, False),
     ("README.md", False, False),
-    ("KNOWN_ISSUES.md", False, False),
 ])
 def test_ignored_paths_are_actually_matched(rel, is_dir, ignored):
     patterns = bpt.read_ignore_patterns(ROOT)

@@ -467,9 +467,7 @@ Deduplication is validated on two levels: a published biomedical gold standard
 disciplines (13,809 live records, 2,584 judgeable pairs, median pairwise
 F1 0.9592; per-discipline figures in `validation/domains_15_final.csv`,
 reproduced by `validation/eval_domains_15.py`).
-An earlier four-discipline study is kept in
-[`validation/multidomain_validation.md`](validation/multidomain_validation.md)
-for the calibration result it established: the 0.93 default needs no
+An earlier four-discipline study established the calibration result: the 0.93 default needs no
 per-discipline tuning, with an argmax gain of at most 0.006 in every field, and
 the biomedical arm is not the strongest, so the defaults are not fitted to
 biomedical conventions.
