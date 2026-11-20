@@ -227,8 +227,11 @@ def test_every_source_block_reaches_the_manuscript(built):
     # The builder drops the markdown "## Metadata" heading and emits the code
     # metadata table from the article under a single "Metadata" heading of its
     # own: every source heading, minus the one skipped, plus the one injected.
-    headings = len(re.findall(r"^#{1,4}\s+\S", src, re.M)) - 1 + 1
-    figures = len(re.findall(r"^!\[[^\]]*\]\([^)]+\)\s*$", src, re.M))
+    # A "#" at the start of a line inside a fenced code block is a comment in
+    # the code, not a heading: the worked example in section 3.1 has such lines.
+    prose = re.sub(r"^```.*?^```[^\n]*$", "", src, flags=re.S | re.M)
+    headings = len(re.findall(r"^#{1,4}\s+\S", prose, re.M)) - 1 + 1
+    figures = len(re.findall(r"^!\[[^\]]*\]\([^)]+\)\s*$", prose, re.M))
     counts = built["manuscript_counts"]
     assert counts["headings"] == headings, (counts["headings"], headings)
     assert counts["figures"] == figures, (counts["figures"], figures)
@@ -482,16 +485,15 @@ def test_the_cover_letter_is_built_and_carries_the_headline_figures(built_all):
     path = pathlib.Path(built_all) / "CorpusSLR_SoftwareX_cover_letter.docx"
     doc = Document(str(path))
     body = _normalise("\n".join(p.text for p in doc.paragraphs))
-    # The letter restates the article's headline result, so it must agree with
-    # the row measured on the released code rather than with a recollection.
-    with open(root / "validation" / "asysd_metrics.csv", encoding="utf-8",
+    # The letter restates one headline result, the median pairwise F1 across
+    # the fifteen disciplines, so it must agree with the committed table and not
+    # with a recollection. (It once also carried the gold-standard confusion
+    # counts; the letter was shortened to the one result that shows the scope.)
+    import statistics
+    with open(root / "validation" / "domains_15_final.csv", encoding="utf-8",
               newline="") as handle:
-        gold = [r for r in csv.DictReader(handle)
-                if r["method"].startswith("CorpusSLR")
-                and "dev milestone" not in r["method"]
-                and "cluster level" in (r.get("metric") or "")][0]
-    assert "TP %d, FP %d, FN %d" % (int(float(gold["TP"])), int(float(gold["FP"])),
-                                    int(float(gold["FN"]))) in body, body[:300]
+        median = statistics.median(float(r["f1"]) for r in csv.DictReader(handle))
+    assert "%.4f" % median in body, (median, body[:300])
     # Line numbering belongs on a manuscript under review, not on a letter.
     assert doc.sections[0]._sectPr.find(qn("w:lnNumType")) is None
     # Every prose paragraph of the source must survive the conversion whole.

@@ -5,7 +5,7 @@ Scopus client and export,4,162,273
 Terminal interface,1,98,98
 Reproducible harvesting,1,79,79
 Web of Science clients,2,79,109
-Deduplication,2,73,101
+Deduplication,3,77,105
 Documentation site,1,60,109
 Submission documents,3,48,65
 Release metadata,3,47,134
@@ -15,6 +15,7 @@ Colab notebook,2,37,40
 Preprint servers,1,33,33
 Source registry,1,31,94
 Export formats,2,26,26
+Browser application,2,25,35
 API clients,1,22,22
 Semantic Scholar client,1,21,31
 arXiv client,1,21,21

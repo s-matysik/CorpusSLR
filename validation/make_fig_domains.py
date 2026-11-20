@@ -71,7 +71,7 @@ def main():
     groups = [
         ("pairs sharing a DOI\n(n = %s)" % format(judged, ","),
          [("found", tp, "#31a354"), ("missed", fn, "#fdae6b")]),
-        ("further merges, DOIs differ\nor one is missing (n = %s)" % format(fp, ","),
+        ("further merges, both records\ncarry different DOIs (n = %s)" % format(fp, ","),
          [(k, v, c) for (k, v), c in zip(
              kinds, ["#9ecae1", "#6baed6", "#3182bd", "#08519c", "#b2182b"])]),
     ]

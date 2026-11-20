@@ -89,3 +89,8 @@ CorpusSLR-push.zip
 /eval_summary.json
 /threshold_calibration.csv
 /threshold_calibration.png
+
+# Browser application: the Pyodide runtime comes from npm and the bundle is
+# rebuilt by `python tools/build_app.py`; neither is committed.
+app/node_modules/
+app/dist/

@@ -39,6 +39,9 @@ DOCS = ["MANUSCRIPT.md", "SUPPLEMENTARY.md", "AUDIT_REPORT.md", "CHANGELOG.md",
         # PDF against a twenty-two-entry bibliography and a seven-page article.
         # It documents the built paper, so its numbers age with every rebuild.
         "paper/README.md",
+        # The highlights state the test count and were left at 2122 after the
+        # suite had grown, because nothing read them.
+        "paper/highlights.md",
         # The submitted article itself, absent from this list until a sentence
         # under Table 2 was found claiming four missed duplicates on the gold
         # standard while the abstract and the table above it said one. Only the

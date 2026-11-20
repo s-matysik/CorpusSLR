@@ -1,0 +1,8 @@
+{
+  "name": "corpusslr-web",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Browser application for CorpusSLR. Pyodide is installed here only to build and test the app; the published app serves its own copy.",
+  "scripts": { "test": "node test/run_pyodide_tests.mjs" },
+  "devDependencies": { "pyodide": "0.27.7", "jsdom": "26.1.0" }
+}

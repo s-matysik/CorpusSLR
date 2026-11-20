@@ -10,22 +10,23 @@
 <text x="37" y="315.0" text-anchor="middle" transform="rotate(-90 37 315.0)" font-weight="bold">Included</text>
 <rect x="90" y="60" width="330" height="46" fill="#ffffff" stroke="#333" rx="3"/>
 <text x="100" y="78">Records identified from databases (n = 2):</text>
-<text x="100" y="94">Embase (n = 1); IEEE Xplore (n = 1)</text>
-<rect x="520" y="60" width="360" height="78" fill="#ffffff" stroke="#333" rx="3"/>
+<text x="100" y="94">Scopus (n = 1); PubMed (n = 1)</text>
+<rect x="520" y="60" width="360" height="94" fill="#ffffff" stroke="#333" rx="3"/>
 <text x="530" y="78">Records removed before screening:</text>
-<text x="530" y="94">Duplicate records removed (n = 0)</text>
-<text x="530" y="110">Records marked ineligible by automation tools (n = 0)</text>
-<text x="530" y="126">Records removed for other reasons (n = 0)</text>
+<text x="530" y="94">Duplicate records removed (n = 1)</text>
+<text x="530" y="110">[doi: 1]</text>
+<text x="530" y="126">Records marked ineligible by automation tools (n = 0)</text>
+<text x="530" y="142">Records removed for other reasons (n = 0)</text>
 <rect x="90" y="132" width="330" height="30" fill="#ffffff" stroke="#333" rx="3"/>
-<text x="100" y="150">Records screened (n = 2)</text>
+<text x="100" y="150">Records screened (n = 1)</text>
 <rect x="520" y="132" width="360" height="30" fill="#ffffff" stroke="#333" rx="3"/>
 <text x="530" y="150">Records excluded (n = 0)</text>
 <rect x="90" y="188" width="330" height="30" fill="#ffffff" stroke="#333" rx="3"/>
-<text x="100" y="206">Reports sought for retrieval (n = 2)</text>
+<text x="100" y="206">Reports sought for retrieval (n = 1)</text>
 <rect x="520" y="188" width="360" height="30" fill="#ffffff" stroke="#333" rx="3"/>
 <text x="530" y="206">Reports not retrieved (n = 0)</text>
 <rect x="90" y="244" width="330" height="30" fill="#ffffff" stroke="#333" rx="3"/>
-<text x="100" y="262">Reports assessed for eligibility (n = 2)</text>
+<text x="100" y="262">Reports assessed for eligibility (n = 1)</text>
 <rect x="520" y="244" width="360" height="30" fill="#ffffff" stroke="#333" rx="3"/>
 <text x="530" y="262">Reports excluded (n = 0)</text>
 <rect x="90" y="300" width="330" height="30" fill="#ffffff" stroke="#333" rx="3"/>

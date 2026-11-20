@@ -545,8 +545,44 @@ microseconds between 6 000 and 60 000 records. Environment and method are in
 calibration data are in [`validation/`](validation/).
 
 ```bash
-python -m pytest tests -q                 # 2209 offline tests, 98% coverage
+python -m pytest tests -q                 # 2248 offline tests, 98% coverage
 python validation/eval_asysd.py --gold validation/labelled_test_set.csv
+```
+
+## Web application
+
+A static page runs the package in the browser, with no server and nothing to install:
+https://s-matysik.github.io/CorpusSLR/app/
+
+It compiles one query into seven dialects, searches OpenAlex, Crossref, PubMed, Semantic
+Scholar and Scopus, imports export files in the formats the parsers read, deduplicates with
+the same cascade and logs every merge, and produces the PRISMA 2020 diagram, the PRISMA-S
+appendix, the strategy audit, the data-quality report and the exports (Scopus CSV, CSV, RIS,
+BibTeX, screening CSV, merge log) as one zip. The engine is the unmodified package, run by
+Pyodide and served from the same site, so a visit makes no request to a CDN.
+
+What it does not do, and why:
+
+- Web of Science and arXiv cannot be searched from a page, because their APIs send no CORS
+  header (measured). Import their exports instead.
+- API keys are typed into fields, used for the requests of one search and cleared afterwards.
+  They are never written to storage, and error messages are scrubbed of them. A key typed into
+  any web page is exposed to that page's code; for a key you cannot afford to expose, use the
+  command line.
+- A search retrieves up to the number you set. Exhaustive harvests belong to the command line.
+
+How it is tested, and what is not: `tests/test_web_bridge.py` and `tests/test_web_app.py` run
+offline in the main suite. `app/test/run_pyodide_tests.mjs` runs the page's Python layer inside
+the real Pyodide runtime in Node, and `app/test/run_ui_tests.mjs` drives the real page in a
+DOM emulation (jsdom) on top of it. Layout, styling and the web worker are not exercised by
+those tests, and the page has not been tried in a real browser by the author of the tests.
+
+Build and test locally:
+
+```
+cd app && npm ci
+cd .. && python tools/build_app.py --out app/dist
+cd app && node --test test/run_pyodide_tests.mjs test/run_ui_tests.mjs
 ```
 
 ## If you would rather not write a configuration file

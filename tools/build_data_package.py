@@ -43,6 +43,9 @@ INVENTORY = (
      ("Supplement S2, comparison table: confusion matrix per tool on the "
       "ASySD Diabetes set, with the published values and the derived ones "
       "marked separately.")),
+    ("validation/same_doi_example.py", "gold_standard",
+     ("Article abstract and section 3.1: twelve records share one DOI and "
+      "represent six abstracts; the package keeps six.")),
     ("validation/labelled_test_set.csv", "gold_standard",
      ("The ASySD Diabetes gold standard itself (Hair et al. 2023), so S2 can "
       "be recomputed without downloading anything. Third-party data under "
@@ -68,6 +71,10 @@ INVENTORY = (
     ("validation/asysd_rule_comparison.csv", "disciplines",
      ("Article section 2.4 and Supplement S8: the transcribed ASySD rule and "
       "this package's rule on identical candidate pairs, per discipline.")),
+    ("validation/fig_domains.png", "disciplines",
+     "Article Figure 2, as drawn from domains_15_final.csv."),
+    ("validation/make_fig_domains.py", "disciplines",
+     "Regenerates Figure 2 from domains_15_final.csv."),
     ("validation/compare_asysd_rule.py", "disciplines",
      ("Regenerates asysd_rule_comparison.csv from the raw archives; the "
       "rule is transcribed from the ASySD source.")),

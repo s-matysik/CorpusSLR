@@ -123,13 +123,85 @@ jobs:
           print("no long dashes in the built site")
           PY
 
+      # ------------------------------------------------------------------
+      # The browser application. It is a separate root from the documentation
+      # site on purpose: the site is built without JavaScript and the steps
+      # above reject any script element or external reference in it, while the
+      # application runs Python in the browser and so needs both a script and a
+      # WebAssembly runtime. The two are joined only at the end, as site/ at the
+      # top of the published tree and the application under /app/.
+      # ------------------------------------------------------------------
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install the pinned runtime and the test tools
+        # Versions are fixed by app/package-lock.json. Pyodide is copied into
+        # the published bundle, so a visitor makes no request to a CDN.
+        working-directory: app
+        run: npm ci --no-audit --no-fund
+
+      - name: Test the Python layer of the application with network access blocked
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+        run: >-
+          python -m pytest tests/test_web_bridge.py tests/test_web_app.py
+          -p no:cacheprovider
+          -p tools.no_network
+          -v
+
+      - name: Build the application bundle
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+        run: python tools/build_app.py --out app/dist
+
+      - name: Test the application in the Pyodide runtime and in a DOM
+        # The same bundle that is published runs inside the real Pyodide
+        # runtime. HTTP is scripted, so nothing reaches a database.
+        working-directory: app
+        env:
+          APP_DIST: ${{ github.workspace }}/app/dist
+        run: node --test test/run_pyodide_tests.mjs test/run_ui_tests.mjs
+
+      - name: Verify the application references only its own files
+        # Its own check: unlike the site, it may contain scripts, but every file
+        # it loads must be in the bundle, and the only hosts named are the five
+        # databases that allow browser requests, plus the one credit link.
+        run: |
+          python - <<'PY'
+          import pathlib, re, sys
+          root = pathlib.Path("app/dist")
+          bad = []
+          for page in root.glob("*.html"):
+              text = page.read_text(encoding="utf-8")
+              for u in re.findall(r'(?:src|href)="([^"]+)"', text):
+                  if re.match(r"^(https?:)?//", u):
+                      if u != "https://pyodide.org":
+                          bad.append("%s: %s" % (page.name, u))
+                  elif not u.startswith(("#", "..")) and not (root / u).exists():
+                      bad.append("%s: missing %s" % (page.name, u))
+          if bad:
+              print("\n".join(bad)); sys.exit(1)
+          print("the application loads only files that are in its bundle")
+          PY
+
+      - name: Assemble the published tree
+        run: |
+          rm -rf _pages && mkdir -p _pages/app
+          cp -R site/. _pages/
+          cp -R app/dist/. _pages/app/
+          test -f _pages/index.html && test -f _pages/app/index.html
+          test -f _pages/app/pyodide/pyodide.asm.wasm
+          echo "published: $(find _pages -type f | wc -l) files"
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
       - name: Upload the site as a Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: site
+          path: _pages
 
   deploy:
     name: deploy to GitHub Pages

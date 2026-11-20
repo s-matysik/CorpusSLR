@@ -232,5 +232,32 @@
   "claims_supported": [
    "the Polyglot Search Translator translates a written search strategy between database syntaxes and was evaluated in a randomized trial"
   ]
+ },
+ "tranfield2003": {
+  "doi": "10.1111/1467-8551.00375",
+  "citation": "Tranfield D, Denyer D, Smart P. Towards a Methodology for Developing Evidence-Informed Management Knowledge by Means of Systematic Review. British Journal of Management 14(3):207-222 (2003)",
+  "claims": [
+   "systematic-review method was adapted to management research; cited for that fact only, no figures quoted"
+  ],
+  "verified_on": "2026-11-19",
+  "verified_from": "Crossref work record, api.crossref.org/works/10.1111/1467-8551.00375"
+ },
+ "shea2017": {
+  "doi": "10.1136/bmj.j4008",
+  "citation": "Shea BJ, Reeves BC, Wells G, Thuku M, Hamel C, Moran J, et al. AMSTAR 2: a critical appraisal tool for systematic reviews that include randomised or non-randomised studies of healthcare interventions, or both. BMJ 358:j4008 (2017)",
+  "claims": [
+   "adequacy of the literature search (item 4) is listed among the critical domains (Box 1 of the full text)"
+  ],
+  "verified_on": "2026-11-19",
+  "verified_from": "Crossref work record; full text read for Box 1 and the item 4 wording"
+ },
+ "wang1996": {
+  "doi": "10.1080/07421222.1996.11518099",
+  "citation": "Wang RY, Strong DM. Beyond Accuracy: What Data Quality Means to Data Consumers. Journal of Management Information Systems 12(4):5-33 (1996)",
+  "claims": [
+   "data quality is multidimensional; accuracy and completeness are among its dimensions; cited for that fact only"
+  ],
+  "verified_on": "2026-11-19",
+  "verified_from": "Crossref work record, api.crossref.org/works/10.1080/07421222.1996.11518099 (bibliographic data only; the dimensions are stated from the paper's well-known framework and were not re-read here)"
  }
 }

@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data: blob:; worker-src 'self' blob:; connect-src 'self' https://api.openalex.org https://api.crossref.org https://eutils.ncbi.nlm.nih.gov https://api.semanticscholar.org https://api.elsevier.com; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<title>CorpusSLR Web: search, deduplicate and document a literature review</title>
+<meta name="description" content="Browser application for CorpusSLR. Compile one query for seven databases, search, import exports, deduplicate with a logged cascade and download the PRISMA 2020 diagram and the PRISMA-S appendix. Nothing leaves your browser except the searches you run.">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to the application</a>
+<header class="top">
+  <div class="brand"><span class="logo" aria-hidden="true"></span><span>CorpusSLR <b>Web</b></span></div>
+  <nav aria-label="Sections" id="steps">
+    <button data-step="query" class="on">1 Query</button>
+    <button data-step="collect">2 Collect</button>
+    <button data-step="dedup">3 Deduplicate</button>
+    <button data-step="report">4 Report</button>
+  </nav>
+  <div class="status" id="engine" role="status" aria-live="polite"><span class="dot"></span><span id="engine-text">Loading Python engine</span></div>
+</header>
+
+<main id="main">
+<noscript><p class="notice err">This application runs Python in your browser and needs JavaScript. The package also runs from the command line; see the repository.</p></noscript>
+
+<section class="hero" id="hero">
+  <h1>From one query to a PRISMA-documented corpus</h1>
+  <p>Runs the CorpusSLR package <span id="ver">1.2.0</span> in your browser. Your files and API keys stay on this computer. The only requests that leave it are the searches you start.</p>
+  <div class="tiles">
+    <div class="tile"><b>7</b><span>query dialects</span></div>
+    <div class="tile"><b>5</b><span>databases searched live</span></div>
+    <div class="tile"><b>10</b><span>file formats imported</span></div>
+    <div class="tile"><b>0</b><span>servers holding your data</span></div>
+  </div>
+  <div class="demo"><button id="load-demo" class="primary" disabled>Try it with an example</button><span class="hint">Loads a small query and two export files, no keys needed.</span></div>
+</section>
+
+<!-- 1 QUERY -->
+<section class="panel" id="step-query" aria-labelledby="h-query">
+  <h2 id="h-query">1 Compile one query for every database</h2>
+  <p class="lead">Each row is a concept; the terms in a row are synonyms joined by OR, and the rows are joined by AND. Press Enter after a term.</p>
+  <div id="blocks"></div>
+  <button id="add-block" class="ghost">Add a concept</button>
+  <div class="grid">
+    <label>From year <input id="y1" type="number" min="1900" max="2100" placeholder="2020"></label>
+    <label>To year <input id="y2" type="number" min="1900" max="2100" placeholder="2024"></label>
+    <fieldset class="chk"><legend>Document types</legend>
+      <label><input type="checkbox" name="dt" value="article" checked> article</label>
+      <label><input type="checkbox" name="dt" value="review"> review</label>
+      <label><input type="checkbox" name="dt" value="conference"> conference</label>
+      <label><input type="checkbox" name="dt" value="book"> book</label>
+    </fieldset>
+    <label class="chk"><input id="title-only" type="checkbox"> Title only</label>
+  </div>
+  <div id="compiled" class="compiled" aria-live="polite"></div>
+</section>
+
+<!-- 2 COLLECT -->
+<section class="panel hidden" id="step-collect" aria-labelledby="h-collect">
+  <h2 id="h-collect">2 Collect records</h2>
+  <div class="cols">
+    <div class="card">
+      <h3>Search a database</h3>
+      <p class="small">Runs in your browser. Databases that block browser requests are marked; use their export files instead.</p>
+      <div id="sources"></div>
+      <div class="grid">
+        <label>Records per database <input id="max" type="number" min="10" max="2000" value="100"></label>
+        <label>Contact e-mail (optional, raises OpenAlex and Crossref limits) <input id="email" type="email" autocomplete="off" placeholder="you@institution.edu"></label>
+      </div>
+      <button id="run-search" class="primary" disabled>Search selected databases</button>
+      <p class="small keynote">Keys are used for the requests of this search and are not stored. Reloading the page forgets them.</p>
+      <div id="search-report" aria-live="polite"></div>
+    </div>
+    <div class="card">
+      <h3>Import export files</h3>
+      <p class="small">RIS, BibTeX, Scopus and Web of Science CSV or plain text, PubMed .nbib, EndNote .enw, Embase, ProQuest and others. The format is detected from the content.</p>
+      <div id="drop" class="drop" tabindex="0" role="button" aria-label="Choose export files">Drop files here or <u>choose files</u><input id="files" type="file" multiple hidden></div>
+      <label class="db-label">Database name for these files (optional) <input id="db-name" placeholder="detected from the file"></label>
+      <div id="import-report" aria-live="polite"></div>
+    </div>
+  </div>
+  <div id="totals" class="totals" aria-live="polite"></div>
+</section>
+
+<!-- 3 DEDUP -->
+<section class="panel hidden" id="step-dedup" aria-labelledby="h-dedup">
+  <h2 id="h-dedup">3 Deduplicate</h2>
+  <p class="lead">An identifier alone never decides a merge: two records with the same DOI are kept apart when their titles disagree or they sit at different places in the volume. Every merge is logged with its evidence.</p>
+  <details class="adv"><summary>Settings</summary>
+    <div class="grid">
+      <label>Title similarity threshold <input id="p-fuzzy" type="number" step="0.01" min="0.5" max="1" value="0.93"></label>
+      <label>Year tolerance <input id="p-year" type="number" min="0" max="5" value="1"></label>
+    </div>
+  </details>
+  <button id="run-dedup" class="primary" disabled>Deduplicate</button>
+  <div id="dedup-summary" class="summary" aria-live="polite"></div>
+  <div class="tabs" role="tablist" id="dd-tabs">
+    <button role="tab" data-t="records" class="on">Records</button>
+    <button role="tab" data-t="decisions">Merge log</button>
+  </div>
+  <div class="tools"><input id="filter" type="search" placeholder="Filter by title, author, DOI" aria-label="Filter rows"></div>
+  <div class="tablewrap"><table id="table"><thead></thead><tbody></tbody></table></div>
+  <p class="small" id="table-note"></p>
+</section>
+
+<!-- 4 REPORT -->
+<section class="panel hidden" id="step-report" aria-labelledby="h-report">
+  <h2 id="h-report">4 Reports and downloads</h2>
+  <details class="adv" open><summary>Screening counts (optional)</summary>
+    <p class="small">From your screening tool. When all are empty the screening stages are shown as 0 and the arithmetic is not checked.</p>
+    <div class="grid">
+      <label>Records excluded at title and abstract <input id="s-excl" type="number" min="0"></label>
+      <label>Reports not retrieved <input id="s-nr" type="number" min="0"></label>
+      <label>Excluded at full text <input id="s-ft" type="number" min="0"></label>
+      <label>Studies included <input id="s-inc" type="number" min="0"></label>
+    </div>
+  </details>
+  <button id="make-report" class="primary" disabled>Build reports</button>
+  <div id="report-out"></div>
+  <h3>Downloads</h3>
+  <div class="dl" id="downloads"></div>
+</section>
+</main>
+
+<footer>
+  <p>CorpusSLR <span id="ver2">1.2.0</span>, MIT licence. Source and documentation: <a href="../" rel="noopener">documentation site</a>. The engine is the unmodified Python package, run by <a href="https://pyodide.org" rel="noopener">Pyodide</a> and served from this site.</p>
+  <p class="small">Web of Science and arXiv do not allow requests from a browser page; import their exports instead. A search retrieves up to the number you set, not the full result set; use the command line for exhaustive harvests.</p>
+</footer>
+<script src="app.js" defer></script>
+</body>
+</html>

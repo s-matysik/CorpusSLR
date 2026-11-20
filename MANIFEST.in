@@ -110,3 +110,11 @@ prune reviewer_package
 exclude corpusslr_reviewer_package.zip
 
 global-exclude *.py[cod] __pycache__/* .DS_Store
+
+# The browser application's sources travel with the tests that guard them
+# (tests/test_web_bridge.py imports app/py). The runtime and the built bundle
+# do not: they come from npm and from tools/build_app.py.
+graft app
+prune app/node_modules
+prune app/dist
+global-exclude package-lock.json

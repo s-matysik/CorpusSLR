@@ -36,6 +36,7 @@ tests/test_record_query.py,Record model,9,20
 tests/test_references.py,Record model,9,15
 tests/test_registry.py,Source registry,31,94
 tests/test_reviewer_package.py,Reviewer package,39,44
+tests/test_same_doi_example.py,Deduplication,4,4
 tests/test_scopus.py,Scopus client and export,56,56
 tests/test_scopus_live_shapes.py,Scopus client and export,37,80
 tests/test_scopus_query_compliance.py,Scopus client and export,20,28
@@ -44,5 +45,7 @@ tests/test_site.py,Documentation site,60,109
 tests/test_sources_offline.py,API clients,22,22
 tests/test_tui.py,Terminal interface,98,98
 tests/test_validate.py,Validation protocol,39,45
+tests/test_web_app.py,Browser application,10,14
+tests/test_web_bridge.py,Browser application,15,21
 tests/test_wos_expanded.py,Web of Science clients,16,20
 tests/test_wos_starter.py,Web of Science clients,63,89

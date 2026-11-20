@@ -39,7 +39,8 @@ EXTENSIONS = (".md", ".py", ".tex", ".html", ".txt", ".cff", ".toml", ".json",
               ".yml", ".yaml", ".ipynb", ".bib", ".css", ".in", ".cfg")
 
 SKIP_PARTS = ("build_check", "__pycache__", ".mypy_cache", ".ruff_cache",
-              ".git", ".venv", "dist", "reviewer_package", "site")
+              ".git", ".venv", "dist", "reviewer_package", "site",
+              "node_modules")
 
 #: LaTeX ligatures that render as the characters above.
 #: ``--`` is also how every command-line flag starts, and those must survive
