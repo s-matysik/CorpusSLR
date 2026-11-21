@@ -50,7 +50,6 @@ exclude validation/multidomain_raw.jsonl.gz
 # figures. 6.7 MB is the price of a reviewer being able to check those numbers
 # instead of taking them on trust. The older multidomain dump above stays
 # excluded: it is superseded and stands behind no published figure.
-include validation/coverage_summary.txt
 include validation/domains_social_raw.jsonl.gz
 include validation/domains_stem_raw.jsonl.gz
 include validation/domains_nature_hum_raw.jsonl.gz

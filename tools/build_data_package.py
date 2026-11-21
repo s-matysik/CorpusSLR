@@ -165,8 +165,6 @@ INVENTORY = (
      "The real vendor export used for that round trip, so S5 is repeatable."),
 
     # --- test inventory ----------------------------------------------------
-    ("validation/coverage_summary.txt", "tests",
-     "Supplement S1: statement coverage of the package measured by pytest-cov (98%)."),
     ("validation/measure_test_inventory.py", "tests",
      "Supplement S1: regenerates the two inventory files below from the test modules."),
     ("validation/supplementary_test_inventory.csv", "tests",
